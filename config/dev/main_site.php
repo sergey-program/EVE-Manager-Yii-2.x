@@ -1,13 +1,24 @@
 <?php
 
 $aConfig = [
-    'id' => 'EVE Manager 2',
+    'id' => 'main',
+    'name' => 'EVE Manager 2',
+    'charset' => 'UTF-8',
+    'language' => 'ru',
     'basePath' => FILE_PATH_ROOT,
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log'
+    ],
     'params' => require_once(FILE_PATH_CONFIG_ENV . '_param.php'),
     'defaultRoute' => 'index/index',
     'components' => [
         'db' => require_once(FILE_PATH_CONFIG_ENV . '_db.php'),
+        'user' => [
+            'class' => 'app\components\UserExtended',
+            'identityClass' => 'app\objects\UserIdentity',
+            'enableAutoLogin' => true,
+            'loginUrl' => ['auth/login']
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -19,12 +30,11 @@ $aConfig = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
-        ],
         'errorHandler' => [
             'errorAction' => 'error/index',
+        ],
+        'view' => [
+            'class' => 'app\components\ViewExtended'
         ],
         // send all mails to a file by default. You have to set
         // 'useFileTransport' to false and configure a transport
@@ -34,6 +44,11 @@ $aConfig = [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [['class' => 'yii\log\FileTarget', 'levels' => ['error', 'warning']]],
         ]
+    ],
+    'modules' => [
+        'debug' => 'yii\debug\Module',
+        'api' => 'app\modules\api\Module',
+        'character' => 'app\modules\character\Module'
     ]
 ];
 

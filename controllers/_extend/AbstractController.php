@@ -2,7 +2,6 @@
 
 namespace app\controllers\_extend;
 
-use yii\filters\AccessControl;
 use yii\web\Controller;
 
 /**
@@ -13,19 +12,31 @@ use yii\web\Controller;
 abstract class AbstractController extends Controller
 {
     /**
-     * @return array
+     * Simple wrapper for ViewExtended class ->addBread().
+     *
+     * @param string|array $data
+     *
+     * @return $this
      */
-    public function behaviors()
+    public function addBread($data)
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    ['actions' => ['logout'], 'allow' => true, 'roles' => ['@']],
-                ],
-            ]
-        ];
+        $this->getView()->addBread($data);
+
+        return $this;
+    }
+
+    /**
+     * Simple wrapper for ViewExtended class ->setTitle().
+     *
+     * @param string $sTitle
+     *
+     * @return $this
+     */
+    public function setTitle($sTitle)
+    {
+        $this->getView()->setTitle($sTitle);
+
+        return $this;
     }
 
     /**

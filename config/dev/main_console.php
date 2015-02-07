@@ -1,31 +1,31 @@
 <?php
 
-Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
+Yii::setAlias('@tests', FILE_PATH_ROOT . '/tests');
 
-$params = require(__DIR__ . '/params.php');
-$db = require(__DIR__ . '/db.php');
-
-return [
-    'id' => 'basic-console',
-    'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'gii'],
+$aConfig = [
+    'id' => 'main-console',
+    'basePath' => FILE_PATH_ROOT,
+//    'bootstrap' => ['log', 'gii'],
+    'bootstrap' => ['log'],
+    'params' => require(FILE_PATH_CONFIG_ENV . '_param.php'),
     'controllerNamespace' => 'app\commands',
-    'modules' => [
-        'gii' => 'yii\gii\Module',
-    ],
     'components' => [
+        'db' => require(FILE_PATH_CONFIG_ENV . '_db.php'),
+        //'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
-        ],
-        'db' => $db,
+                    'levels' => ['error', 'warning']
+                ]
+            ]
+        ]
     ],
-    'params' => $params,
+    //'modules' => ['gii' => 'yii\gii\Module']
 ];
+
+return $aConfig;
