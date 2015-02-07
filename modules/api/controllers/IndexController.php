@@ -2,6 +2,7 @@
 
 namespace app\modules\api\controllers;
 
+use app\models\Api;
 use app\modules\api\controllers\_extend\ApiController;
 
 class IndexController extends ApiController
@@ -14,26 +15,42 @@ class IndexController extends ApiController
         return $this->render('index');
     }
 
+    /**
+     * @return string
+     */
     public function actionList()
     {
-//        $this->render('list', array('aApi' => clApi::loadAll()));
-        return $this->render('list');
+        $this
+            ->setTitle('Api List')
+            ->addBread(['label' => 'List']);
+
+        $aApi = Api::find()->all();
+
+        return $this->render('list', ['aApi' => $aApi]);
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function actionAdd()
     {
-//        $oApi = new Api('create');
-//
-//        if ($this->isPost('Api', $oApi)) {
-//            if ($oApi->validate()) {
-//                $oApi->save();
-//
-//                $this->redirect($this->createUrl('api/update', array('sApiID' => $oApi->id)));
-//            }
-//        }
-//
-//        $this->render('add', array('oApi' => $oApi));
-        return $this->render('add');
+        $this
+            ->setTitle('Add new Api')
+            ->addBread(['label' => 'Add']);
+
+        $mApi = new Api();
+
+        if ($this->isPostRequest()) {
+            if ($mApi->load($this->getPostData())) {
+                if ($mApi->validate()) {
+                    $mApi->save();
+
+                    return $this->redirect(['/api/index/list']);
+                }
+            }
+        }
+
+        return $this->render('add', ['mApi' => $mApi]);
     }
 
     /**
@@ -75,20 +92,19 @@ class IndexController extends ApiController
     }
 
     /**
-     * @param string|int $sApiID
+     * @param int $id
+     *
+     * @return \yii\web\Response
+     * @throws \Exception
      */
-    public function actionDelete($sApiID)
+    public function actionDelete($id)
     {
-//        $oApi = Api::model()->findByPk($sApiID);
-//
-//        if ($oApi) {
-//            $this->setFlash('success', 'Api was deleted.');
-//            $oApi->delete();
-//        } else {
-//            $this->setFlash('danger', 'Such api doesn\'t exist.');
-//        }
-//
-//        $this->redirect($this->createUrl('api/list'));
-    }
+        $mApi = Api::findOne(['id' => $id]);
 
+        if ($mApi) {
+            $mApi->delete();
+        }
+
+        return $this->redirect(['/api/index/list']);
+    }
 }

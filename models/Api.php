@@ -31,6 +31,7 @@ class Api extends AbstractActiveRecord
     {
         return [
             [['keyID', 'vCode'], 'required'],
+            ['keyID', 'integer'],
             ['userID', 'safe']
         ];
     }
@@ -41,6 +42,7 @@ class Api extends AbstractActiveRecord
     public function attributeLabels()
     {
         return [
+            'userID' => 'User',
             'keyID' => 'Key ID',
             'vCode' => 'Verification Code'
         ];
@@ -56,4 +58,14 @@ class Api extends AbstractActiveRecord
      */
 
     ### functions
+
+    public function hasInfo()
+    {
+        return false;
+    }
+
+    public function hasCharacters()
+    {
+        return false;
+    }
 }
