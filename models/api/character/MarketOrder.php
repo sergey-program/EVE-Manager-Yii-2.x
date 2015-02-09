@@ -3,6 +3,8 @@
 namespace app\models\api\character;
 
 use app\models\_extend\AbstractActiveRecord;
+
+use app\models\InvTypes;
 use app\models\StaStation;
 
 /**
@@ -69,5 +71,13 @@ class MarketOrder extends AbstractActiveRecord
     public function getStaStation()
     {
         return $this->hasOne(StaStation::className(), ['stationID' => 'stationID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvTypes()
+    {
+        return $this->hasOne(InvTypes::className(), ['typeID' => 'typeID']);
     }
 }

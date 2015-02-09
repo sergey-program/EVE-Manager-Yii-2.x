@@ -14,8 +14,14 @@
             'filterModel' => $mSearchMarketOrder,
             'dataProvider' => $mSearchMarketOrder->search(Yii::$app->getRequest()->get()),
             'columns' => [
-                ['attribute' => 'stationID', 'label' => 'Station ID'],
-                ['attribute' => 'typeID', 'label' => 'Type ID'],
+                [
+                    'format' => 'raw',
+                    'value' => function ($mModel) {
+                        return '<img class="img-thumbnail" src="https://image.eveonline.com/Type/' . $mModel->typeID . '_32.png">';
+                    }
+                ],
+                ['attribute' => 'typeName', 'value' => 'invTypes.typeName', 'label' => 'Item'],
+                ['attribute' => 'stationName', 'value' => 'staStation.stationName', 'label' => 'Station'],
                 [
                     'attribute' => 'orderState',
                     'label' => 'Order State',
