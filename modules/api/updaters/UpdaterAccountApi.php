@@ -15,7 +15,8 @@ class UpdaterAccountApi
     /**
      * Update using keyID or api id.
      *
-     * @param int $iApiID
+     * @param int    $iApiID
+     * @param string $sBy
      *
      * @throws NotFoundHttpException
      */

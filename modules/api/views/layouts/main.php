@@ -12,10 +12,6 @@
                 <a class="list-group-item" href="<?= Url::to('/api/index/list'); ?>">
                     <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> List</span>
                 </a>
-
-                <a class="list-group-item" href="<?= Url::to('/api/index/add'); ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Add new</span>
-                </a>
             </div>
         </div>
 
