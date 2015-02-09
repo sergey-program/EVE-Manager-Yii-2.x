@@ -116,13 +116,10 @@ class ViewExtended extends View
     }
 
     /**
-     * @param string $sVarName
-     * @param null   $sDefaultValue
-     *
-     * @return array|mixed
+     * @return \yii\console\Controller|\yii\web\Controller
      */
-    public function getFromUrl($sVarName, $sDefaultValue = null)
+    public function getController()
     {
-        return \Yii::$app->getRequest()->get($sVarName, $sDefaultValue);
+        return \Yii::$app->controller;
     }
 }

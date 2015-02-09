@@ -45,7 +45,11 @@ class MarketDemand extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'stationID' => 'Station',
+            'typeID' => 'Item',
+            'characterID' => 'Character'
+        ];
     }
 
     ### relations

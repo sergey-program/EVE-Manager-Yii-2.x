@@ -1,17 +1,14 @@
-<?php
-use app\assets\Select2Asset;
-use app\models\MarketDemand;
-use yii\bootstrap\ActiveForm;
-
-?>
+<?php use app\assets\Select2Asset; ?>
+<?php use app\models\MarketDemand; ?>
+<?php use yii\bootstrap\ActiveForm; ?>
 <?php use yii\helpers\Html; ?>
 
 <?php Select2Asset::register($this); ?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="pull-right"><?= $mCharacter->characterName; ?></div>
-        <h1 class="panel-title">Create new demand for character</h1>
+        <div class="pull-right"><?= $this->getController()->mCharacter->characterName; ?></div>
+        <h1 class="panel-title">Demand :: Create</h1>
     </div>
 
     <?php $oForm = ActiveForm::begin(); ?>
@@ -19,7 +16,8 @@ use yii\bootstrap\ActiveForm;
     <div class="panel-body">
         <?= $oForm->field($mMarketDemand, 'stationID'); ?>
         <?= $oForm->field($mMarketDemand, 'typeID'); ?>
-        <?= $oForm->field($mMarketDemand, 'characterID')->hiddenInput(); ?>
+        <?php // $oForm->field($mMarketDemand, 'characterID')->hiddenInput(); ?>
+        <?= Html::activeHiddenInput($mMarketDemand, 'characterID'); ?>
 
         <div class="form-group">
             <div class="col-sm-4 col-sm-offset-2">
@@ -27,7 +25,7 @@ use yii\bootstrap\ActiveForm;
             </div>
 
             <div class="col-sm-4">
-                <?= $oForm->field($mMarketDemand, 'type')->dropDownList([MarketDemand::TYPE_SELL => MarketDemand::TYPE_SELL, MarketDemand::TYPE_BUY => MarketDemand::TYPE_BUY], ['class' => 'form-control text-center']); ?>
+                <?= $oForm->field($mMarketDemand, 'type')->dropDownList([MarketDemand::TYPE_SELL => 'Sell', MarketDemand::TYPE_BUY => 'Buy'], ['class' => 'form-control text-center']); ?>
             </div>
         </div>
     </div>
@@ -74,9 +72,7 @@ use yii\bootstrap\ActiveForm;
             }
         });
 
-        $("#marketdemand-type").select2({
-            minimumResultsForSearch: -1
-        });
+
         $("#marketdemand-typeid").select2({
             placeholder: "Item name",
             minimumInputLength: 3,

@@ -2,6 +2,7 @@
 
 namespace app\modules\_extend;
 
+use app\modules\character\components\ViewCharacter;
 use yii\base\Module;
 
 class AbstractModule extends Module

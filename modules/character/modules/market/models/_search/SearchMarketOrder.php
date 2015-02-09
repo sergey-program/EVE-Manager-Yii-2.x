@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\character\models\_search;
+namespace app\modules\character\modules\market\models\_search;
 
 use app\models\api\character\MarketOrder;
 use yii\base\Model;

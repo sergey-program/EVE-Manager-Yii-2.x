@@ -4,7 +4,8 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Market Orders List</h1>
+        <div class="pull-right"><?= $this->getController()->mCharacter->characterName; ?></div>
+        <h1 class="panel-title">Orders :: List</h1>
     </div>
 
     <div class="panel-body">
@@ -15,9 +16,9 @@
             'dataProvider' => $mSearchMarketOrder->search(Yii::$app->getRequest()->get()),
             'columns' => [
                 [
-                    'format' => 'raw',
+                    'format' => 'image',
                     'value' => function ($mModel) {
-                        return '<img class="img-thumbnail" src="https://image.eveonline.com/Type/' . $mModel->typeID . '_32.png">';
+                        return 'https://image.eveonline.com/Type/' . $mModel->typeID . '_32.png';
                     }
                 ],
                 ['attribute' => 'typeName', 'value' => 'invTypes.typeName', 'label' => 'Item'],
@@ -40,6 +41,4 @@
 
         <?php Pjax::end(); ?>
     </div>
-
-    <div class="panel-footer"></div>
 </div>

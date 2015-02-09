@@ -2,21 +2,15 @@
 
 <?php $this->beginContent('@app/views/layouts/backend.php'); ?>
 
-    <?php $characterID = $this->getFromUrl('characterID'); ?>
-
     <div class="row">
         <div class="col-md-3">
             <div class="list-group">
-                <a class="list-group-item" href="<?= Url::to(['/character/index/index', 'characterID' => $characterID]); ?>">
+                <a class="list-group-item" href="<?= Url::to(['/character/index/index', 'characterID' => $this->getController()->mCharacter->characterID]); ?>">
                     <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Index</span>
                 </a>
 
-                <a class="list-group-item" href="<?= Url::to(['/character/market-orders/index', 'characterID' => $characterID]) ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Market Orders</span>
-                </a>
-
-                <a class="list-group-item" href="<?= Url::to(['/character/market-demands/index', 'characterID' => $characterID]) ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Market Demands</span>
+                <a class="list-group-item" href="<?= Url::to(['/character/market/index', 'characterID' => $this->getController()->mCharacter->characterID]); ?>">
+                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Market</span>
                 </a>
             </div>
         </div>

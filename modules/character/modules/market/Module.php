@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\character;
+namespace app\modules\character\modules\market;
 
 use app\modules\_extend\AbstractModule;
 
@@ -12,7 +12,7 @@ class Module extends AbstractModule
     public function init()
     {
         parent::init();
-        
+
         $this->loadConfig();
     }
 }

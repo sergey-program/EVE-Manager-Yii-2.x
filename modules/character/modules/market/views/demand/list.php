@@ -3,8 +3,8 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="pull-right"><?= $mCharacter->characterName; ?></div>
-        <h1 class="panel-title">Demand List</h1>
+        <div class="pull-right"><?= $this->getController()->mCharacter->characterName; ?></div>
+        <h1 class="panel-title">Demands :: List</h1>
     </div>
 
     <div class="panel-body">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12 text-center">
-                                <?= Html::a('Delete demand', ['/character/market-demands/delete', 'characterID' => $mCharacter->characterID, 'id' => $mMarketDemand->id], ['class' => 'btn btn-xs btn-danger']); ?>
+                                <?= Html::a('Delete demand', ['/character/market-demands/delete', 'characterID' => $this->getController()->mCharacter->characterID, 'id' => $mMarketDemand->id], ['class' => 'btn btn-xs btn-danger']); ?>
                             </div>
                         </div>
 
@@ -113,6 +113,7 @@
 </div>
 
 <script type="text/javascript">
+    // @todo refactor for someone else, bad solution
     $(document).ready(function () {
         $('[data-action="toggle-info"]').css('cursor', 'pointer').click(function () {
             $('[data-info="' + $(this).attr('data-target') + '"]').toggle();
