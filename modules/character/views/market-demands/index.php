@@ -9,5 +9,6 @@
 
     <div class="panel-footer text-center">
         <?= Html::a('Create demand', ['/character/market-demands/create', 'characterID' => $mCharacter->characterID], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a('Show List', ['/character/market-demands/list', 'characterID' => $mCharacter->characterID], ['class' => 'btn btn-info']); ?>
     </div>
 </div>
