@@ -21,6 +21,7 @@
                     }
                 ],
                 ['attribute' => 'typeName', 'value' => 'invTypes.typeName', 'label' => 'Item'],
+                ['attribute' => 'volRemaining', 'label' => 'Quantity'],
                 ['attribute' => 'stationName', 'value' => 'staStation.stationName', 'label' => 'Station'],
                 [
                     'attribute' => 'orderState',

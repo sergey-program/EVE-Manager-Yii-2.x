@@ -1,7 +1,9 @@
-<?php ?>
+<?php use app\models\MarketDemand; ?>
+<?php use yii\helpers\Html; ?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
+        <div class="pull-right"><?= $mCharacter->characterName; ?></div>
         <h1 class="panel-title">Demand List</h1>
     </div>
 
@@ -9,13 +11,34 @@
         <?php if ($aMarketDemand): ?>
             <ul class="list-group">
                 <?php foreach ($aMarketDemand as $mMarketDemand): ?>
-                    <li class="list-group-item list-group-item-success">
-                        <div class="pull-right" style="line-height: 42px;">Need: <strong><?= $mMarketDemand->quantity; ?></strong> Demand: <?= $mMarketDemand->quantity; ?></div>
-                        <img class="img-thumbnail" src="http://image.eveonline.com/Type/<?= $mMarketDemand->typeID; ?>_32.png">
+                    <?php
+                    if ($mMarketDemand->getCountOrders() >= $mMarketDemand->quantity) {
+                        $sColor = 'list-group-item-success';
+                    } elseif (($mMarketDemand->quantity / 2) > $mMarketDemand->getCountNeed()) {
+                        $sColor = 'list-group-item-warning';
+                    } else {
+                        $sColor = 'list-group-item-danger';
+                    }
+                    ?>
+
+                    <li class="list-group-item <?= $sColor; ?>">
+                        <div class="pull-right" style="line-height: 42px;">
+                            <?php if ($mMarketDemand->getCountNeed() > 0): ?>
+                                <span>Need: <strong><?= number_format($mMarketDemand->getCountNeed(), 0, '.', ' '); ?></strong></span>
+                            <?php endif; ?>
+                            <span>Current: <strong><?= number_format($mMarketDemand->getCountOrders(), 0, '.', ' '); ?></strong></span>
+                            <span>Demand: <?= number_format($mMarketDemand->quantity, 0, '.', ' '); ?></span>
+                        </div>
+
+                        <span data-action="toggle-info" data-target="<?= $mMarketDemand->id; ?>">
+                            <img class="img-thumbnail" src="http://image.eveonline.com/Type/<?= $mMarketDemand->typeID; ?>_32.png">
+                        </span>
+
                         <span style="font-weight: bold;"><?= $mMarketDemand->invTypes->typeName; ?></span>
-                        <span class="margin-left-15">Sell \ Buy<?php //echo $cDemand->getTypeName(); ?></span>
+                        <span class="margin-left-15"><?php if ($mMarketDemand->type == MarketDemand::TYPE_BUY): ?>Buy <?php else: ?>Sell <?php endif; ?></span>
                     </li>
-                    <li class="list-group-item">
+
+                    <li class="list-group-item" data-info="<?= $mMarketDemand->id; ?>" style="display: none;">
                         <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-group">
@@ -43,14 +66,15 @@
                                     </li>
                                 </ul>
                             </div>
-                            <!-- col -->
+
                             <div class="col-md-6">
                                 <ul class="list-group margin-bottom-0">
-                                    <?php if (false): //$cDemand->getOrders($cCharacter->getCharacterID())): ?>
-                                        <?php foreach ($cDemand->getOrders($cCharacter->getCharacterID()) as $cOrder): ?>
+                                    <?php if ($mMarketDemand->orders): ?>
+                                        <?php foreach ($mMarketDemand->orders as $mMarketOrder): ?>
                                             <li class="list-group-item list-group-item-info">
-                                                <div class="pull-right"><?php echo $cOrder->getVolRemaining(); ?> / <?php echo $cOrder->getVolEntered(); ?></div>
-                                                <span>#<?php echo $cOrder->getOrderID(); ?></span>
+                                                <div class="pull-right"><?= number_format($mMarketOrder->volRemaining, 0, '.', ' '); ?> / <?= number_format($mMarketOrder->volEntered, 0, '.', ' '); ?></div>
+                                                <span>#<?= $mMarketOrder->orderID; ?></span>
+                                                <span class="text-muted"> <?= number_format($mMarketOrder->price, 2, '.', ' '); ?> isk</span>
                                             </li>
                                         <?php endforeach; ?>
                                     <?php else: ?>
@@ -58,9 +82,13 @@
                                     <?php endif; ?>
                                 </ul>
                             </div>
-                            <!-- col -->
                         </div>
-                        <!-- row -->
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+                                <?= Html::a('Delete demand', ['/character/market-demands/delete', 'characterID' => $mCharacter->characterID, 'id' => $mMarketDemand->id], ['class' => 'btn btn-xs btn-danger']); ?>
+                            </div>
+                        </div>
+
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -68,6 +96,14 @@
             <p class="alert alert-warning text-center">Has no sell demands...</p>
         <?php endif; ?>
     </div>
-
-    <div class="panel-footer"></div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('[data-action="toggle-info"]')
+            .css('cursor', 'pointer')
+            .click(function () {
+                $('[data-info="' + $(this).attr('data-target') + '"]').toggle();
+            });
+    });
+</script>

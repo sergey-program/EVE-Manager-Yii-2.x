@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\_extend\AbstractActiveRecord;
+use app\models\api\character\MarketOrder;
 
 /**
  * Class MarketDemand
@@ -57,5 +58,46 @@ class MarketDemand extends AbstractActiveRecord
         return $this->hasOne(InvTypes::className(), ['typeID' => 'typeID']);
     }
 
+    /**
+     * @return static
+     */
+    public function getOrders()
+    {
+        return MarketOrder::find()->where([
+            'characterID' => $this->characterID,
+            'stationID' => $this->stationID,
+            'typeID' => $this->typeID,
+            'orderState' => MarketOrder::ORDER_STATE_OPEN
+        ])->all();
+    }
+
     ### function
+
+    /**
+     * @return int
+     */
+    public function getCountOrders()
+    {
+        $iCount = 0;
+
+        if ($this->orders) {
+            foreach ($this->orders as $mMarketOrder) {
+                $iCount += $mMarketOrder->volEntered;
+            }
+        }
+
+        return $iCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountNeed()
+    {
+        if ($this->getCountOrders() > $this->quantity) {
+            return 0;
+        }
+
+        return $this->quantity - $this->getCountOrders();
+    }
 }

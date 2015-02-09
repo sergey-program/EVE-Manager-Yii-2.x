@@ -27,9 +27,10 @@ class MarketDemandsController extends CharacterController
      */
     public function actionList($characterID)
     {
+        $mCharacter = $this->loadCharacter($characterID);
         $aMarketDemand = MarketDemand::findAll(['characterID' => $characterID]);
 
-        return $this->render('list', ['aMarketDemand' => $aMarketDemand]);
+        return $this->render('list', ['mCharacter' => $mCharacter, 'aMarketDemand' => $aMarketDemand]);
     }
 
     /**
@@ -71,6 +72,18 @@ class MarketDemandsController extends CharacterController
         }
 
         return $this->render('create', ['mCharacter' => $mCharacter, 'mMarketDemand' => $mMarketDemand]);
+    }
+
+    public function actionDelete($characterID, $id)
+    {
+        $mCharacter = $this->loadCharacter($characterID);
+        $mMarketDemand = $this->loadMarketDemand($id, false);
+
+        if ($mMarketDemand) {
+            $mMarketDemand->delete();
+        }
+
+        return $this->redirect(['/character/market-demands/list', 'characterID' => $characterID]);
     }
 }
 
