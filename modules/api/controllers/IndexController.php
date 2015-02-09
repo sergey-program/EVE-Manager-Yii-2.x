@@ -2,8 +2,10 @@
 
 namespace app\modules\api\controllers;
 
+use app\calls\account\CallApiKeyInfo;
 use app\models\Api;
 use app\modules\api\controllers\_extend\ApiController;
+use app\modules\api\updaters\UpdaterAccountApi;
 
 class IndexController extends ApiController
 {
@@ -12,6 +14,11 @@ class IndexController extends ApiController
      */
     public function actionIndex()
     {
+        $oUpdater = new CallApiKeyInfo();
+        $oUpdater->keyID = 3764904;
+        $oUpdater->vCode = 'ZpcbvBFFNGm6BLVHkGTdaM2HdWIQuVpeZsap3msVLkad7tc76SKYfImdPqK9qcua';
+        $oUpdater->update();
+
         return $this->render('index');
     }
 
@@ -25,6 +32,13 @@ class IndexController extends ApiController
             ->addBread(['label' => 'List']);
 
         $aApi = Api::find()->all();
+        $iApiID = $this->getGetData('updateApi');
+
+        if ($iApiID) {
+            UpdaterAccountApi::updateBy($iApiID);
+
+            return $this->redirect(['/api/index/list']);
+        }
 
         return $this->render('list', ['aApi' => $aApi]);
     }

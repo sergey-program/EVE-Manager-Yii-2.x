@@ -6,14 +6,19 @@ use app\modules\character\controllers\_extend\CharacterController;
 
 class IndexController extends CharacterController
 {
-    public function actionIndex()
+    /**
+     * @param int $characterID
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionIndex($characterID)
     {
-        return $this->render('index');
-    }
+        $mCharacter = $this->loadCharacter($characterID);
+        $this
+            ->addBread(['label' => 'Characters', 'url' => ['/characters/index/list']])
+            ->addBread(['label' => $mCharacter->characterName]);
 
-    public function actionList()
-    {
-        //$this->render('list', array('aCharacter' => clCharacter::loadAll()));
-        return $this->render('list');
+        return $this->render('index', ['mCharacter' => $mCharacter]);
     }
 }

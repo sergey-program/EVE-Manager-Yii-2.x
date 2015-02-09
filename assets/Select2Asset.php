@@ -6,21 +6,22 @@ use yii\web\AssetBundle;
 use yii\web\View;
 
 /**
- * Class AppAsset
+ * Class Select2Asset
  *
  * @package app\assets
  */
-class AppAsset extends AssetBundle
+class Select2Asset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'js/select2-3.4.8/select2.css',
+        'js/select2-3.4.8/select2-bootstrap.css'
     ];
     public $js = [
+        'js/select2-3.4.8/select2.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'yii\web\JqueryAsset'
     ];

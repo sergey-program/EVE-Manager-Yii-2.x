@@ -48,7 +48,9 @@ $aConfig = [
     'modules' => [
         'debug' => 'yii\debug\Module',
         'api' => 'app\modules\api\Module',
-        'character' => 'app\modules\character\Module'
+        'characters' => 'app\modules\characters\Module',
+        'character' => 'app\modules\character\Module',
+        'station' => 'app\modules\station\Module'
     ]
 ];
 

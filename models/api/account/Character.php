@@ -3,6 +3,7 @@
 namespace app\models\api\account;
 
 use app\models\_extend\AbstractActiveRecord;
+use app\models\Api;
 
 /**
  * Class Character
@@ -26,7 +27,7 @@ class Character extends AbstractActiveRecord
      */
     public static function tableName()
     {
-        return 'api_account_character';
+        return 'api_account_characters';
     }
 
     /**
@@ -34,7 +35,10 @@ class Character extends AbstractActiveRecord
      */
     public function rules()
     {
-        return [];
+        return [
+            [['apiID', 'characterID'], 'required'],
+            [['characterName', 'corporationID', 'corporationName', 'allianceID', 'allianceName', 'factionID', 'factionName'], 'safe']
+        ];
     }
 
     /**
@@ -43,5 +47,15 @@ class Character extends AbstractActiveRecord
     public function attributeLabels()
     {
         return [];
+    }
+
+    ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getApi()
+    {
+        return $this->hasOne(Api::className(), ['id' => 'apiID']);
     }
 }

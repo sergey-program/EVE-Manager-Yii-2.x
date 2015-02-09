@@ -114,4 +114,15 @@ class ViewExtended extends View
     {
         return \Yii::$app->getSession()->getFlash($sKey);
     }
+
+    /**
+     * @param string $sVarName
+     * @param null   $sDefaultValue
+     *
+     * @return array|mixed
+     */
+    public function getFromUrl($sVarName, $sDefaultValue = null)
+    {
+        return \Yii::$app->getRequest()->get($sVarName, $sDefaultValue);
+    }
 }

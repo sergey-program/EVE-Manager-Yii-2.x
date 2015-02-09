@@ -3,6 +3,8 @@
 namespace app\models;
 
 use app\models\_extend\AbstractActiveRecord;
+use app\models\api\account\ApiKeyInfo;
+use app\models\api\account\Character;
 
 /**
  * Class Api
@@ -48,24 +50,41 @@ class Api extends AbstractActiveRecord
         ];
     }
 
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        if ($this->info) {
+            $this->info->delete();
+        }
+
+        if ($this->characters) {
+            foreach ($this->characters as $mCharacter) {
+                $mCharacter->delete();
+            }
+        }
+
+        return parent::beforeDelete();
+    }
+
     ### relations
 
-    /*
-     *         return array(
-            'aCharacter' => array(self::HAS_MANY, 'ApiAccountCharacters', 'apiID'),
-            'oApiKeyInfo' => array(self::HAS_ONE, 'ApiAccountApiKeyInfo', 'apiID')
-        );
+    /**
+     * @return \yii\db\ActiveQuery
      */
+    public function getInfo()
+    {
+        return $this->hasOne(ApiKeyInfo::className(), ['apiID' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCharacters()
+    {
+        return $this->hasMany(Character::className(), ['apiID' => 'id']);
+    }
 
     ### functions
-
-    public function hasInfo()
-    {
-        return false;
-    }
-
-    public function hasCharacters()
-    {
-        return false;
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\api\characters;
+namespace app\models\api\character;
 
 use app\models\_extend\AbstractActiveRecord;
 
@@ -39,7 +39,7 @@ class MarketOrder extends AbstractActiveRecord
      */
     public static function tableName()
     {
-        return 'api_characters_marketOrder';
+        return 'api_character_marketOrders';
     }
 
     /**
@@ -47,7 +47,9 @@ class MarketOrder extends AbstractActiveRecord
      */
     public function rules()
     {
-        return [];
+        return [
+            [['characterID', 'orderID', 'stationID', 'volEntered', 'volRemaining', 'minVolume', 'orderState', 'typeID', 'range', 'accountKey', 'duration', 'escrow', 'price', 'bid', 'issued'], 'safe']
+        ];
     }
 
     /**
