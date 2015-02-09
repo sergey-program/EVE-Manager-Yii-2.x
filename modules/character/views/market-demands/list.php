@@ -9,19 +9,33 @@
 
     <div class="panel-body">
         <?php if ($aMarketDemand): ?>
+
+            <form data-action="filter" class="form-horizontal">
+                <select class="form-control">
+                    <option value="0">Show all</option>
+                    <option value="1">Success</option>
+                    <option value="2">Warning</option>
+                    <option value="3">Danger</option>
+                    <option value="4">Warning and Danger</option>
+                </select>
+            </form>
+            <br/>
             <ul class="list-group">
                 <?php foreach ($aMarketDemand as $mMarketDemand): ?>
                     <?php
                     if ($mMarketDemand->getCountOrders() >= $mMarketDemand->quantity) {
                         $sColor = 'list-group-item-success';
+                        $iFilterType = 1;
                     } elseif (($mMarketDemand->quantity / 2) > $mMarketDemand->getCountNeed()) {
                         $sColor = 'list-group-item-warning';
+                        $iFilterType = 2;
                     } else {
                         $sColor = 'list-group-item-danger';
+                        $iFilterType = 3;
                     }
                     ?>
 
-                    <li class="list-group-item <?= $sColor; ?>">
+                    <li class="list-group-item <?= $sColor; ?>" data-filter-type="<?= $iFilterType; ?>">
                         <div class="pull-right" style="line-height: 42px;">
                             <?php if ($mMarketDemand->getCountNeed() > 0): ?>
                                 <span>Need: <strong><?= number_format($mMarketDemand->getCountNeed(), 0, '.', ' '); ?></strong></span>
@@ -93,17 +107,38 @@
                 <?php endforeach; ?>
             </ul>
         <?php else: ?>
-            <p class="alert alert-warning text-center">Has no sell demands...</p>
+            <p class="alert alert-warning text-center">Has no demands...</p>
         <?php endif; ?>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('[data-action="toggle-info"]')
-            .css('cursor', 'pointer')
-            .click(function () {
-                $('[data-info="' + $(this).attr('data-target') + '"]').toggle();
+        $('[data-action="toggle-info"]').css('cursor', 'pointer').click(function () {
+            $('[data-info="' + $(this).attr('data-target') + '"]').toggle();
+        });
+
+        $('[data-action="filter"] select').change(function () {
+            var iFilterType = $(this).val();
+
+            $('[data-filter-type]').each(function () {
+                if (iFilterType == 4) {
+                    if ($(this).attr('data-filter-type') == 2 || $(this).attr('data-filter-type') == 3) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                } else if (iFilterType == 0) {
+                    $(this).show();
+                }
+                else {
+                    if (iFilterType != $(this).attr('data-filter-type')) {
+                        $(this).hide();
+                    } else {
+                        $(this).show()
+                    }
+                }
             });
+        });
     });
 </script>

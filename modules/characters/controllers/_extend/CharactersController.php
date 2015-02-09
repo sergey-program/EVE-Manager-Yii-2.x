@@ -13,6 +13,6 @@ abstract class CharactersController extends AbstractController
      */
     public function init()
     {
-        $this->addBread(['label' => 'Character']);
+        $this->addBread(['label' => 'Characters', 'url' => ['/characters/index/index']]);
     }
 }

@@ -12,6 +12,8 @@ class IndexController extends CharactersController
      */
     public function actionIndex()
     {
+        $this->addBread(['label' => 'Index']);
+
         return $this->render('index');
     }
 
@@ -20,6 +22,7 @@ class IndexController extends CharactersController
      */
     public function actionList()
     {
+        $this->addBread(['label' => 'List']);
         $aCharacter = Character::find()->all();
 
         return $this->render('list', ['aCharacter' => $aCharacter]);
