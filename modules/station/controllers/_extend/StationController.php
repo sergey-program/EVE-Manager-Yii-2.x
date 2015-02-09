@@ -13,6 +13,6 @@ abstract class StationController extends AbstractController
      */
     public function init()
     {
-        $this->addBread(['label' => 'Station']);
+        $this->addBread(['label' => 'Station', 'url' => '/station/index/index']);
     }
 }

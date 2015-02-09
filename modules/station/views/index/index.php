@@ -2,7 +2,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Station index page</h1>
+        <h1 class="panel-title">Station :: Index</h1>
     </div>
 
     <div class="panel-body">
@@ -10,6 +10,6 @@
     </div>
 
     <div class="panel-footer text-center">
-        <?= Html::a('Updater station list', ['/station/index/index', 'updateStation' => 1], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a('Updater station list', ['/station/index/index', 'returnUrl' => '/station/index/index'], ['class' => 'btn btn-primary']); ?>
     </div>
 </div>

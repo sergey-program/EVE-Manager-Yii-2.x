@@ -13,11 +13,7 @@ class IndexController extends StationController
      */
     public function actionIndex()
     {
-        if ($this->getGetData('updateStation')) {
-            UpdaterEveConquerableStation::update();
-
-            return $this->redirect(['/station/index/index']);
-        }
+        $this->addBread(['label' => 'Index']);
 
         return $this->render('index');
     }
@@ -27,8 +23,24 @@ class IndexController extends StationController
      */
     public function actionList()
     {
+        $this->addBread(['label' => 'List']);
         $mSearchConquerableStation = new SearchConquerableStation();
 
         return $this->render('list', ['mSearchConquerableStation' => $mSearchConquerableStation]);
+    }
+
+    /**
+     * @return \yii\web\Response
+     */
+    public function actionUpdate()
+    {
+        $sReturnUrl = $this->getGetData('updateStation');
+        UpdaterEveConquerableStation::update();
+
+        if ($sReturnUrl) {
+            return $this->redirect($sReturnUrl);
+        }
+
+        return $this->redirect(['/station/index/index']);
     }
 }

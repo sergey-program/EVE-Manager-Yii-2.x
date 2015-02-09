@@ -51,6 +51,7 @@ class SearchConquerableStation extends ConquerableStation
 
         $oQuery
             ->andFilterWhere(['stationID' => $this->stationID])
+            ->andFilterWhere(['solarSystemID' => $this->solarSystemID])
             ->andFilterWhere(['like', 'stationName', $this->stationName]);
 
         return $oDataProvider;

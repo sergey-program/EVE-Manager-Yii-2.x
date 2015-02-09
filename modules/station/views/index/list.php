@@ -3,7 +3,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Conquerable Station List</h1>
+        <h1 class="panel-title">Station :: List</h1>
     </div>
 
     <div class="panel-body">
@@ -13,7 +13,6 @@
             'filterModel' => $mSearchConquerableStation,
             'dataProvider' => $mSearchConquerableStation->search(Yii::$app->getRequest()->get()),
             'columns' => [
-                ['attribute' => 'id', 'label' => 'ID'],
                 ['attribute' => 'stationID', 'label' => 'Station ID'],
                 ['attribute' => 'stationName', 'label' => 'Station Name'],
                 ['attribute' => 'solarSystemID', 'label' => 'Solar System ID']
