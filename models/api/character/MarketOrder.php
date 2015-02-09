@@ -3,6 +3,7 @@
 namespace app\models\api\character;
 
 use app\models\_extend\AbstractActiveRecord;
+use app\models\StaStation;
 
 /**
  * Class MarketOrder
@@ -58,5 +59,15 @@ class MarketOrder extends AbstractActiveRecord
     public function attributeLabels()
     {
         return [];
+    }
+
+    ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStaStation()
+    {
+        return $this->hasOne(StaStation::className(), ['stationID' => 'stationID']);
     }
 }
