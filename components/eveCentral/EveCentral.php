@@ -1,10 +1,10 @@
 <?php
+
 namespace app\components\eveCentral;
 
 use app\calls\_extend\AbstractCall;
 use app\components\eveCentral\_extend\AbstractEveCentral;
 use app\modules\prices\models\Price;
-use yii\db\Expression;
 
 class EveCentral extends AbstractEveCentral
 {
