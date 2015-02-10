@@ -52,31 +52,38 @@
                         <span class="margin-left-15"><?php if ($mMarketDemand->type == MarketDemand::TYPE_BUY): ?>Buy <?php else: ?>Sell <?php endif; ?></span>
                     </li>
 
-                    <li class="list-group-item" data-info="<?= $mMarketDemand->id; ?>" style="display: none;">
+                    <li class="list-group-item" data-info="<?= $mMarketDemand->id; ?>" data-filter-type="<?= $iFilterType; ?>" style="display: none;">
                         <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-group">
                                     <li class="list-group-item">
-                                        <span>Jita Buy:</span>
-                                        <div class="pull-right"><?php //echo number_format($cDemand->getPriceBuy(), 2, ',', ' '); ?></div>
+                                        <div class="pull-right text-muted">Jita</div>
+                                        <span class="text-muted">Buy:</span> <?= number_format($mMarketDemand->priceBuy->max, 2, '.', ' '); ?>
+                                        <span class="text-muted">Sell:</span> <?= number_format($mMarketDemand->priceSell->min, 2, '.', ' '); ?>
                                     </li>
+
                                     <li class="list-group-item">
-                                        <span>Jita Sell:</span>
-                                        <div class="pull-right"><?php //echo number_format($cDemand->getPriceSell(), 2, ',', ' '); ?></div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <span>My Buy:</span>
-                                        <div class="pull-right">
-                                            <span class="text-muted"><small>-<?php //echo cPrice::getPercentSell(); ?>%</small></span>
-                                            <?php //echo number_format($cDemand->getPriceBuy(true), 2, ',', ' '); ?>
+                                        <div class="pull-right text-muted">
+                                            <span class="text-muted"><small>-<?= Yii::$app->params['demand']['percent']['buy']; ?>% / +<?= Yii::$app->params['demand']['percent']['sell']; ?>%</small></span>
                                         </div>
+                                        <span class="text-muted">Buy:</span> <?= number_format($mMarketDemand->getMarginPriceBuy(false, false), 2, '.', ' '); ?>
+                                        <span class="text-muted">Sell:</span> <?= number_format($mMarketDemand->getMarginPriceSell(false, false), 2, '.', ' '); ?>
                                     </li>
+
                                     <li class="list-group-item">
-                                        <span>My Sell:</span>
-                                        <div class="pull-right">
-                                            <span class="text-muted"><small>+<?php //echo cPrice::getPercentBuy(); ?>%</small></span>
-                                            <?php //echo number_format($cDemand->getPriceSell(true), 2, ',', ' '); ?>
+                                        <div class="pull-right text-muted">
+                                            <span class="text-muted"><small>Station <?= Yii::$app->params['demand']['stationPercent']; ?>%</small></span>
                                         </div>
+                                        <span class="text-muted">Buy:</span> <?= number_format($mMarketDemand->getMarginPriceBuy(false, true), 2, '.', ' '); ?>
+                                        <span class="text-muted">Sell:</span> <?= number_format($mMarketDemand->getMarginPriceSell(false, true), 2, '.', ' '); ?>
+                                    </li>
+
+                                    <li class="list-group-item">
+                                        <div class="pull-right text-muted">
+                                            <span class="text-muted"><small>+<?= number_format(Yii::$app->params['demand']['iskPerM3'], 0, '.', ' '); ?> isk pm3</small></span>
+                                        </div>
+                                        <span class="text-muted">Buy:</span> <?= number_format($mMarketDemand->getMarginPriceBuy(), 2, '.', ' '); ?>
+                                        <span class="text-muted">Sell:</span> <?= number_format($mMarketDemand->getMarginPriceSell(), 2, '.', ' '); ?>
                                     </li>
                                 </ul>
                             </div>

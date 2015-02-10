@@ -53,6 +53,10 @@ class UpdaterEveCentral
 
             if ($mPriceCron->validate()) {
                 $mPriceCron->save();
+
+                $oEveCentral = new EveCentral();
+                $oEveCentral->addTypeID($iTypeID);
+                $oEveCentral->fetch();
             }
         }
     }
