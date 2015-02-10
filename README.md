@@ -46,6 +46,13 @@ You can then access the application through the following URL:
 http://localhost/basic/web/
 ~~~
 
+1. Get repository.
+1.1 Setup dev \ prod config.
+2. Execute migration.
+3. Run command rbac (create user and roles).
+4. Import static dump.
+5. Add crontab rules.
+
 
 ### Install via Composer
 
