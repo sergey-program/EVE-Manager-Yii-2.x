@@ -1,6 +1,8 @@
 # phpstorm project files
 .idea
-.production
+
+# development detection
+.prod
 
 /config/*
 # netbeans project files

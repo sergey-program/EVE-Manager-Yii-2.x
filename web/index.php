@@ -8,7 +8,7 @@ define('FILE_PATH_ROOT', FILE_PATH_ROOT_WEB . '..' . DS);
 define('FILE_PATH_ROOT_UPLOAD', FILE_PATH_ROOT_WEB . DS . 'uploads' . DS);
 define('FILE_PATH_VENDOR', FILE_PATH_ROOT . 'vendor' . DS);
 
-defined('YII_ENV') or define('YII_ENV', file_exists(FILE_PATH_ROOT . '.production') ? 'prod' : 'dev');
+defined('YII_ENV') or define('YII_ENV', file_exists(FILE_PATH_ROOT . '.prod') ? 'prod' : 'dev');
 defined('YII_DEBUG') or define('YII_DEBUG', YII_ENV === 'dev');
 
 define('FILE_PATH_CONFIG', FILE_PATH_ROOT . 'config' . DS);
