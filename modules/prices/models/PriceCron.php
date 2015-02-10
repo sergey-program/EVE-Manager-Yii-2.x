@@ -3,32 +3,24 @@
 namespace app\modules\prices\models;
 
 use app\models\_extend\AbstractActiveRecord;
-use app\models\InvTypes;
 
 /**
- * Class Price
+ * Class PriceCron
  *
  * @package app\modules\prices\models
  *
  * @var $id
  * @var $typeID
- * @var $type
- * @var $volume
- * @var $average
- * @var $max
- * @var $min
- * @var $stdDev
- * @var $median
- * @var $percentile
+ * @var $date
  */
-class Price extends AbstractActiveRecord
+class PriceCron extends AbstractActiveRecord
 {
-    const TYPE_BUY = 1;
-    const TYPE_SELL = 0;
-
+    /**
+     * @return string
+     */
     public static function tableName()
     {
-        return 'api_price_item';
+        return 'api_price_item_cron';
     }
 
     /**
@@ -36,7 +28,10 @@ class Price extends AbstractActiveRecord
      */
     public function rules()
     {
-        return [];
+        return [
+            ['typeID', 'required'],
+            ['date', 'safe']
+        ];
     }
 
     /**
@@ -52,9 +47,9 @@ class Price extends AbstractActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInvTypes()
+    public function getPrice()
     {
-        return $this->hasOne(InvTypes::className(), ['typeID' => 'typeID']);
+        return $this->hasOne(Price::className(), ['typeID' => 'typeID']);
     }
 
     ### functions

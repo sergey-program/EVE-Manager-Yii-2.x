@@ -4,6 +4,7 @@ namespace app\modules\character\modules\market\controllers;
 use app\models\MarketDemand;
 
 use app\modules\character\modules\market\controllers\_extend\MarketController;
+use app\modules\prices\updaters\UpdaterEveCentral;
 use yii\helpers\Json;
 
 class DemandController extends MarketController
@@ -67,6 +68,7 @@ class DemandController extends MarketController
             if ($mMarketDemand->load($this->getPostData())) {
                 if ($mMarketDemand->validate()) {
                     $mMarketDemand->save();
+                    UpdaterEveCentral::addType($mMarketDemand->typeID);
 
                     return $this->redirect(['/character/market/demand/list', 'characterID' => $this->mCharacter->characterID]);
                 }

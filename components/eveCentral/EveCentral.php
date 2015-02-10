@@ -48,7 +48,6 @@ class EveCentral extends AbstractEveCentral
             $mPrice->type = Price::TYPE_BUY;
         }
 
-        $mPrice->date = new Expression('NOW()');
         $mPrice->volume = (string)$oRow->buy->volume;
         $mPrice->average = (string)$oRow->buy->avg;
         $mPrice->min = (string)$oRow->buy->min;
@@ -71,7 +70,6 @@ class EveCentral extends AbstractEveCentral
             $mPrice->type = Price::TYPE_SELL;
         }
 
-        $mPrice->date = new Expression('NOW()');
         $mPrice->volume = (string)$oRow->sell->volume;
         $mPrice->average = (string)$oRow->sell->avg;
         $mPrice->min = (string)$oRow->sell->min;

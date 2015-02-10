@@ -1,8 +1,5 @@
-<?php
-use app\modules\prices\models\Price;
-use yii\grid\GridView;
-
-?>
+<?php use app\modules\prices\models\Price; ?>
+<?php use yii\grid\GridView; ?>
 <?php use yii\widgets\Pjax; ?>
 
 <div class="panel panel-default">

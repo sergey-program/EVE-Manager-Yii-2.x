@@ -5,6 +5,7 @@ namespace app\modules\prices\controllers;
 use app\components\eveCentral\EveCentral;
 use app\modules\prices\controllers\_extend\PricesController;
 use app\modules\prices\models\_search\SearchPrice;
+use app\modules\prices\updaters\UpdaterEveCentral;
 
 class IndexController extends PricesController
 {
@@ -24,12 +25,24 @@ class IndexController extends PricesController
     public function actionList()
     {
         $this->addBread(['label' => 'List']);
-
         $mSearchPrice = new SearchPrice();
-        $oEveCentral = new EveCentral();
-        $oEveCentral->addTypeID(mt_rand(100, 10000));
-        $oEveCentral->fetch();
 
         return $this->render('list', ['mSearchPrice' => $mSearchPrice]);
+    }
+
+    /**
+     * @return \yii\web\Response
+     */
+    public function actionUpdate()
+    {
+        $sReturnUrl = $this->getGetData('returnUrl');
+
+        UpdaterEveCentral::update();
+
+        if ($sReturnUrl) {
+            return $this->redirect($sReturnUrl);
+        }
+
+        return $this->redirect(['/prices/index/index']);
     }
 }
