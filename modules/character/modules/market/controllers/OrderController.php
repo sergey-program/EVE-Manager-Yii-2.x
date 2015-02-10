@@ -2,9 +2,9 @@
 
 namespace app\modules\character\modules\market\controllers;
 
-use app\calls\character\CallMarketOrders;
 use app\modules\character\modules\market\models\_search\SearchMarketOrder;
 use app\modules\character\modules\market\controllers\_extend\MarketController;
+use app\modules\character\modules\market\updaters\UpdaterCharacterMarketOrder;
 
 class OrderController extends MarketController
 {
@@ -41,12 +41,7 @@ class OrderController extends MarketController
      */
     public function actionUpdate()
     {
-        $oCallMarketOrders = new CallMarketOrders();
-        $oCallMarketOrders->keyID = $this->mCharacter->api->keyID;
-        $oCallMarketOrders->vCode = $this->mCharacter->api->vCode;;
-        $oCallMarketOrders->characterID = $this->mCharacter->characterID;
-
-        $oCallMarketOrders->update();
+        UpdaterCharacterMarketOrder::update($this->mCharacter->api->keyID, $this->mCharacter->api->vCode, $this->mCharacter->characterID);
 
         return $this->redirect(['/character/market/order/index', 'characterID' => $this->mCharacter->characterID]);
     }

@@ -57,7 +57,7 @@
                             <div class="col-md-6">
                                 <ul class="list-group">
                                     <li class="list-group-item">
-                                        <div class="pull-right text-muted">Jita</div>
+                                        <div class="pull-right text-muted">Jita</div><?php //if (!$mMarketDemand->priceBuy){var_dump($mMarketDemand->typeID);die();}; ?>
                                         <span class="text-muted">Buy:</span> <?= number_format($mMarketDemand->priceBuy->max, 2, '.', ' '); ?>
                                         <span class="text-muted">Sell:</span> <?= number_format($mMarketDemand->priceSell->min, 2, '.', ' '); ?>
                                     </li>
@@ -106,7 +106,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12 text-center">
-                                <?= Html::a('Delete demand', ['/character/market-demands/delete', 'characterID' => $this->getController()->mCharacter->characterID, 'id' => $mMarketDemand->id], ['class' => 'btn btn-xs btn-danger']); ?>
+                                <?= Html::a('Delete demand', ['/character/market/demand/delete', 'characterID' => $this->getController()->mCharacter->characterID, 'id' => $mMarketDemand->id, 'returnUrl'=> Yii::$app->getRequest()->getUrl()], ['class' => 'btn btn-xs btn-danger']); ?>
                             </div>
                         </div>
 

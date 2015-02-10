@@ -87,9 +87,14 @@ class DemandController extends MarketController
     public function actionDelete($id)
     {
         $mMarketDemand = $this->loadMarketDemand($id, false);
+        $sReturnUrl = $this->getGetData('returnUrl');
 
         if ($mMarketDemand) {
             $mMarketDemand->delete();
+        }
+
+        if ($sReturnUrl) {
+            return $this->redirect($sReturnUrl);
         }
 
         return $this->redirect(['/character/market-demands/list', 'characterID' => $this->mCharacter->characterID]);

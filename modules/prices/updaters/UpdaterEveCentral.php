@@ -10,6 +10,8 @@ class UpdaterEveCentral
 {
     /**
      * Get last items and update.
+     *
+     * @param int $iBatch
      */
     public static function update($iBatch = 10)
     {
