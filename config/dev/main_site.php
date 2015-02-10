@@ -15,10 +15,11 @@ $aConfig = [
         'db' => require_once(FILE_PATH_CONFIG_ENV . '_db.php'),
         'user' => [
             'class' => 'app\components\UserExtended',
-            'identityClass' => 'app\objects\UserIdentity',
+            'identityClass' => 'app\components\UserIdentity',
             'enableAutoLogin' => true,
             'loginUrl' => ['auth/login']
         ],
+        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

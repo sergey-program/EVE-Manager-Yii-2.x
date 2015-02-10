@@ -1,16 +1,11 @@
-<?php
-use yii\helpers\Html;
+<?php ?>
 
-/* @var $this yii\web\View */
-$this->title = 'About';
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="site-about">
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1 class="panel-title">About :: Index</h1>
+    </div>
 
-    <p>
-        This is the About page. You may modify the following file to customize its content:
-    </p>
-
-    <code><?= __FILE__ ?></code>
+    <div class="panel-body">
+        <p>One day i will add something here.</p>
+    </div>
 </div>

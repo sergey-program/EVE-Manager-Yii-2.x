@@ -1,17 +1,11 @@
 <?php
 
-namespace app\objects;
+namespace app\components;
 
-use \Yii;
+use yii\web\IdentityInterface;
 use app\models\User;
 use yii\base\NotSupportedException;
-use yii\web\IdentityInterface;
 
-/**
- * Class UserIdentity
- *
- * @package app\objects
- */
 class UserIdentity extends User implements IdentityInterface
 {
     /**

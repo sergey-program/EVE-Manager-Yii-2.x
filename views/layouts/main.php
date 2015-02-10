@@ -36,8 +36,7 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
                 ['label' => 'Home', 'url' => Yii::$app->getHomeUrl()],
-                ['label' => 'About', 'url' => ['/about']],
-                ['label' => 'Contact', 'url' => ['/contact']],
+                ['label' => 'About', 'url' => ['/about/index']],
                 ['label' => 'Api', 'url' => ['/api/index/index']],
                 ['label' => 'Characters', 'url' => ['/characters/index/index']],
                 ['label' => 'Station', 'url' => ['/station/index/index']],

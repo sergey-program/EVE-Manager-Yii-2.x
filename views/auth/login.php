@@ -1,46 +1,32 @@
-<?php
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+<?php use yii\helpers\Html; ?>
+<?php use yii\bootstrap\ActiveForm; ?>
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\LoginForm */
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">Authentication</h1>
+            </div>
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+            <div class="panel-body">
+                <?php $oForm = ActiveForm::begin(); ?>
 
-    <p>Please fill out the following fields to login:</p>
+                <?= $oForm->field($fLogin, 'username') ?>
+                <?= $oForm->field($fLogin, 'password')->passwordInput() ?>
+                <?= $oForm->field($fLogin, 'rememberMe')->checkbox() ?>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'options' => ['class' => 'form-horizontal'],
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
+                <div class="form-group text-center">
+                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                </div>
 
-    <?= $form->field($model, 'username') ?>
-
-    <?= $form->field($model, 'password')->passwordInput() ?>
-
-    <?= $form->field($model, 'rememberMe', [
-        'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-    ])->checkbox() ?>
-
-    <div class="form-group">
-        <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <?php ActiveForm::end(); ?>
+            </div>
         </div>
     </div>
+</div>
 
-    <?php ActiveForm::end(); ?>
-
-    <div class="col-lg-offset-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 text-center">
+        <p class="text-muted">This site is closed for public. If you want get access contact me buy mail.</p>
     </div>
 </div>

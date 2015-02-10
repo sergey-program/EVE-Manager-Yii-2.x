@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\controllers\_extend\AbstractController;
-use app\models\LoginForm;
+use app\forms\FormLogin;
 
 /**
  * Class AuthController
@@ -21,13 +21,13 @@ class AuthController extends AbstractController
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $fLogin = new FormLogin();
 
-        if ($model->load($this->getPostData()) && $model->login()) {
+        if ($fLogin->load($this->getPostData()) && $fLogin->login()) {
             return $this->goBack();
         }
 
-        return $this->render('login', ['model' => $model]);
+        return $this->render('login', ['fLogin' => $fLogin]);
     }
 
     /**

@@ -10,6 +10,7 @@ $aConfig = [
     'controllerNamespace' => 'app\commands',
     'components' => [
         'db' => require(FILE_PATH_CONFIG_ENV . '_db.php'),
+        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
