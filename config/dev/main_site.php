@@ -50,7 +50,8 @@ $aConfig = [
         'api' => 'app\modules\api\Module',
         'characters' => 'app\modules\characters\Module',
         'character' => 'app\modules\character\Module',
-        'station' => 'app\modules\station\Module'
+        'station' => 'app\modules\station\Module',
+        'prices' => 'app\modules\prices\Module'
     ]
 ];
 

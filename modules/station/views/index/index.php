@@ -10,6 +10,6 @@
     </div>
 
     <div class="panel-footer text-center">
-        <?= Html::a('Updater station list', ['/station/index/index', 'returnUrl' => '/station/index/index'], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a('Updater station list', ['/station/index/update', 'returnUrl' => '/station/index/index'], ['class' => 'btn btn-primary']); ?>
     </div>
 </div>

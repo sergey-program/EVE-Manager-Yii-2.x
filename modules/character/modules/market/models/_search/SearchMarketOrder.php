@@ -59,7 +59,6 @@ class SearchMarketOrder extends MarketOrder
             ->andFilterWhere(['orderState' => $this->orderState])
             ->andFilterWhere(['characterID' => $this->characterID]);
 
-
         return $oDataProvider;
     }
 }
