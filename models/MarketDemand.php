@@ -103,7 +103,7 @@ class MarketDemand extends AbstractActiveRecord
 
         if ($this->orders) {
             foreach ($this->orders as $mMarketOrder) {
-                $iCount += $mMarketOrder->volEntered;
+                $iCount += $mMarketOrder->volRemaining;
             }
         }
 
