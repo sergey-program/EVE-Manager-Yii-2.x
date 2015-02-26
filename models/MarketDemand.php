@@ -37,7 +37,8 @@ class MarketDemand extends AbstractActiveRecord
     public function rules()
     {
         return [
-            [['characterID', 'stationID', 'typeID', 'quantity', 'type'], 'required']
+            [['characterID', 'stationID', 'typeID', 'quantity', 'type'], 'required'],
+            ['typeID', 'ruleUnique']
         ];
     }
 
@@ -51,6 +52,16 @@ class MarketDemand extends AbstractActiveRecord
             'typeID' => 'Item',
             'characterID' => 'Character'
         ];
+    }
+
+    /**
+     *
+     */
+    public function ruleUnique()
+    {
+        if (MarketDemand::findOne(['typeID' => $this->typeID, 'stationID' => $this->stationID])) {
+            $this->addError('typeID', $this->invTypes->typeName . ' already added to list.');
+        }
     }
 
     ### relations
