@@ -2,8 +2,9 @@
 
 namespace app\modules\api\controllers\extend;
 
-use app\controllers\_extend\AbstractController;
+use app\controllers\extend\AbstractController;
 use app\models\Api;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class AbstractApiController
@@ -12,8 +13,9 @@ use app\models\Api;
  */
 abstract class AbstractApiController extends AbstractController
 {
+    const REMEMBER_NAME = 'api';
+
     public $layout = 'main';
-    public $api;
 
     /**
      *
@@ -22,12 +24,26 @@ abstract class AbstractApiController extends AbstractController
     {
         parent::init();
 
-        $this->addBread(['label' => 'Api', 'url' => ['/api/index/index']]);
+        $this
+            ->getView()
+            ->addBread(['label' => 'Api', 'url' => ['index/index']]);
+    }
 
-        $apiID = $this->getGetData('apiID');
+    /**
+     * @param int $id
+     *
+     * @return Api
+     * @throws NotFoundHttpException
+     */
+    protected function loadApi($id)
+    {
+        /** @var Api $model */
+        $model = Api::find()->where(['id' => $id, 'userID' => \Yii::$app->user->id])->one();
 
-        if ($apiID) {
-            $this->api = Api::findOne(['id' => $apiID]);
+        if (!$model) {
+            throw new NotFoundHttpException('Api not found.');
         }
+
+        return $model;
     }
 }

@@ -1,51 +1,81 @@
-<?php use yii\helpers\Url; ?>
+<?php
+
+use yii\helpers\Url;
+
+/**
+ * @var app\components\ViewExtended $this
+ * @var app\models\Api[]            $apis
+ */
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Api :: List</h1>
+        <h1 class="panel-title">List</h1>
     </div>
 
     <div class="panel-body">
 
-        <?php if ($aApi) : ?>
-            <?php foreach ($aApi as $mApi): ?>
+        <?php if ($apis) : ?>
+            <?php foreach ($apis as $api): ?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h1 class="panel-title">
-                            <div class="pull-right"><?= $mApi->keyID; ?></div>
-                            <span>#<?= $mApi->id; ?></span>
-                        </h1>
+                        <h1 class="panel-title">ID #<?= $api->id; ?></h1>
                     </div>
 
                     <div class="panel-body">
                         <ul class="list-group">
-                            <li class="list-group-item">keyID: <?= $mApi->keyID; ?></li>
-                            <li class="list-group-item">vCode: <?= $mApi->vCode; ?></li>
+                            <li class="list-group-item"><?= $api->getAttributeLabel('keyID'); ?>: <?= $api->keyID; ?></li>
+                            <li class="list-group-item"><?= $api->getAttributeLabel('vCode'); ?>: <?= $api->vCode; ?></li>
                         </ul>
 
-                        <?php if ($mApi->info): ?>
-                            <h3>
-                                <?php if ($mApi->info->accessMask == '268435455'): ?>
-                                    <div class="pull-right text-success">Full</div>
-                                <?php endif; ?>
-                                <span>Key Info</span>
-                            </h3>
+                        <?php if ($api->info): ?>
+                            <small class="pull-right text-muted"><?= \Yii::$app->formatter->asDatetime($api->info->timeUpdated); ?></small>
+                            <h3>Key Info <?php if ($api->isFullAccess()): ?><span class="text-success">Full</span><?php endif; ?></h3>
+
                             <ul class="list-group">
-                                <li class="list-group-item">Type: <?= $mApi->info->type; ?></li>
-                                <li class="list-group-item">Access Mask: <?= $mApi->info->accessMask; ?></li>
+                                <li class="list-group-item"><?= $api->info->getAttributeLabel('type'); ?>: <?= $api->info->type; ?></li>
+                                <li class="list-group-item"><?= $api->info->getAttributeLabel('accessMask'); ?>: <?= $api->info->accessMask; ?></li>
+                                <li class="list-group-item"><?= $api->info->getAttributeLabel('expires'); ?>: <?= \Yii::$app->formatter->asDatetime($api->info->expires); ?></li>
                             </ul>
                         <?php else: ?>
                             <p class="text-muted">Key Info not updated...</p>
                         <?php endif; ?>
 
-                        <?php if ($mApi->characters): ?>
+                        <?php if ($api->characters): ?>
+                            <small class="pull-right text-muted"></small>
                             <h3>Characters</h3>
+
                             <ul class="list-group">
-                                <?php foreach ($mApi->characters as $mCharacter): ?>
+                                <?php foreach ($api->characters as $character): ?>
                                     <li class="list-group-item">
-                                        <span><img class="img-thumbnail" src="https://image.eveonline.com/character/<?= $mCharacter->characterID; ?>_32.jpg"></span>
-                                        <span><?= $mCharacter->characterName; ?></span> <span class="text-muted"><?= $mCharacter->corporationName; ?></span>
-                                        <div class="pull-right text-muted" title="characterID"><?= $mCharacter->characterID; ?></div>
+                                        <div class="row">
+                                            <div class="col-md-2 text-center">
+                                                <img class="img-thumbnail" title="<?= $character->characterName; ?>" src="<?= $character->getImageSrc(64); ?>">
+                                            </div>
+
+                                            <div class="col-md-10">
+                                                <table class="table table-hover table-condensed">
+                                                    <tr>
+                                                        <td width="125"><?= $character->characterID; ?></td>
+                                                        <td><?= $character->characterName; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><?= $character->corporationID; ?></td>
+                                                        <td><?= $character->corporationName; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><?= \Yii::$app->formatter->asText($character->allianceID); ?></td>
+                                                        <td><?= \Yii::$app->formatter->asText($character->allianceName); ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" class="text-right text-muted small">
+                                                            <?= \Yii::$app->formatter->asDatetime($character->timeUpdated); ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -53,12 +83,14 @@
                             <p class="text-muted">No character entries...</p>
                         <?php endif; ?>
                     </div>
+
                     <div class="panel-footer text-center">
-                        <a href="<?= Url::to(['/api/index/update', 'apiID' => $mApi->id]); ?>" class="btn btn-info">Update</a>
-                        <a href="<?= Url::to(['/api/index/delete', 'apiID' => $mApi->id]); ?>" class="btn btn-danger">Delete</a>
+                        <a href="<?= Url::to(['index/update', 'apiID' => $api->id]); ?>" class="btn btn-info">Update</a>
+                        <a href="<?= Url::to(['index/delete', 'apiID' => $api->id]); ?>" class="btn btn-danger">Delete</a>
                     </div>
                 </div>
             <?php endforeach; ?>
+
         <?php else: ?>
             <p class="alert alert-danger text-center">No api presented.</p>
         <?php endif; ?>

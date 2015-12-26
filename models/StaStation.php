@@ -2,30 +2,30 @@
 
 namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class StaStation
  * @package app\models
  *
- * @var $stationID
- * @var $security
- * @var $dockingCostPerVolume
- * @var $maxShipVolumeDockable
- * @var $officeRentalCost
- * @var $operationID
- * @var $stationTypeID
- * @var $corporationID
- * @var $solarSystemID
- * @var $constellationID
- * @var $regionID
- * @var $stationName
- * @var $x
- * @var $y
- * @var $z
- * @var $reprocessingEfficiency
- * @var $reprocessingStationsTake
- * @var $reprocessingHangarFlag
+ * @property $stationID
+ * @property $security
+ * @property $dockingCostPerVolume
+ * @property $maxShipVolumeDockable
+ * @property $officeRentalCost
+ * @property $operationID
+ * @property $stationTypeID
+ * @property $corporationID
+ * @property $solarSystemID
+ * @property $constellationID
+ * @property $regionID
+ * @property $stationName
+ * @property $x
+ * @property $y
+ * @property $z
+ * @property $reprocessingEfficiency
+ * @property $reprocessingStationsTake
+ * @property $reprocessingHangarFlag
  */
 class StaStation extends AbstractActiveRecord
 {

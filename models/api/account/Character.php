@@ -2,23 +2,27 @@
 
 namespace app\models\api\account;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 use app\models\Api;
 
 /**
  * Class Character
  *
  * @package app\models\api\account
- * @var $id
- * @var $apiID
- * @var $characterID
- * @var $characterName
- * @var $corporationID
- * @var $corporationName
- * @var $allianceID
- * @var $allianceName
- * @var $factionID
- * @var $factionName
+ *
+ * @property int    $id
+ * @property int    $apiID
+ * @property int    $characterID
+ * @property string $characterName
+ * @property int    $corporationID
+ * @property string $corporationName
+ * @property int    $allianceID
+ * @property string $allianceName
+ * @property int    $factionID
+ * @property string $factionName
+ * @property int    $timeUpdated
+ *
+ * @property Api    $api
  */
 class Character extends AbstractActiveRecord
 {
@@ -46,7 +50,9 @@ class Character extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'id' => 'ID'
+        ];
     }
 
     ### relations
@@ -57,5 +63,17 @@ class Character extends AbstractActiveRecord
     public function getApi()
     {
         return $this->hasOne(Api::className(), ['id' => 'apiID']);
+    }
+
+    ### functions
+
+    /**
+     * @param string|int $width
+     *
+     * @return string
+     */
+    public function getImageSrc($width = 32)
+    {
+        return 'https://image.eveonline.com/character/' . $this->characterID . '_' . $width . '.jpg';
     }
 }

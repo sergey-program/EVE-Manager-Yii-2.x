@@ -2,26 +2,26 @@
 
 namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class InvTypes
  *
  * @package app\models
  *
- * @var $typeID
- * @var $groupID
- * @var $typeName
- * @var $description
- * @var $mass
- * @var $volume
- * @var $capacity
- * @var $portionSize
- * @var $raceID
- * @var $basePrice
- * @var $published
- * @var $marketGroupID
- * @var $chanceOfDuplicating
+ * @property $typeID
+ * @property $groupID
+ * @property $typeName
+ * @property $description
+ * @property $mass
+ * @property $volume
+ * @property $capacity
+ * @property $portionSize
+ * @property $raceID
+ * @property $basePrice
+ * @property $published
+ * @property $marketGroupID
+ * @property $chanceOfDuplicating
  */
 class InvTypes extends AbstractActiveRecord
 {

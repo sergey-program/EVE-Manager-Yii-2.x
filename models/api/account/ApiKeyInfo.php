@@ -2,21 +2,27 @@
 
 namespace app\models\api\account;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 use app\models\Api;
 
 /**
  * Class ApiKeyInfo
  *
  * @package app\models\api\account
- * @var $id
- * @var $apiID
- * @var $accessMask
- * @var $type
- * @var $expires
+ *
+ * @property int    $id
+ * @property int    $apiID
+ * @property int    $accessMask
+ * @property string $type
+ * @property int    $expires
+ * @property int    $timeUpdated
+ *
+ * @property Api    $api
  */
 class ApiKeyInfo extends AbstractActiveRecord
 {
+    const ACCESS_MASK_FULL = '268435455';
+
     /**
      * @return string
      */
@@ -32,8 +38,7 @@ class ApiKeyInfo extends AbstractActiveRecord
     {
         return [
             ['apiID', 'required'],
-            ['accessMask', 'integer'],
-            [['accessMask', 'type', 'expires'], 'safe']
+            [['accessMask', 'type', 'expires', 'timeUpdated'], 'safe']
         ];
     }
 
@@ -42,7 +47,9 @@ class ApiKeyInfo extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'id' => 'ID'
+        ];
     }
 
     ### relations
@@ -54,4 +61,6 @@ class ApiKeyInfo extends AbstractActiveRecord
     {
         return $this->hasOne(Api::className(), ['id' => 'apiID']);
     }
+
+    ### functions
 }

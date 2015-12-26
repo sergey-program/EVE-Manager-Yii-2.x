@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractApi;
 use app\models\api\account\ApiKeyInfo;
 use app\models\api\account\Character;
 
@@ -11,12 +11,16 @@ use app\models\api\account\Character;
  *
  * @package app\models
  *
- * @var $id
- * @var $userID
- * @var $keyID
- * @var $vCode
+ * @property int         $id
+ * @property int         $userID
+ * @property int         $keyID
+ * @property string      $vCode
+ * @property int         $timeCreated
+ *
+ * @property ApiKeyInfo  $info
+ * @property Character[] $characters
  */
-class Api extends AbstractActiveRecord
+class Api extends AbstractApi
 {
     /**
      * @return string
@@ -32,9 +36,9 @@ class Api extends AbstractActiveRecord
     public function rules()
     {
         return [
-            [['keyID', 'vCode'], 'required'],
+            [['keyID', 'vCode', 'userID'], 'required'],
             ['keyID', 'integer'],
-            ['userID', 'safe']
+            ['timeCreated', 'safe']
         ];
     }
 
@@ -44,7 +48,7 @@ class Api extends AbstractActiveRecord
     public function attributeLabels()
     {
         return [
-            'userID' => 'User',
+            'userID' => 'User ID',
             'keyID' => 'Key ID',
             'vCode' => 'Verification Code'
         ];
@@ -60,8 +64,8 @@ class Api extends AbstractActiveRecord
         }
 
         if ($this->characters) {
-            foreach ($this->characters as $mCharacter) {
-                $mCharacter->delete();
+            foreach ($this->characters as $character) {
+                $character->delete();
             }
         }
 
@@ -87,4 +91,16 @@ class Api extends AbstractActiveRecord
     }
 
     ### functions
+
+    /**
+     * @return bool
+     */
+    public function isFullAccess()
+    {
+        if ($this->info) {
+            return ($this->info->accessMask == ApiKeyInfo::ACCESS_MASK_FULL);
+        }
+
+        return false;
+    }
 }

@@ -2,9 +2,14 @@
 
 namespace app\calls\account;
 
-use app\calls\_extend\AbstractCall;
+use app\calls\extend\AbstractCall;
 use app\models\api\account\Character;
 
+/**
+ * Class CallCharacters
+ *
+ * @package app\calls\account
+ */
 class CallCharacters extends AbstractCall
 {
     public $apiID;
@@ -20,34 +25,38 @@ class CallCharacters extends AbstractCall
     }
 
     /**
-     * @param string $sResult
+     * @param string $result
+     *
+     * @return bool
      */
-    public function doUpdate($sResult)
+    public function doUpdate($result)
     {
-        $oXml = $this->createXmlObject($sResult);
-        $aCharacters = $oXml->result->rowset->row;
+        $return = true;
+        $xml = $this->createXmlObject($result);
+        $characters = $xml->result->rowset->row;
 
-        foreach ($aCharacters as $oCharacter) {
-            $aData = self::getXmlAttr($oCharacter);
-            $mCharacter = Character::findOne(['apiID' => $this->apiID, 'characterID' => $aData['characterID']]);
+        foreach ($characters as $character) {
+            $data = self::getXmlAttr($character);
+            $character = Character::findOne(['apiID' => $this->apiID, 'characterID' => $data['characterID']]);
 
-            if (!$mCharacter) {
-                $mCharacter = new Character();
-                $mCharacter->apiID = $this->apiID;
+            if (!$character) {
+                $character = new Character();
+                $character->apiID = $this->apiID;
             }
+            
+            $character->timeUpdated = time();
+            $character->characterID = $data['characterID'];
+            $character->characterName = $data['name'];
+            $character->corporationID = $data['corporationID'];
+            $character->corporationName = $data['corporationName'];
+            $character->allianceID = $data['allianceID'] ? $data['allianceID'] : null;
+            $character->allianceName = $data['allianceName'] ? $data['allianceName'] : null;
+            $character->factionID = $data['factionID'] ? $data['factionID'] : null;
+            $character->factionName = $data['factionName'] ? $data['factionName'] : null;
 
-            $mCharacter->characterID = $aData['characterID'];
-            $mCharacter->characterName = $aData['name'];
-            $mCharacter->corporationID = $aData['corporationID'];
-            $mCharacter->corporationName = $aData['corporationName'];
-            $mCharacter->allianceID = $aData['allianceID'] ? $aData['allianceID'] : null;
-            $mCharacter->allianceName = $aData['allianceName'] ? $aData['allianceName'] : null;
-            $mCharacter->factionID = $aData['factionID'] ? $aData['factionID'] : null;
-            $mCharacter->factionName = $aData['factionName'] ? $aData['factionName'] : null;
-
-            if ($mCharacter->validate()) {
-                $mCharacter->save();
-            }
+            $return = ($character->save() && $return);
         }
+
+        return $return;
     }
 }

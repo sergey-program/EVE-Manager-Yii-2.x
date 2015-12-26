@@ -2,18 +2,24 @@
 
 namespace app\modules\api\controllers;
 
+use app\modules\api\controllers\extend\AbstractApiController;
 use app\models\Api;
-use app\modules\api\controllers\_extend\ApiController;
-use app\modules\api\updaters\UpdaterAccountApi;
+use yii\helpers\Url;
 
-class IndexController extends ApiController
+/**
+ * Class IndexController
+ *
+ * @package app\modules\api\controllers
+ */
+class IndexController extends AbstractApiController
 {
     /**
      * @return string
      */
     public function actionIndex()
     {
-        $this->addBread(['label' => 'Index']);
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('Index');
 
         return $this->render('index');
     }
@@ -23,10 +29,12 @@ class IndexController extends ApiController
      */
     public function actionList()
     {
-        $this->addBread(['label' => 'List']);
-        $aApi = Api::find()->all();
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('List');
 
-        return $this->render('list', ['aApi' => $aApi]);
+        $apis = Api::find()->where(['userID' => \Yii::$app->user->id])->all();
+
+        return $this->render('list', ['apis' => $apis]);
     }
 
     /**
@@ -34,47 +42,52 @@ class IndexController extends ApiController
      */
     public function actionAdd()
     {
-        $this->addBread(['label' => 'Add']);
-        $mApi = new Api();
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('Add');
 
-        if ($this->isPostRequest()) {
-            if ($mApi->load($this->getPostData())) {
-                if ($mApi->validate()) {
-                    $mApi->save();
+        $api = new Api();
+        $api->userID = \Yii::$app->user->id;
+        $api->timeCreated = time();
 
-                    return $this->redirect(['/api/index/list']);
-                }
+        if ($this->isPost() && $api->load($this->post())) {
+            if ($api->save()) {
+                return $this->redirect(['index/list']);
             }
         }
 
-        return $this->render('add', ['mApi' => $mApi]);
+        return $this->render('add', ['api' => $api]);
     }
 
     /**
+     * @param int $apiID
+     *
+     * @return \yii\web\Response
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionUpdate()
+    public function actionUpdate($apiID)
     {
-        UpdaterAccountApi::updateBy($this->mApi->id);
-        $sReturnUrl = $this->getGetData('returnUrl');
+        $api = $this->loadApi($apiID);
+        $api
+            ->updateApiKeyInfo()
+            ->updateCharacters();
 
-        if ($sReturnUrl) {
-            return $this->redirect($sReturnUrl);
-        }
-
-        return $this->redirect(['/api/index/list']);
+        return $this->redirect(Url::previous(self::REMEMBER_NAME));
     }
 
     /**
+     * @param int $apiID
+     *
      * @return \yii\web\Response
-     * @throws \Exception
      */
-    public function actionDelete()
+    public function actionDelete($apiID)
     {
-        if ($this->mApi) {
-            $this->mApi->delete();
+        try {
+            $api = $this->loadApi($apiID);
+            $api->delete();
+        } catch (\Exception $exception) {
+            // do nothing
         }
 
-        return $this->redirect(['/api/index/list']);
+        return $this->redirect(Url::previous(self::REMEMBER_NAME));
     }
 }

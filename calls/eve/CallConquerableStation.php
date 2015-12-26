@@ -2,7 +2,7 @@
 
 namespace app\calls\eve;
 
-use app\calls\_extend\AbstractCall;
+use app\calls\extend\AbstractCall;
 use app\models\api\eve\ConquerableStation;
 
 /**
@@ -21,32 +21,43 @@ class CallConquerableStation extends AbstractCall
     }
 
     /**
-     * @param string $sResult
+     * @param string $result
+     *
+     * @return bool
      */
-    public function doUpdate($sResult)
+    public function doUpdate($result)
     {
-        $oXml = $this->createXmlObject($sResult);
-        $aStation = $oXml->result->rowset->row;
+        $return = true;
+        $xml = $this->createXmlObject($result);
+        $stations = $xml->result->rowset->row;
 
-        foreach ($aStation as $oStation) {
-            $aData = self::getXmlAttr($oStation);
-            $mConquerableStation = ConquerableStation::findOne(['stationID' => $aData['stationID']]);
+        foreach ($stations as $station) {
+            $data = self::getXmlAttr($station);
 
-            if (!$mConquerableStation) {
-                $mConquerableStation = new ConquerableStation();
-                $mConquerableStation->stationID = $aData['stationID'];
+            /** @var ConquerableStation $conquerableStation */
+            $conquerableStation = ConquerableStation::findOne(['stationID' => $data['stationID']]);
+
+            if (!$conquerableStation) {
+                $conquerableStation = new ConquerableStation();
+                $conquerableStation->stationID = $data['stationID'];
+                $conquerableStation->timeUpdate = time();
+            } else {
+                if ($conquerableStation->stationName != $data['stationName'] || $conquerableStation->corporationID != $data['corporationID']) {
+                    // only owner and name can be changed in game, all others data is not changeable
+                    $conquerableStation->timeUpdate = time();
+                }
             }
 
-            $mConquerableStation->stationID = $aData['stationID'];
-            $mConquerableStation->stationName = $aData['stationName'];
-            $mConquerableStation->stationTypeID = $aData['stationTypeID'];
-            $mConquerableStation->solarSystemID = $aData['solarSystemID'];
-            $mConquerableStation->corporationID = $aData['corporationID'];
-            $mConquerableStation->corporationName = $aData['corporationName'];
+            $conquerableStation->stationID = $data['stationID'];
+            $conquerableStation->stationName = $data['stationName'];
+            $conquerableStation->stationTypeID = $data['stationTypeID'];
+            $conquerableStation->solarSystemID = $data['solarSystemID'];
+            $conquerableStation->corporationID = $data['corporationID'];
+            $conquerableStation->corporationName = $data['corporationName'];
 
-            if ($mConquerableStation->validate()) {
-                $mConquerableStation->save();
-            }
+            $return = ($conquerableStation->save() && $return);
         }
+
+        return $return;
     }
 }

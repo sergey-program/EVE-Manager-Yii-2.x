@@ -2,7 +2,7 @@
 
 namespace app\models\api\eve;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class ConquerableStation
@@ -16,6 +16,7 @@ use app\models\_extend\AbstractActiveRecord;
  * @property int    $solarSystemID
  * @property int    $corporationID
  * @property string $corporationName
+ * @property int    $timeUpdate
  */
 class ConquerableStation extends AbstractActiveRecord
 {
@@ -34,7 +35,7 @@ class ConquerableStation extends AbstractActiveRecord
     {
         return [
             [['stationID', 'stationName'], 'required'],
-            [['stationTypeID', 'solarSystemID', 'corporationID', 'corporationName'], 'safe']
+            [['stationTypeID', 'solarSystemID', 'corporationID', 'corporationName', 'timeUpdate'], 'safe']
         ];
     }
 

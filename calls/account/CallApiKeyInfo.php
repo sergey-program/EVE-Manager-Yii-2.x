@@ -2,9 +2,14 @@
 
 namespace app\calls\account;
 
-use app\calls\_extend\AbstractCall;
+use app\calls\extend\AbstractCall;
 use app\models\api\account\ApiKeyInfo;
 
+/**
+ * Class CallApiKeyInfo
+ *
+ * @package app\calls\account
+ */
 class CallApiKeyInfo extends AbstractCall
 {
     public $keyID;
@@ -20,25 +25,29 @@ class CallApiKeyInfo extends AbstractCall
     }
 
     /**
-     * @param string $sResult
+     * @param string $result
+     *
+     * @return bool
      */
-    public function doUpdate($sResult)
+    public function doUpdate($result)
     {
-        $oXml = $this->createXmlObject($sResult);
-        $mApiKeyInfo = ApiKeyInfo::findOne(['id' => $this->apiID]);
+        $xml = $this->createXmlObject($result);
 
-        if (!$mApiKeyInfo) {
-            $mApiKeyInfo = new ApiKeyInfo();
-            $mApiKeyInfo->apiID = $this->apiID;
+        /** @var ApiKeyInfo $apiKeyInfo */
+        $apiKeyInfo = ApiKeyInfo::findOne(['id' => $this->apiID]);
+
+        if (!$apiKeyInfo) {
+            $apiKeyInfo = new ApiKeyInfo();
+            $apiKeyInfo->apiID = $this->apiID;
         }
 
-        $aDataKey = self::getXmlAttr($oXml->result->key);
-        $mApiKeyInfo->accessMask = $aDataKey['accessMask'];
-        $mApiKeyInfo->type = $aDataKey['type'];
-        $mApiKeyInfo->expires = $aDataKey['expires'] ? $aDataKey['expires'] : null;
+        $dataKey = self::getXmlAttr($xml->result->key);
 
-        if ($mApiKeyInfo->validate()) {
-            $mApiKeyInfo->save();
-        }
+        $apiKeyInfo->timeUpdated = time();
+        $apiKeyInfo->accessMask = $dataKey['accessMask'];
+        $apiKeyInfo->type = $dataKey['type'];
+        $apiKeyInfo->expires = $dataKey['expires'] ? strtotime($dataKey['expires']) : null;
+
+        return $apiKeyInfo->save();
     }
 }

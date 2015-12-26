@@ -2,8 +2,7 @@
 
 namespace app\models\api\character;
 
-use app\models\_extend\AbstractActiveRecord;
-
+use app\models\extend\AbstractActiveRecord;
 use app\models\InvTypes;
 use app\models\StaStation;
 
@@ -11,22 +10,23 @@ use app\models\StaStation;
  * Class MarketOrder
  *
  * @package app\models\api\characters
- * @var $id
- * @var $characterID
- * @var $orderID
- * @var $stationID
- * @var $volEntered
- * @var $volRemaining
- * @var $minVolume
- * @var $orderState
- * @var $typeID
- * @var $range
- * @var $accountKey
- * @var $duration
- * @var $escrow
- * @var $price
- * @var $bid
- * @var $issued
+ *
+ * @property int    $id
+ * @property int    $characterID
+ * @property int    $orderID
+ * @property int    $stationID
+ * @property int    $volEntered
+ * @property int    $volRemaining
+ * @property int    $minVolume
+ * @property int    $orderState
+ * @property int    $typeID
+ * @property int    $range
+ * @property int    $accountKey
+ * @property int    $duration
+ * @property float  $escrow
+ * @property float  $price
+ * @property bool   $bid
+ * @property string $issued
  */
 class MarketOrder extends AbstractActiveRecord
 {
@@ -60,7 +60,9 @@ class MarketOrder extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'id' => 'ID'
+        ];
     }
 
     ### relations

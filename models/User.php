@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class User
@@ -45,7 +45,9 @@ class User extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'id' => 'ID'
+        ];
     }
 
     ### relations
