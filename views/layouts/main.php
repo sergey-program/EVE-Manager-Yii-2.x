@@ -6,6 +6,11 @@ use app\components\ViewExtended;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+/**
+ * @var app\components\ViewExtended $this
+ * @var string                      $content
+ */
 ?>
 
 <?php $this->beginPage() ?>

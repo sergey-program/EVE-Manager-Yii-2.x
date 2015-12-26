@@ -1,21 +1,29 @@
-<?php use yii\grid\GridView; ?>
-<?php use yii\widgets\Pjax; ?>
+<?php
+
+use yii\grid\GridView;
+use yii\widgets\Pjax;
+
+/**
+ * @var app\components\ViewExtended                         $this
+ * @var app\modules\station\models\SearchConquerableStation $searchConquerableStation
+ */
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Station :: List</h1>
+        <h1 class="panel-title">List</h1>
     </div>
 
     <div class="panel-body">
         <?php Pjax::begin(); ?>
 
         <?= GridView::widget([
-            'filterModel' => $mSearchConquerableStation,
-            'dataProvider' => $mSearchConquerableStation->search(Yii::$app->getRequest()->get()),
+            'filterModel' => $searchConquerableStation,
+            'dataProvider' => $searchConquerableStation->search(Yii::$app->request->get()),
             'columns' => [
-                ['attribute' => 'stationID', 'label' => 'Station ID'],
-                ['attribute' => 'stationName', 'label' => 'Station Name'],
-                ['attribute' => 'solarSystemID', 'label' => 'Solar System ID']
+                ['attribute' => 'stationID'],
+                ['attribute' => 'stationName'],
+                ['attribute' => 'solarSystemID']
             ]
         ]); ?>
 

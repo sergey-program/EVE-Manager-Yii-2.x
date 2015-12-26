@@ -2,30 +2,35 @@
 
 namespace app\components;
 
-use yii\web\IdentityInterface;
 use app\models\User;
+use yii\web\IdentityInterface;
 use yii\base\NotSupportedException;
 
+/**
+ * Class UserIdentity
+ *
+ * @package app\components
+ */
 class UserIdentity extends User implements IdentityInterface
 {
     /**
-     * @param int|string $sID
+     * @param int|string $id
      *
      * @return IdentityInterface|static
      */
-    public static function findIdentity($sID)
+    public static function findIdentity($id)
     {
-        return static::findOne(['id' => $sID]);
+        return static::findOne(['id' => $id]);
     }
 
     /**
-     * @param string      $sToken
-     * @param string|null $sType
+     * @param string      $token
+     * @param string|null $type
      *
      * @return void|IdentityInterface
      * @throws NotSupportedException
      */
-    public static function findIdentityByAccessToken($sToken, $sType = null)
+    public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('<strong>findIdentityByAccessToken</strong> is not implemented.');
     }
@@ -35,7 +40,7 @@ class UserIdentity extends User implements IdentityInterface
      */
     public function getID()
     {
-        return $this->getPrimaryKey();
+        return $this->primaryKey;
     }
 
     /**
@@ -49,12 +54,12 @@ class UserIdentity extends User implements IdentityInterface
     }
 
     /**
-     * @param string $sAuthKey
+     * @param string $authKey
      *
      * @return bool
      */
-    public function validateAuthKey($sAuthKey)
+    public function validateAuthKey($authKey)
     {
-        return $this->getAuthKey() === $sAuthKey;
+        return $this->getAuthKey() === $authKey;
     }
 }

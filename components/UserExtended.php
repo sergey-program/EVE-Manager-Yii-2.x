@@ -13,13 +13,13 @@ use yii\web\User;
 class UserExtended extends User
 {
     /**
-     * @param string $sRole
+     * @param string $role
      *
      * @return mixed
      */
-    public function hasRole($sRole)
+    public function hasRole($role)
     {
-        return Yii::$app->authManager->checkAccess(Yii::$app->getUser()->getID(), $sRole);
+        return Yii::$app->authManager->checkAccess(Yii::$app->user->id, $role);
     }
 
     /**
@@ -27,16 +27,17 @@ class UserExtended extends User
      */
     public function getUsername()
     {
-        $sUsername = null;
+        $username = null;
 
-        if (!$this->getIsGuest()) {
-            $oUserIdentity = $this->getIdentity();
-            
-            if ($oUserIdentity) {
-                $sUsername = $oUserIdentity->username;
+        if (!$this->isGuest) {
+            /** @var UserIdentity $userIdentity */
+            $userIdentity = $this->getIdentity();
+
+            if ($userIdentity) {
+                $username = $userIdentity->username;
             }
         }
 
-        return $sUsername;
+        return $username;
     }
 }

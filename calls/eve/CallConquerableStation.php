@@ -5,6 +5,11 @@ namespace app\calls\eve;
 use app\calls\_extend\AbstractCall;
 use app\models\api\eve\ConquerableStation;
 
+/**
+ * Class CallConquerableStation
+ *
+ * @package app\calls\eve
+ */
 class CallConquerableStation extends AbstractCall
 {
     /**

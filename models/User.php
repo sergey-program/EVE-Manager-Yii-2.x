@@ -9,12 +9,12 @@ use app\models\_extend\AbstractActiveRecord;
  *
  * @package app\models
  *
- * @var $id         int
- * @var $username   string
- * @var $password   string
- * @var $email      string
- * @var $timeCreate int
- * @var $authKey    string
+ * @property int    $id
+ * @property string $username
+ * @property string $password
+ * @property string $email
+ * @property int    $timeCreate
+ * @property string $authKey
  */
 class User extends AbstractActiveRecord
 {
@@ -39,4 +39,16 @@ class User extends AbstractActiveRecord
             ['email', 'email']
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return [];
+    }
+
+    ### relations
+
+    ### functions
 }

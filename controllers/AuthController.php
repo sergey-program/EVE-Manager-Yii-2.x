@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\controllers\_extend\AbstractController;
+use app\controllers\extend\AbstractController;
 use app\forms\FormLogin;
 
 /**
@@ -21,9 +21,11 @@ class AuthController extends AbstractController
             return $this->goHome();
         }
 
+        $this->getView()->setTitle('Login');
+
         $fLogin = new FormLogin();
 
-        if ($fLogin->load($this->getPostData()) && $fLogin->login()) {
+        if ($fLogin->load($this->post()) && $fLogin->login()) {
             return $this->goBack();
         }
 
@@ -35,7 +37,7 @@ class AuthController extends AbstractController
      */
     public function actionLogout()
     {
-        \Yii::$app->user->logout();
+        \Yii::$app->user->logout(false);
 
         return $this->goHome();
     }

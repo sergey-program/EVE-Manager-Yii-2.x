@@ -8,13 +8,14 @@ use app\models\_extend\AbstractActiveRecord;
  * Class ConquerableStation
  *
  * @package app\models\api\characters
- * @var $id
- * @var $stationID
- * @var $stationName
- * @var $stationTypeID
- * @var $solarSystemID
- * @var $corporationID
- * @var $corporationName
+ *
+ * @property int    $id
+ * @property int    $stationID
+ * @property string $stationName
+ * @property int    $stationTypeID
+ * @property int    $solarSystemID
+ * @property int    $corporationID
+ * @property string $corporationName
  */
 class ConquerableStation extends AbstractActiveRecord
 {
@@ -42,6 +43,14 @@ class ConquerableStation extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'id' => 'ID',
+            'stationID' => 'Station ID',
+            'solarSystemID' => 'Solar System ID'
+        ];
     }
+
+    ### relations
+
+    ### functions
 }

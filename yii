@@ -3,7 +3,7 @@
 
 use yii\console\Application;
 
-define ('DS', DIRECTORY_SEPARATOR);
+define('DS', DIRECTORY_SEPARATOR);
 define('FILE_PATH_ROOT', __DIR__ . DS);
 define('FILE_PATH_ROOT_WEB', FILE_PATH_ROOT . 'web' . DS);
 define('FILE_PATH_VENDOR', FILE_PATH_ROOT . 'vendor' . DS);
@@ -21,9 +21,9 @@ defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
 require(FILE_PATH_VENDOR . 'autoload.php');
 require(FILE_PATH_VENDOR . 'yiisoft' . DS . 'yii2' . DS . 'Yii.php');
 
-$aConfig = require(FILE_PATH_CONFIG_ENV . 'main_console.php');
+$config = require(FILE_PATH_CONFIG_ENV . 'main_console.php');
 
-$oApplication = new Application($aConfig);
-$sExitCode = $oApplication->run();
+$application = new Application($config);
+$exitCode = $application->run();
 
-exit($sExitCode);
+exit($exitCode);

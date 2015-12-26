@@ -1,7 +1,10 @@
 <?php
-/* @var $this yii\web\View */
-$this->title = 'My Yii Application';
+
+/**
+ * @var app\components\ViewExtended $this
+ */
 ?>
+
 <div class="site-index">
 
     <div class="jumbotron">

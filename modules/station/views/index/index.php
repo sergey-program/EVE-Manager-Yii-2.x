@@ -1,8 +1,15 @@
-<?php use yii\helpers\Html; ?>
+<?php
+
+use yii\helpers\Html;
+
+/**
+ * @var app\components\ViewExtended $this
+ */
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Station :: Index</h1>
+        <h1 class="panel-title">Index</h1>
     </div>
 
     <div class="panel-body">
@@ -10,6 +17,6 @@
     </div>
 
     <div class="panel-footer text-center">
-        <?= Html::a('Updater station list', ['/station/index/update', 'returnUrl' => '/station/index/index'], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a('Updater station list', ['index/update'], ['class' => 'btn btn-primary']); ?>
     </div>
 </div>

@@ -4,6 +4,11 @@ namespace app\components;
 
 use yii\web\View;
 
+/**
+ * Class ViewExtended
+ *
+ * @package app\components
+ */
 class ViewExtended extends View
 {
     const PARAM_NAME_BREAD = 'bread';
@@ -51,13 +56,13 @@ class ViewExtended extends View
     }
 
     /**
-     * @param array $aBread
+     * @param array $bread
      *
      * @return $this
      */
-    public function setBread(array $aBread)
+    public function setBreads(array $bread)
     {
-        $this->params[self::PARAM_NAME_BREAD] = $aBread;
+        $this->params[self::PARAM_NAME_BREAD] = $bread;
 
         return $this;
     }
@@ -65,9 +70,9 @@ class ViewExtended extends View
     /**
      * @return null|array
      */
-    public function getBread()
+    public function getBreads()
     {
-        if ($this->hasBread()) {
+        if ($this->hasBreads()) {
             return $this->params[self::PARAM_NAME_BREAD];
         }
 
@@ -77,49 +82,41 @@ class ViewExtended extends View
     /**
      * @return bool
      */
-    public function hasBread()
+    public function hasBreads()
     {
         return (isset($this->params[self::PARAM_NAME_BREAD]) && is_array($this->params[self::PARAM_NAME_BREAD]));
     }
 
     /**
-     * @param string $sKey
-     * @param string $sValue
+     * @param string $key
+     * @param string $value
      *
      * @return $this
      */
-    public function setFlash($sKey, $sValue)
+    public function setFlash($key, $value)
     {
-        \Yii::$app->getSession()->setFlash($sKey, $sValue);
+        \Yii::$app->session->setFlash($key, $value);
 
         return $this;
     }
 
     /**
-     * @param string $sKey
+     * @param string $key
      *
      * @return bool
      */
-    public function hasFlash($sKey)
+    public function hasFlash($key)
     {
-        return \Yii::$app->getSession()->hasFlash($sKey);
+        return \Yii::$app->session->hasFlash($key);
     }
 
     /**
-     * @param string $sKey
+     * @param string $key
      *
      * @return string|null
      */
-    public function getFlash($sKey)
+    public function getFlash($key)
     {
-        return \Yii::$app->getSession()->getFlash($sKey);
-    }
-
-    /**
-     * @return \yii\console\Controller|\yii\web\Controller
-     */
-    public function getController()
-    {
-        return \Yii::$app->controller;
+        return \Yii::$app->session->getFlash($key);
     }
 }

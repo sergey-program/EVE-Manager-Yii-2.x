@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\controllers\_extend\AbstractController;
+use app\controllers\extend\AbstractController;
 use yii\base\Exception;
 use yii\base\UserException;
 use yii\web\HttpException;
@@ -14,8 +14,8 @@ use yii\web\HttpException;
  */
 class ErrorController extends AbstractController
 {
-    private $_sDefaultName;
-    private $_sDefaultMessage;
+    private $defaultName;
+    private $defaultMessage;
 
     /**
      *
@@ -24,8 +24,8 @@ class ErrorController extends AbstractController
     {
         parent::init();
 
-        $this->_sDefaultName = 'Error';
-        $this->_sDefaultMessage = 'An internal server error occurred.';
+        $this->defaultName = 'Error';
+        $this->defaultMessage = 'An internal server error occurred.';
     }
 
     /**
@@ -35,38 +35,46 @@ class ErrorController extends AbstractController
      */
     public function actionIndex()
     {
-        if (!YII_ENV_PROD) {
-            $oException = \Yii::$app->getErrorHandler()->exception;
+        $this->getView()->setTitle('Error');
 
-            if ($oException === null) {
+        if (!YII_ENV_PROD) {
+            $exception = \Yii::$app->errorHandler->exception;
+
+            if ($exception === null) {
                 return '';
             }
 
-            if ($oException instanceof HttpException) {
-                $sCode = $oException->statusCode;
+            if ($exception instanceof HttpException) {
+                $code = $exception->statusCode;
             } else {
-                $sCode = $oException->getCode();
+                $code = $exception->getCode();
             }
 
-            if ($oException instanceof Exception) {
-                $sName = $oException->getName();
+            if ($exception instanceof Exception) {
+                $name = $exception->getName();
             } else {
-                $sName = $this->_sDefaultName;
+                $name = $this->defaultName;
             }
 
-            if ($oException instanceof UserException) {
-                $sMessage = $oException->getMessage();
+            if ($exception instanceof UserException) {
+                $message = $exception->getMessage();
             } else {
-                $sMessage = $this->_sDefaultMessage;
+                $message = $this->defaultMessage;
             }
 
-            $sName .= ($sCode) ? ' (#' . $sCode . ')' : '';
+            $name .= ($code) ? ' (#' . $code . ')' : '';
 
-            if ($this->isAjaxRequest()) {
-                return $sName . ':' . $sMessage;
+            if ($this->isAjax()) {
+                return $name . ':' . $message;
             }
 
-            return $this->render('index', ['name' => $sName, 'message' => $sMessage, 'exception' => $oException]);
+            return $this->render('index', [
+                'name' => $name,
+                'message' => $message,
+                'exception' => $exception
+            ]);
         }
+
+        return 'Error.';
     }
 }

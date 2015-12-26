@@ -2,8 +2,13 @@
 
 namespace app\controllers;
 
-use app\controllers\_extend\AbstractController;
+use app\controllers\extend\AbstractController;
 
+/**
+ * Class AboutController
+ *
+ * @package app\controllers
+ */
 class AboutController extends AbstractController
 {
     /**
@@ -11,6 +16,8 @@ class AboutController extends AbstractController
      */
     public function actionIndex()
     {
+        $this->getView()->setTitle('About');
+
         return $this->render('index');
     }
 }
