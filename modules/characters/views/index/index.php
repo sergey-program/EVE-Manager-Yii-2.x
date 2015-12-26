@@ -1,6 +1,13 @@
+<?php
+
+/**
+ * @var app\components\ViewExtended $this
+ */
+?>
+
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Characters :: Index</h1>
+        <h1 class="panel-title">Index</h1>
     </div>
 
     <div class="panel-body">

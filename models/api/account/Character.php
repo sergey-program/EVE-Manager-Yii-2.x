@@ -76,4 +76,14 @@ class Character extends AbstractActiveRecord
     {
         return 'https://image.eveonline.com/character/' . $this->characterID . '_' . $width . '.jpg';
     }
+
+    /**
+     * @param string|int $width
+     *
+     * @return string
+     */
+    public function getCorporationImageSrc($width = 32)
+    {
+        return 'https://image.eveonline.com/Corporation/' . $this->corporationID . '_' . $width . '.png';
+    }
 }

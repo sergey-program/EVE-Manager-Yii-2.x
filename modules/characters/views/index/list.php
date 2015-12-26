@@ -1,23 +1,34 @@
-<?php use yii\helpers\Url; ?>
+<?php
+
+use yii\helpers\Url;
+
+/**
+ * @var app\components\ViewExtended        $this
+ * @var app\models\api\account\Character[] $characters
+ */
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h1 class="panel-title">Characters :: List</h1>
+        <h1 class="panel-title">List</h1>
     </div>
 
     <div class="panel-body">
-        <?php if ($aCharacter) : ?>
+
+        <?php if ($characters) : ?>
             <ul class="list-group">
-                <?php foreach ($aCharacter as $mCharacter): ?>
+
+                <?php foreach ($characters as $character): ?>
                     <li class="list-group-item">
-                        <div class="pull-right">
-                            <span class="text-muted"><?= $mCharacter->corporationName; ?></span>
-                            <img class="img-thumbnail" src="https://image.eveonline.com/Corporation/<?= $mCharacter->corporationID; ?>_32.png">
-                        </div>
-                        <img class="img-thumbnail" src="https://image.eveonline.com/Character/<?= $mCharacter->characterID; ?>_32.jpg">
-                        <a href="<?= Url::to(['/character/index/index', 'characterID' => $mCharacter->characterID]); ?>"><?= $mCharacter->characterName; ?></a>
+                        <img class="img-thumbnail" src="<?= $character->getCorporationImageSrc(); ?>" title="<?= $character->corporationName; ?>">
+                        <img class="img-thumbnail" src="<?= $character->getImageSrc(); ?>" title="<?= $character->characterName; ?>">
+                        
+                        <a href="<?= Url::to(['/character/index/index', 'characterID' => $character->characterID]); ?>">
+                            <?= $character->characterName; ?>
+                        </a>
                     </li>
                 <?php endforeach; ?>
+
             </ul>
         <?php else: ?>
             <p class="alert alert-warning text-center">No characters presented...</p>

@@ -2,17 +2,24 @@
 
 namespace app\modules\characters\controllers;
 
+use app\modules\characters\controllers\extend\AbstractCharactersController;
 use app\models\api\account\Character;
-use app\modules\characters\controllers\_extend\CharactersController;
+use yii\helpers\Url;
 
-class IndexController extends CharactersController
+/**
+ * Class IndexController
+ *
+ * @package app\modules\characters\controllers
+ */
+class IndexController extends AbstractCharactersController
 {
     /**
      * @return string
      */
     public function actionIndex()
     {
-        $this->addBread(['label' => 'Index']);
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('Index');
 
         return $this->render('index');
     }
@@ -22,9 +29,11 @@ class IndexController extends CharactersController
      */
     public function actionList()
     {
-        $this->addBread(['label' => 'List']);
-        $aCharacter = Character::find()->all();
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('List');
 
-        return $this->render('list', ['aCharacter' => $aCharacter]);
+        $characters = Character::find()->joinWith('api')->where(['api.userID' => \Yii::$app->user->id])->all();
+
+        return $this->render('list', ['characters' => $characters]);
     }
 }
