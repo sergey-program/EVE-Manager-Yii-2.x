@@ -2,21 +2,24 @@
 
 namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 use app\models\api\character\MarketOrder;
-use app\modules\prices\models\Price;
 
 /**
  * Class MarketDemand
  *
  * @package app\models
  *
- * @var $id
- * @var $characterID
- * @var $stationID
- * @var $typeID
- * @var $quantity
- * @var $type
+ * @property int           $id
+ * @property int           $characterID
+ * @property int           $stationID
+ * @property int           $typeID
+ * @property int           $quantity
+ * @property int           $type
+ *
+ * @property MarketOrder[] $orders
+ * @property Price|null    $priceBuy
+ * @property Price|null    $priceSell
  */
 class MarketDemand extends AbstractActiveRecord
 {
@@ -88,19 +91,19 @@ class MarketDemand extends AbstractActiveRecord
     }
 
     /**
-     * @return array|null|\yii\db\ActiveRecord
+     * @return null|Price
      */
     public function getPriceBuy()
     {
-        return Price::find()->where(['typeID' => $this->typeID, 'type' => Price::TYPE_BUY])->one();
+        return Price::findOne(['typeID' => $this->typeID, 'type' => Price::TYPE_BUY]);
     }
 
     /**
-     * @return array|null|\yii\db\ActiveRecord
+     * @return null|Price
      */
     public function getPriceSell()
     {
-        return Price::find()->where(['typeID' => $this->typeID, 'type' => Price::TYPE_SELL])->one();
+        return Price::findOne(['typeID' => $this->typeID, 'type' => Price::TYPE_SELL]);
     }
 
     ### function
@@ -110,15 +113,15 @@ class MarketDemand extends AbstractActiveRecord
      */
     public function getCountOrders()
     {
-        $iCount = 0;
+        $count = 0;
 
         if ($this->orders) {
-            foreach ($this->orders as $mMarketOrder) {
-                $iCount += $mMarketOrder->volRemaining;
+            foreach ($this->orders as $marketOrder) {
+                $count += $marketOrder->volRemaining;
             }
         }
 
-        return $iCount;
+        return $count;
     }
 
     /**
@@ -130,63 +133,65 @@ class MarketDemand extends AbstractActiveRecord
             return 0;
         }
 
-        return $this->quantity - $this->getCountOrders();
+        return ($this->quantity - $this->getCountOrders());
     }
 
     /**
-     * @param bool $bTransportPrice
+     * @param bool $transportPrice
+     * @param bool $stationPercent
      *
      * @return int
      */
-    public function getMarginPriceBuy($bTransportPrice = true, $bStationPercent = true)
+    public function getMarginPriceBuy($transportPrice = true, $stationPercent = true)
     {
-        $iPrice = 0;
-        $iPercent = \Yii::$app->params['demand']['percent']['buy'];
+        $price = 0;
+        $percent = \Yii::$app->params['demand']['percent']['buy'];
 
         if ($this->priceBuy && $this->priceBuy->max) {
-            $iPriceOriginal = $this->priceBuy->max;
+            $priceOriginal = $this->priceBuy->max;
 
-            $iPricePercent = $iPriceOriginal * ($iPercent / 100);
-            $iPrice = $iPriceOriginal - $iPricePercent;
+            $pricePercent = $priceOriginal * ($percent / 100);
+            $price = $priceOriginal - $pricePercent;
 
-            if ($bTransportPrice) {
-                $iPrice -= $this->getTransportPrice();
+            if ($transportPrice) {
+                $price -= $this->getTransportPrice();
             }
 
-            if ($bStationPercent) {
-                $iPrice -= $this->getStationPercent($iPriceOriginal);
+            if ($stationPercent) {
+                $price -= $this->getStationPercent($priceOriginal);
             }
         }
 
-        return $iPrice;
+        return $price;
     }
 
     /**
-     * @param bool $bTransportPrice
+     * @param bool $transportPrice
+     * @param bool $stationPercent
      *
      * @return int
      */
-    public function getMarginPriceSell($bTransportPrice = true, $bStationPercent = true)
+    public function getMarginPriceSell($transportPrice = true, $stationPercent = true)
     {
-        $iPrice = 0;
-        $iPercent = \Yii::$app->params['demand']['percent']['sell'];
+        $price = 0;
+        $percent = \Yii::$app->params['demand']['percent']['sell'];
 
         if ($this->priceSell && $this->priceSell->min) {
-            $iPriceOriginal = $this->priceSell->min;
+            $priceOriginal = $this->priceSell->min;
 
-            $iPricePercent = $iPriceOriginal * ($iPercent / 100);
-            $iPrice = $iPriceOriginal + $iPricePercent;
+            $pricePercent = $priceOriginal * ($percent / 100);
+            $price = $priceOriginal + $pricePercent;
 
-            if ($bTransportPrice) {
-                $iPrice += $this->getTransportPrice();
+            if ($transportPrice) {
+                $price += $this->getTransportPrice();
             }
-            //var_dump($iPrice);
-            if ($bStationPercent) {
-                $iPrice += $this->getStationPercent($iPriceOriginal);
+
+            if ($stationPercent) {
+                $price += $this->getStationPercent($priceOriginal);
             }
         }
 
-        return $iPrice;
+        return $price;
     }
 
     /**
@@ -194,32 +199,32 @@ class MarketDemand extends AbstractActiveRecord
      */
     public function getTransportPrice()
     {
-        $iPrice = 0;
-        $mItem = $this->invTypes;
-        $iPricePerM3 = \Yii::$app->params['demand']['iskPerM3'];
+        $price = 0;
+        $item = $this->invTypes;
+        $pricePerM3 = \Yii::$app->params['demand']['iskPerM3'];
 
-        if ($mItem && $mItem->volume && $iPricePerM3) {
-            $iPrice = $mItem->volume * $iPricePerM3;
+        if ($item && $item->volume && $pricePerM3) {
+            $price = $item->volume * $pricePerM3;
             // @todo in db there is no repackaged volume
         }
 
-        return $iPrice;
+        return $price;
     }
 
     /**
-     * @param float $iPriceOrigin
+     * @param float $priceOrigin
      *
      * @return int
      */
-    public function getStationPercent($iPriceOrigin)
+    public function getStationPercent($priceOrigin)
     {
-        $iPrice = 0;
-        $iStationPercent = \Yii::$app->params['demand']['stationPercent'];
+        $price = 0;
+        $stationPercent = \Yii::$app->params['demand']['stationPercent'];
 
-        if ($iPriceOrigin) {
-            $iPrice = $iPriceOrigin * ($iStationPercent / 100);
+        if ($priceOrigin) {
+            $price = $priceOrigin * ($stationPercent / 100);
         }
 
-        return $iPrice;
+        return $price;
     }
 }

@@ -68,7 +68,7 @@ class Character extends AbstractActiveRecord
     ### functions
 
     /**
-     * @param string|int $width
+     * @param int $width
      *
      * @return string
      */
@@ -78,12 +78,22 @@ class Character extends AbstractActiveRecord
     }
 
     /**
-     * @param string|int $width
+     * @param int $width
      *
      * @return string
      */
     public function getCorporationImageSrc($width = 32)
     {
         return 'https://image.eveonline.com/Corporation/' . $this->corporationID . '_' . $width . '.png';
+    }
+
+    /**
+     * @param int $width
+     *
+     * @return string
+     */
+    public function getAllianceImageSrc($width = 32)
+    {
+        return 'https://image.eveonline.com/Alliance/' . $this->allianceID . '_' . $width . '.png';
     }
 }

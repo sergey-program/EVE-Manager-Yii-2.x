@@ -2,9 +2,14 @@
 
 namespace app\calls\character;
 
-use app\calls\_extend\AbstractCall;
+use app\calls\extend\AbstractCall;
 use app\models\api\character\MarketOrder;
 
+/**
+ * Class CallMarketOrders
+ *
+ * @package app\calls\character
+ */
 class CallMarketOrders extends AbstractCall
 {
     public $keyID;
@@ -20,40 +25,43 @@ class CallMarketOrders extends AbstractCall
     }
 
     /**
-     * @param string $sResult
+     * @param string $result
+     *
+     * @return bool
      */
-    public function doUpdate($sResult)
+    public function doUpdate($result)
     {
-        $oXml = $this->createXmlObject($sResult);
-        $aOrder = $oXml->result->rowset->row;
+        $return = true;
+        $xmlObj = $this->createXmlObject($result);
+        $orders = $xmlObj->result->rowset->row;
 
-        foreach ($aOrder as $oOrder) {
-            $aData = self::getXmlAttr($oOrder);
-            $mMarketOrder = MarketOrder::findOne(['characterID' => $aData['charID'], 'orderID' => $aData['orderID']]);
+        foreach ($orders as $order) {
+            $data = self::getXmlAttr($order);
+            $marketOrder = MarketOrder::findOne(['characterID' => $data['charID'], 'orderID' => $data['orderID']]);
 
-            if (!$mMarketOrder) {
-                $mMarketOrder = new MarketOrder();
-                $mMarketOrder->characterID = $aData['charID'];
-                $mMarketOrder->orderID = $aData['orderID'];
+            if (!$marketOrder) {
+                $marketOrder = new MarketOrder();
+                $marketOrder->characterID = $data['charID'];
+                $marketOrder->orderID = $data['orderID'];
             }
 
-            $mMarketOrder->stationID = $aData['stationID'];
-            $mMarketOrder->volEntered = $aData['volEntered'];
-            $mMarketOrder->volRemaining = $aData['volRemaining'];
-            $mMarketOrder->minVolume = $aData['minVolume'];
-            $mMarketOrder->orderState = $aData['orderState'];
-            $mMarketOrder->typeID = $aData['typeID'];
-            $mMarketOrder->range = $aData['range'];
-            $mMarketOrder->accountKey = $aData['accountKey'];
-            $mMarketOrder->duration = $aData['duration'];
-            $mMarketOrder->escrow = $aData['escrow'];
-            $mMarketOrder->price = $aData['price'];
-            $mMarketOrder->bid = $aData['bid'];
-            $mMarketOrder->issued = date($aData['issued']);
+            $marketOrder->stationID = $data['stationID'];
+            $marketOrder->volEntered = $data['volEntered'];
+            $marketOrder->volRemaining = $data['volRemaining'];
+            $marketOrder->minVolume = $data['minVolume'];
+            $marketOrder->orderState = $data['orderState'];
+            $marketOrder->typeID = $data['typeID'];
+            $marketOrder->range = $data['range'];
+            $marketOrder->accountKey = $data['accountKey'];
+            $marketOrder->duration = $data['duration'];
+            $marketOrder->escrow = $data['escrow'];
+            $marketOrder->price = $data['price'];
+            $marketOrder->bid = $data['bid'];
+            $marketOrder->issued = date($data['issued']);
 
-            if ($mMarketOrder->validate()) {
-                $mMarketOrder->save();
-            }
+            $return = ($marketOrder->save() && $return);
         }
+
+        return $return;
     }
 }

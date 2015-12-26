@@ -2,47 +2,72 @@
 
 namespace app\modules\character\modules\market\controllers;
 
-use app\modules\character\modules\market\models\_search\SearchMarketOrder;
-use app\modules\character\modules\market\controllers\_extend\MarketController;
+use app\calls\character\CallMarketOrders;
+use app\modules\character\modules\market\controllers\extend\AbstractMarketController;
+use app\modules\character\modules\market\models\SearchMarketOrder;
 use app\modules\character\modules\market\updaters\UpdaterCharacterMarketOrder;
 
-class OrderController extends MarketController
+/**
+ * Class OrderController
+ *
+ * @package app\modules\character\modules\market\controllers
+ */
+class OrderController extends AbstractMarketController
 {
     /**
+     * @param int $characterID
+     *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($characterID)
     {
+        $character = $this->loadCharacter($characterID);
+
         $this
-            ->addBread(['label' => 'Orders', 'url' => ['/character/market/order/index', 'characterID' => $this->mCharacter->characterID]])
-            ->addBread(['label' => 'Index']);
+            ->getView()
+            ->addBread(['label' => 'Orders', 'url' => ['order/index', 'characterID' => $character->characterID]])
+            ->addBread(['label' => 'Index'])
+            ->setCharacter($character);
 
         return $this->render('index');
     }
 
     /**
+     * @param int $characterID
+     *
      * @return string
      */
-    public function actionList()
+    public function actionList($characterID)
     {
+        $character = $this->loadCharacter($characterID);
         $this
-            ->addBread(['label' => 'Orders', 'url' => ['/character/market/order/index', 'characterID' => $this->mCharacter->characterID]])
-            ->addBread(['label' => 'List']);
+            ->getView()
+            ->addBread(['label' => 'Orders', 'url' => ['order/index', 'characterID' => $character->characterID]])
+            ->addBread(['label' => 'List'])
+            ->setCharacter($character);
 
-        $mSearchMarketOrder = new SearchMarketOrder();
-        $mSearchMarketOrder->characterID = $this->mCharacter->characterID;
+        $searchMarketOrder = new SearchMarketOrder();
+        $searchMarketOrder->characterID = $character->characterID;
 
-        return $this->render('list', ['mSearchMarketOrder' => $mSearchMarketOrder]);
+        return $this->render('list', ['searchMarketOrder' => $searchMarketOrder]);
     }
 
     /**
+     * @param int $characterID
+     *
      * @return \yii\web\Response
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionUpdate()
+    public function actionUpdate($characterID)
     {
-        UpdaterCharacterMarketOrder::update($this->mCharacter->api->keyID, $this->mCharacter->api->vCode, $this->mCharacter->characterID);
+        $character = $this->loadCharacter($characterID);
 
-        return $this->redirect(['/character/market/order/index', 'characterID' => $this->mCharacter->characterID]);
+        $callMarketOrders = new CallMarketOrders();
+        $callMarketOrders->keyID = $character->api->keyID;
+        $callMarketOrders->vCode = $character->api->vCode;
+        $callMarketOrders->characterID = $characterID;
+        $callMarketOrders->update();
+
+        return $this->redirect(['order/index', 'characterID' => $characterID]);
     }
 }

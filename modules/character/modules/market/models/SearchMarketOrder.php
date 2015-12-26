@@ -1,11 +1,16 @@
 <?php
 
-namespace app\modules\character\modules\market\models\_search;
+namespace app\modules\character\modules\market\models;
 
 use app\models\api\character\MarketOrder;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
+/**
+ * Class SearchMarketOrder
+ *
+ * @package app\modules\character\modules\market\models
+ */
 class SearchMarketOrder extends MarketOrder
 {
     /**
@@ -36,29 +41,35 @@ class SearchMarketOrder extends MarketOrder
     }
 
     /**
-     * @param array $aParam
+     * @param array|null $params
      *
      * @return ActiveDataProvider
      */
-    public function search($aParam)
+    public function search($params)
     {
-        $oQuery = MarketOrder::find()->joinWith(['staStation', 'invTypes']);
-        $oDataProvider = new ActiveDataProvider(['query' => $oQuery]);
+        $query = MarketOrder::find()->joinWith(['staStation', 'invTypes']);
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
 
-        if (!$this->load($aParam) && !$this->validate()) {
-            return $oDataProvider;
+        if (!$this->load($params) && !$this->validate()) {
+            return $dataProvider;
         }
 
-        $oDataProvider->getSort()->attributes['stationName'] = ['asc' => ['staStations.stationName' => SORT_ASC], 'desc' => ['staStations.stationName' => SORT_DESC]];
-        $oDataProvider->getSort()->attributes['typeName'] = ['asc' => ['invTypes.typeName' => SORT_ASC], 'desc' => ['invTypes.typeName' => SORT_DESC]];
+        $dataProvider->getSort()->attributes['stationName'] = [
+            'asc' => ['staStations.stationName' => SORT_ASC],
+            'desc' => ['staStations.stationName' => SORT_DESC]
+        ];
+        $dataProvider->getSort()->attributes['typeName'] = [
+            'asc' => ['invTypes.typeName' => SORT_ASC],
+            'desc' => ['invTypes.typeName' => SORT_DESC]
+        ];
 
-        $oQuery
+        $query
             ->andFilterWhere(['stationID' => $this->stationID])
             ->andFilterWhere(['like', 'stationName', $this->getAttribute('stationName')])
             ->andFilterWhere(['like', 'typeName', $this->getAttribute('typeName')])
             ->andFilterWhere(['orderState' => $this->orderState])
             ->andFilterWhere(['characterID' => $this->characterID]);
 
-        return $oDataProvider;
+        return $dataProvider;
     }
 }

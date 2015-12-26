@@ -2,15 +2,19 @@
 
 namespace app\components;
 
+use app\models\api\account\Character;
 use yii\web\View;
 
 /**
  * Class ViewExtended
  *
  * @package app\components
+ * @property Character|null $character
  */
 class ViewExtended extends View
 {
+    private $character;
+
     const PARAM_NAME_BREAD = 'bread';
 
     /**
@@ -119,4 +123,25 @@ class ViewExtended extends View
     {
         return \Yii::$app->session->getFlash($key);
     }
+
+    /**
+     * @param Character $character
+     *
+     * @return $this
+     */
+    public function setCharacter(Character $character)
+    {
+        $this->character = $character;
+
+        return $this;
+    }
+
+    /**
+     * @return Character|null
+     */
+    public function getCharacter()
+    {
+        return $this->character;
+    }
+
 }

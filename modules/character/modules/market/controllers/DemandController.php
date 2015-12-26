@@ -1,81 +1,106 @@
 <?php
+
 namespace app\modules\character\modules\market\controllers;
 
+use app\modules\character\modules\market\controllers\extend\AbstractMarketController;
 use app\models\MarketDemand;
-
-use app\modules\character\modules\market\controllers\_extend\MarketController;
 use app\modules\prices\updaters\UpdaterEveCentral;
 use yii\helpers\Json;
+use yii\helpers\Url;
 
-class DemandController extends MarketController
+/**
+ * Class DemandController
+ *
+ * @package app\modules\character\modules\market\controllers
+ */
+class DemandController extends AbstractMarketController
 {
     /**
+     * @param int $characterID
+     *
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionIndex()
+    public function actionIndex($characterID)
     {
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $character = $this->loadCharacter($characterID);
+
         $this
-            ->addBread(['label' => 'Demands', 'url' => ['/character/market/demand/index', 'characterID' => $this->mCharacter->characterID]])
-            ->addBread(['label' => 'Index']);
+            ->getView()
+            ->addBread(['label' => 'Demands', 'url' => ['demand/index', 'characterID' => $characterID]])
+            ->addBread(['label' => 'Index'])
+            ->setCharacter($character);
 
         return $this->render('index');
     }
 
     /**
+     * @param int $characterID
+     *
      * @return string
      */
-    public function actionList()
+    public function actionList($characterID)
     {
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $character = $this->loadCharacter($characterID);
+
         $this
-            ->addBread(['label' => 'Demands', 'url' => ['/character/market/demand/index', 'characterID' => $this->mCharacter->characterID]])
-            ->addBread(['label' => 'List']);
+            ->getView()
+            ->addBread(['label' => 'Demands', 'url' => ['demand/index', 'characterID' => $characterID]])
+            ->addBread(['label' => 'List'])
+            ->setCharacter($character);
 
-        $aMarketDemand = MarketDemand::findAll(['characterID' => $this->mCharacter->characterID]);
+        $marketDemands = MarketDemand::findAll(['characterID' => $characterID]);
 
-        return $this->render('list', ['aMarketDemand' => $aMarketDemand]);
+        return $this->render('list', ['marketDemands' => $marketDemands]);
     }
 
     /**
+     * @param int $characterID
+     *
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionCreate()
+    public function actionCreate($characterID)
     {
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $character = $this->loadCharacter($characterID);
+
         $this
-            ->addBread(['label' => 'Demands', 'url' => ['/character/market/demand/index', 'characterID' => $this->mCharacter->characterID]])
-            ->addBread(['label' => 'Create']);
+            ->getView()
+            ->addBread(['label' => 'Demands', 'url' => ['demand/index', 'characterID' => $characterID]])
+            ->addBread(['label' => 'Create'])
+            ->setCharacter($character);
 
-        $mMarketDemand = new MarketDemand();
-        $mMarketDemand->characterID = $this->mCharacter->characterID;
+        $marketDemand = new MarketDemand();
+        $marketDemand->characterID = $characterID;
 
-        if ($this->isAjaxRequest()) {
-            $sType = $this->getGetData('sType');
+        if ($this->isAjax()) {
+            $type = $this->get('sType');
 
-            if ($sType == 'station') {
-                $sSql = '(SELECT sStation.stationID, sStation.stationName, sStation.stationTypeID FROM staStations as sStation WHERE sStation.stationName LIKE "%' . $_GET['q'] . '%")
+            if ($type == 'station') {
+                $sql = '(SELECT sStation.stationID, sStation.stationName, sStation.stationTypeID FROM staStations as sStation WHERE sStation.stationName LIKE "%' . $_GET['q'] . '%")
                         UNION
                         (SELECT cStation.stationID, cStation.stationName, cStation.stationTypeID FROM api_eve_conquerableStation as cStation WHERE cStation.stationName LIKE "%' . $_GET['q'] . '%")';
-            } elseif ($sType == 'item') {
-                $sSql = 'SELECT typeID, typeName FROM invTypes WHERE typeName LIKE "%' . $_GET['q'] . '%" AND published ="1" ORDER BY typeName';
+            } elseif ($type == 'item') {
+                $sql = 'SELECT typeID, typeName FROM invTypes WHERE typeName LIKE "%' . $_GET['q'] . '%" AND published ="1" ORDER BY typeName';
             }
 
-            $aReturn = \Yii::$app->getDb()->createCommand($sSql)->queryAll();
+            $return = \Yii::$app->db->createCommand($sql)->queryAll();
 
-            echo Json::encode($aReturn); // @todo change response type
+            echo Json::encode($return); // @todo change response type
             \Yii::$app->end();
-        } elseif ($this->isPostRequest()) {
-            if ($mMarketDemand->load($this->getPostData())) {
-                if ($mMarketDemand->validate()) {
-                    $mMarketDemand->save();
-                    UpdaterEveCentral::addType($mMarketDemand->typeID);
+        } elseif ($this->isPost() && $marketDemand->load($this->post())) {
 
-                    return $this->redirect(['/character/market/demand/list', 'characterID' => $this->mCharacter->characterID]);
-                }
+            if ($marketDemand->save()) {
+                UpdaterEveCentral::addType($marketDemand->typeID);
+
+                return $this->redirect(['demand/list', 'characterID' => $characterID]);
             }
         }
 
-        return $this->render('create', ['mMarketDemand' => $mMarketDemand]);
+        return $this->render('create', ['marketDemand' => $marketDemand]);
     }
 
     /**
@@ -86,18 +111,14 @@ class DemandController extends MarketController
      */
     public function actionDelete($id)
     {
-        $mMarketDemand = $this->loadMarketDemand($id, false);
-        $sReturnUrl = $this->getGetData('returnUrl');
-
-        if ($mMarketDemand) {
-            $mMarketDemand->delete();
+        try {
+            $marketDemand = $this->loadMarketDemand($id);
+            $marketDemand->delete();
+        } catch (\Exception $exception) {
+            // do nothing
         }
 
-        if ($sReturnUrl) {
-            return $this->redirect($sReturnUrl);
-        }
-
-        return $this->redirect(['/character/market-demands/list', 'characterID' => $this->mCharacter->characterID]);
+        return $this->redirect(Url::previous(self::REMEMBER_NAME));
     }
 }
 

@@ -2,16 +2,26 @@
 
 namespace app\modules\character\modules\market\controllers;
 
-use app\modules\character\modules\market\controllers\_extend\MarketController;
+use app\modules\character\modules\market\controllers\extend\AbstractMarketController;
 
-class IndexController extends MarketController
+/**
+ * Class IndexController
+ *
+ * @package app\modules\character\modules\market\controllers
+ */
+class IndexController extends AbstractMarketController
 {
     /**
+     * @param int $characterID
+     *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($characterID)
     {
-        $this->addBread(['label' => 'Index']);
+        $this
+            ->getView()
+            ->addBread('Index')
+            ->setCharacter($this->loadCharacter($characterID));;
 
         return $this->render('index');
     }

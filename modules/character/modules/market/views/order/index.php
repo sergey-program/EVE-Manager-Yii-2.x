@@ -1,9 +1,15 @@
-<?php use yii\helpers\Html; ?>
+<?php
+
+use yii\helpers\Html;
+
+/**
+ * @var app\components\ViewExtended $this
+ */
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="pull-right"><?= $this->getController()->mCharacter->characterName; ?></div>
-        <h1 class="panel-title">Orders :: Index</h1>
+        <h1 class="panel-title">Index</h1>
     </div>
 
     <div class="panel-body">
@@ -11,7 +17,7 @@
     </div>
 
     <div class="panel-footer text-center">
-        <?= Html::a('Update orders', ['/character/market/order/update', 'characterID' => $this->getController()->mCharacter->characterID], ['class' => 'btn btn-primary']); ?>
-        <?= Html::a('Show list', ['/character/market/order/list', 'characterID' => $this->getController()->mCharacter->characterID], ['class' => 'btn btn-info']); ?>
+        <?= Html::a('Update orders', ['order/update', 'characterID' => $this->getCharacter()->characterID], ['class' => 'btn btn-primary']); ?>
+        <?= Html::a('Show list', ['order/list', 'characterID' => $this->getCharacter()->characterID], ['class' => 'btn btn-info']); ?>
     </div>
 </div>

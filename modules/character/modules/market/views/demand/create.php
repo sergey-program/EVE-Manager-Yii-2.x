@@ -1,31 +1,38 @@
-<?php use app\assets\Select2Asset; ?>
-<?php use app\models\MarketDemand; ?>
-<?php use yii\bootstrap\ActiveForm; ?>
-<?php use yii\helpers\Html; ?>
+<?php
 
-<?php Select2Asset::register($this); ?>
+use app\assets\Select2Asset;
+use app\models\MarketDemand;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
+
+/**
+ * @var app\components\ViewExtended $this
+ * @var app\models\MarketDemand     $marketDemand
+ */
+
+Select2Asset::register($this);
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="pull-right"><?= $this->getController()->mCharacter->characterName; ?></div>
-        <h1 class="panel-title">Demand :: Create</h1>
+        <div class="pull-right"><?= $this->getCharacter()->characterName; ?></div>
+        <h1 class="panel-title">Create</h1>
     </div>
 
     <?php $oForm = ActiveForm::begin(); ?>
 
     <div class="panel-body">
-        <?= $oForm->field($mMarketDemand, 'stationID'); ?>
-        <?= $oForm->field($mMarketDemand, 'typeID'); ?>
-        <?php // $oForm->field($mMarketDemand, 'characterID')->hiddenInput(); ?>
-        <?= Html::activeHiddenInput($mMarketDemand, 'characterID'); ?>
+        <?= $oForm->field($marketDemand, 'stationID'); ?>
+        <?= $oForm->field($marketDemand, 'typeID'); ?>
+        <?= Html::activeHiddenInput($marketDemand, 'characterID'); ?>
 
         <div class="form-group">
             <div class="col-sm-4 col-sm-offset-2">
-                <?= $oForm->field($mMarketDemand, 'quantity')->textInput(['class' => 'form-control text-center', 'placeholder' => 'quantity']); ?>
+                <?= $oForm->field($marketDemand, 'quantity')->textInput(['class' => 'form-control text-center', 'placeholder' => 'quantity']); ?>
             </div>
 
             <div class="col-sm-4">
-                <?= $oForm->field($mMarketDemand, 'type')->dropDownList([MarketDemand::TYPE_SELL => 'Sell', MarketDemand::TYPE_BUY => 'Buy'], ['class' => 'form-control text-center']); ?>
+                <?= $oForm->field($marketDemand, 'type')->dropDownList([MarketDemand::TYPE_SELL => 'Sell', MarketDemand::TYPE_BUY => 'Buy'], ['class' => 'form-control text-center']); ?>
             </div>
         </div>
     </div>

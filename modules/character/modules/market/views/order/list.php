@@ -1,24 +1,31 @@
-<?php use app\models\api\character\MarketOrder; ?>
-<?php use yii\grid\GridView; ?>
-<?php use yii\widgets\Pjax; ?>
+<?php
+
+use app\models\api\character\MarketOrder;
+use yii\grid\GridView;
+use yii\widgets\Pjax;
+
+/**
+ * @var app\components\ViewExtended                                   $this
+ * @var app\modules\character\modules\market\models\SearchMarketOrder $searchMarketOrder
+ */
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="pull-right"><?= $this->getController()->mCharacter->characterName; ?></div>
-        <h1 class="panel-title">Orders :: List</h1>
+        <h1 class="panel-title">List</h1>
     </div>
 
     <div class="panel-body">
         <?php Pjax::begin(); ?>
 
         <?= GridView::widget([
-            'filterModel' => $mSearchMarketOrder,
-            'dataProvider' => $mSearchMarketOrder->search(Yii::$app->getRequest()->get()),
+            'filterModel' => $searchMarketOrder,
+            'dataProvider' => $searchMarketOrder->search(\Yii::$app->request->get()),
             'columns' => [
                 [
                     'format' => 'image',
-                    'value' => function ($mModel) {
-                        return 'https://image.eveonline.com/Type/' . $mModel->typeID . '_32.png';
+                    'value' => function ($model) {
+                        return 'https://image.eveonline.com/Type/' . $model->typeID . '_32.png';
                     }
                 ],
                 ['attribute' => 'typeName', 'value' => 'invTypes.typeName', 'label' => 'Item'],

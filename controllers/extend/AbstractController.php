@@ -12,18 +12,18 @@ use yii\web\Controller;
  */
 abstract class AbstractController extends Controller
 {
-//    public function behaviors()
-//    {
-//        return [
-//            'access' => [
-//                'class' => AccessControl::className(),
-//                'rules' => [
-//                    ['allow' => true, 'roles' => ['user']],         // all others user
-//                    ['allow' => true, 'controllers' => ['auth']]    // allow only authentication
-//                ]
-//            ]
-//        ];
-//    }
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    ['allow' => true, 'roles' => ['user']],         // all others user
+                    ['allow' => true, 'controllers' => ['auth']]    // allow only authentication
+                ]
+            ]
+        ];
+    }
 
     /**
      * @return \app\components\ViewExtended

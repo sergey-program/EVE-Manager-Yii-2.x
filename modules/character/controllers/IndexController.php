@@ -2,20 +2,29 @@
 
 namespace app\modules\character\controllers;
 
-use app\modules\character\controllers\_extend\CharacterController;
+use app\modules\character\controllers\extend\AbstractCharacterController;
 
-class IndexController extends CharacterController
+/**
+ * Class IndexController
+ *
+ * @package app\modules\character\controllers
+ */
+class IndexController extends AbstractCharacterController
 {
     /**
+     * @param int $characterID
+     *
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionIndex()
+    public function actionIndex($characterID)
     {
-        $this
-            ->addBread(['label' => 'Characters', 'url' => ['/characters/index/list']])
-            ->addBread(['label' => $this->mCharacter->characterName]);
+        $character = $this->loadCharacter($characterID);
 
-        return $this->render('index', ['mCharacter' => $this->mCharacter]);
+        $this
+            ->getView()
+            ->addBread(['label' => $character->characterName]);
+
+        return $this->render('index', ['character' => $character]);
     }
 }
