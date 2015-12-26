@@ -2,17 +2,14 @@
 
 namespace app\modules\characters;
 
-use app\modules\_extend\AbstractModule;
+use app\modules\extend\AbstractModule;
 
+/**
+ * Class Module
+ *
+ * @package app\modules\characters
+ */
 class Module extends AbstractModule
 {
-    /**
-     *
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->loadConfig();
-    }
+    //
 }

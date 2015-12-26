@@ -2,7 +2,7 @@
 
 namespace app\modules\station;
 
-use app\modules\_extend\AbstractModule;
+use app\modules\extend\AbstractModule;
 
 /**
  * Class Module
@@ -11,4 +11,5 @@ use app\modules\_extend\AbstractModule;
  */
 class Module extends AbstractModule
 {
+    //
 }

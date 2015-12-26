@@ -2,10 +2,15 @@
 
 namespace app\components\eveCentral;
 
-use app\calls\_extend\AbstractCall;
-use app\components\eveCentral\_extend\AbstractEveCentral;
-use app\modules\prices\models\Price;
+use app\calls\extend\AbstractCall;
+use app\components\eveCentral\extend\AbstractEveCentral;
+use app\models\Price;
 
+/**
+ * Class EveCentral
+ *
+ * @package app\components\eveCentral
+ */
 class EveCentral extends AbstractEveCentral
 {
     /**
@@ -13,73 +18,73 @@ class EveCentral extends AbstractEveCentral
      */
     public function fetch()
     {
-        $sXml = $this->getXmlContent();
+        $xml = $this->getXmlContent();
 
-        if (is_int(strpos($sXml, 'non-marketable'))) {
-            return;
+        if (is_int(strpos($xml, 'non-marketable'))) {
+            return false;
         }
 
-        $oXml = new \SimpleXMLElement($sXml);
+        $xmlObj = new \SimpleXMLElement($xml);
 
-        if (!$oXml) {
-            return;
+        if (!$xmlObj) {
+            return false;
         }
 
-        foreach ($oXml->marketstat->type as $oRow) {
-            $this->update($oRow);
+        foreach ($xmlObj->marketstat->type as $row) {
+            $this->update($row);
         }
+
+        return true;
     }
 
     /**
-     * @param \SimpleXMLElement $oRow
+     * @param \SimpleXMLElement $row
+     *
+     * @return bool
      */
-    private function update(\SimpleXMLElement $oRow)
+    private function update(\SimpleXMLElement $row)
     {
-        $aTypeID = AbstractCall::getXmlAttr($oRow);
-        $iTypeID = $aTypeID['id'];
+        $return = true;
+        $type = AbstractCall::getXmlAttr($row);
 
         // buy
+        /** @var Price $price */
+        $price = Price::findOne(['typeID' => $type['id'], 'type' => Price::TYPE_BUY]);
 
-        $mPrice = Price::findOne(['typeID' => $iTypeID, 'type' => Price::TYPE_BUY]);
-
-        if (!$mPrice) {
-            $mPrice = new Price();
-            $mPrice->typeID = $aTypeID['id'];
-            $mPrice->type = Price::TYPE_BUY;
+        if (!$price) {
+            $price = new Price();
+            $price->typeID = $type['id'];
+            $price->type = Price::TYPE_BUY;
         }
 
-        $mPrice->volume = (string)$oRow->buy->volume;
-        $mPrice->average = (string)$oRow->buy->avg;
-        $mPrice->min = (string)$oRow->buy->min;
-        $mPrice->max = (string)$oRow->buy->max;
-        $mPrice->stdDev = (string)$oRow->buy->stddev;
-        $mPrice->median = (string)$oRow->buy->median;
-        $mPrice->percentile = (string)$oRow->buy->percentile;
-
-        if ($mPrice->validate()) {
-            $mPrice->save();
-        }
+        $price->volume = (string)$row->buy->volume;
+        $price->average = (string)$row->buy->avg;
+        $price->min = (string)$row->buy->min;
+        $price->max = (string)$row->buy->max;
+        $price->stdDev = (string)$row->buy->stddev;
+        $price->median = (string)$row->buy->median;
+        $price->percentile = (string)$row->buy->percentile;
+        $return = ($price->save() && $return);
 
         // sell
+        /** @var Price $price */
+        $price = Price::findOne(['typeID' => $type['id'], 'type' => Price::TYPE_SELL]);
 
-        $mPrice = Price::findOne(['typeID' => $iTypeID, 'type' => Price::TYPE_SELL]);
-
-        if (!$mPrice) {
-            $mPrice = new Price();
-            $mPrice->typeID = $aTypeID['id'];
-            $mPrice->type = Price::TYPE_SELL;
+        if (!$price) {
+            $price = new Price();
+            $price->typeID = $type['id'];
+            $price->type = Price::TYPE_SELL;
         }
 
-        $mPrice->volume = (string)$oRow->sell->volume;
-        $mPrice->average = (string)$oRow->sell->avg;
-        $mPrice->min = (string)$oRow->sell->min;
-        $mPrice->max = (string)$oRow->sell->max;
-        $mPrice->stdDev = (string)$oRow->sell->stddev;
-        $mPrice->median = (string)$oRow->sell->median;
-        $mPrice->percentile = (string)$oRow->sell->percentile;
+        $price->volume = (string)$row->sell->volume;
+        $price->average = (string)$row->sell->avg;
+        $price->min = (string)$row->sell->min;
+        $price->max = (string)$row->sell->max;
+        $price->stdDev = (string)$row->sell->stddev;
+        $price->median = (string)$row->sell->median;
+        $price->percentile = (string)$row->sell->percentile;
+        $return = ($price->save() && $return);
 
-        if ($mPrice->validate()) {
-            $mPrice->save();
-        }
+        return $return;
     }
 }

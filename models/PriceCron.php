@@ -1,17 +1,17 @@
 <?php
 
-namespace app\modules\prices\models;
+namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
+use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class PriceCron
  *
- * @package app\modules\prices\models
+ * @package app\models
  *
- * @var $id
- * @var $typeID
- * @var $date
+ * @property int $id
+ * @property int $typeID
+ * @property int $timeUpdated
  */
 class PriceCron extends AbstractActiveRecord
 {
@@ -30,7 +30,7 @@ class PriceCron extends AbstractActiveRecord
     {
         return [
             ['typeID', 'required'],
-            ['date', 'safe']
+            ['timeUpdated', 'safe']
         ];
     }
 
@@ -39,7 +39,9 @@ class PriceCron extends AbstractActiveRecord
      */
     public function attributeLabels()
     {
-        return [];
+        return [
+            'id' => 'ID'
+        ];
     }
 
     ### relations

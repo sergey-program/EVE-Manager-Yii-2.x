@@ -1,25 +1,26 @@
 <?php
 
-namespace app\modules\prices\models;
+namespace app\models;
 
-use app\models\_extend\AbstractActiveRecord;
-use app\models\InvTypes;
+use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class Price
  *
- * @package app\modules\prices\models
+ * @package app\models
  *
- * @var $id
- * @var $typeID
- * @var $type
- * @var $volume
- * @var $average
- * @var $max
- * @var $min
- * @var $stdDev
- * @var $median
- * @var $percentile
+ * @property int      $id
+ * @property int      $typeID
+ * @property int      $type
+ * @property int      $volume
+ * @property float    $average
+ * @property float    $max
+ * @property float    $min
+ * @property float    $stdDev
+ * @property float    $median
+ * @property float    $percentile
+ *
+ * @property InvTypes $invTypes
  */
 class Price extends AbstractActiveRecord
 {

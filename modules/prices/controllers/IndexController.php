@@ -2,19 +2,25 @@
 
 namespace app\modules\prices\controllers;
 
-use app\components\eveCentral\EveCentral;
-use app\modules\prices\controllers\_extend\PricesController;
-use app\modules\prices\models\_search\SearchPrice;
+use app\modules\prices\controllers\extend\AbstractPricesController;
+use app\modules\prices\models\SearchPrice;
 use app\modules\prices\updaters\UpdaterEveCentral;
+use yii\helpers\Url;
 
-class IndexController extends PricesController
+/**
+ * Class IndexController
+ *
+ * @package app\modules\prices\controllers
+ */
+class IndexController extends AbstractPricesController
 {
     /**
      * @return string
      */
     public function actionIndex()
     {
-        $this->addBread(['label' => 'Index']);
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('Index');
 
         return $this->render('index');
     }
@@ -24,10 +30,12 @@ class IndexController extends PricesController
      */
     public function actionList()
     {
-        $this->addBread(['label' => 'List']);
-        $mSearchPrice = new SearchPrice();
+        Url::remember(Url::current(), self::REMEMBER_NAME);
+        $this->getView()->addBread('List');
 
-        return $this->render('list', ['mSearchPrice' => $mSearchPrice]);
+        $searchPrice = new SearchPrice();
+
+        return $this->render('list', ['searchPrice' => $searchPrice]);
     }
 
     /**
@@ -35,14 +43,8 @@ class IndexController extends PricesController
      */
     public function actionUpdate()
     {
-        $sReturnUrl = $this->getGetData('returnUrl');
-
         UpdaterEveCentral::update();
 
-        if ($sReturnUrl) {
-            return $this->redirect($sReturnUrl);
-        }
-
-        return $this->redirect(['/prices/index/index']);
+        return $this->redirect(Url::previous(self::REMEMBER_NAME));
     }
 }

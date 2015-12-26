@@ -1,11 +1,16 @@
 <?php
 
-namespace app\modules\prices\models\_search;
+namespace app\modules\prices\models;
 
-use app\modules\prices\models\Price;
+use app\models\Price;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
+/**
+ * Class SearchPrice
+ *
+ * @package app\modules\prices\models
+ */
 class SearchPrice extends Price
 {
     /**
@@ -37,24 +42,24 @@ class SearchPrice extends Price
     }
 
     /**
-     * @param $aParam
+     * @param array|null $params
      *
      * @return ActiveDataProvider
      */
-    public function search($aParam)
+    public function search($params)
     {
-        $oQuery = Price::find()->joinWith('invTypes');
-        $oDataProvider = new ActiveDataProvider(['query' => $oQuery]);
+        $query = Price::find()->joinWith('invTypes');
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
 
-        if (!$this->load($aParam) && !$this->validate()) {
-            return $oDataProvider;
+        if (!$this->load($params) && !$this->validate()) {
+            return $dataProvider;
         }
 
-        $oQuery
+        $query
             ->andFilterWhere(['typeID' => $this->typeID])
             ->andFilterWhere(['type' => $this->type])
             ->andFilterWhere(['like', 'typeName', $this->getAttribute('typeName')]);
 
-        return $oDataProvider;
+        return $dataProvider;
     }
 }

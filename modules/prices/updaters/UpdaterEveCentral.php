@@ -3,62 +3,57 @@
 namespace app\modules\prices\updaters;
 
 use app\components\eveCentral\EveCentral;
-use app\modules\prices\models\PriceCron;
+use app\models\PriceCron;
 use yii\db\Expression;
 
+/**
+ * Class UpdaterEveCentral
+ *
+ * @package app\modules\prices\updaters
+ */
 class UpdaterEveCentral
 {
     /**
      * Get last items and update.
      *
-     * @param int $iBatch
+     * @param int $limit
      */
-    public static function update($iBatch = 10)
+    public static function update($limit = 100)
     {
-        $oQuery = PriceCron::find()->groupBy('typeID')->orderBy('date ASC');
+        /** @var PriceCron[] $priceCrons */
+        $priceCrons = PriceCron::find()->groupBy('typeID')->orderBy('timeUpdated ASC')->limit($limit)->all();
+        $eveCentral = new EveCentral();
 
-        if (is_int($iBatch)) {
-            $oQuery->limit($iBatch);
+        foreach ($priceCrons as $priceCron) {
+            $eveCentral->addTypeID($priceCron->typeID);
         }
 
-        $aPriceCron = $oQuery->all();
-        $oEveCentral = new EveCentral();
+        $eveCentral->fetch();
 
-        foreach ($aPriceCron as $mPriceCron) {
-            $oEveCentral->addTypeID($mPriceCron->typeID);
-        }
-
-        $oEveCentral->fetch();
-
-        foreach ($aPriceCron as $mPriceCron) {
-            $mPriceCron->date = new Expression('NOW()');
-
-            if ($mPriceCron->validate()) {
-                $mPriceCron->save();
-            }
+        foreach ($priceCrons as $priceCron) {
+            $priceCron->timeUpdated = new Expression('NOW()');
+            $priceCron->save();
         }
     }
 
     /**
      * Add typeID to cron updater.
      *
-     * @param $iTypeID
+     * @param int $typeID
      */
-    public static function addType($iTypeID)
+    public static function addType($typeID)
     {
-        $mPriceCron = PriceCron::findOne(['typeID' => $iTypeID]);
+        $priceCron = PriceCron::findOne(['typeID' => $typeID]);
 
-        if (!$mPriceCron) {
-            $mPriceCron = new PriceCron();
-            $mPriceCron->typeID = $iTypeID;
-            $mPriceCron->date = null;
+        if (!$priceCron) {
+            $priceCron = new PriceCron();
+            $priceCron->typeID = $typeID;
+            $priceCron->timeUpdated = null;
 
-            if ($mPriceCron->validate()) {
-                $mPriceCron->save();
-
-                $oEveCentral = new EveCentral();
-                $oEveCentral->addTypeID($iTypeID);
-                $oEveCentral->fetch();
+            if ($priceCron->save()) {
+                $eveCentral = new EveCentral();
+                $eveCentral->addTypeID($typeID);
+                $eveCentral->fetch();
             }
         }
     }
