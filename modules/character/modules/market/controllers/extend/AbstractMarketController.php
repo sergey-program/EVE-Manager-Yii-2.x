@@ -37,14 +37,14 @@ abstract class AbstractMarketController extends AbstractCharacterController
 
 
     /**
-     * @param int $id
+     * @param int $demandID
      *
      * @return MarketDemand
      * @throws NotFoundHttpException
      */
-    public function loadMarketDemand($id)
+    public function loadMarketDemand($demandID)
     {
-        $model = MarketDemand::findOne(['id' => $id, 'userID' => \Yii::$app->user->id]);
+        $model = MarketDemand::findOne(['id' => $demandID, 'userID' => \Yii::$app->user->id]);
 
         if (!$model) {
             throw new NotFoundHttpException ('Such market demand does not exist.');

@@ -11,12 +11,14 @@ use app\models\api\character\MarketOrder;
  * @package app\models
  *
  * @property int           $id
+ * @property int           $userID
  * @property int           $characterID
  * @property int           $stationID
  * @property int           $typeID
  * @property int           $quantity
  * @property int           $type
  *
+ * @property InvTypes      $invType
  * @property MarketOrder[] $orders
  * @property Price|null    $priceBuy
  * @property Price|null    $priceSell
@@ -40,7 +42,7 @@ class MarketDemand extends AbstractActiveRecord
     public function rules()
     {
         return [
-            [['characterID', 'stationID', 'typeID', 'quantity', 'type'], 'required'],
+            [['characterID', 'stationID', 'typeID', 'quantity', 'type', 'userID'], 'required'],
             ['typeID', 'ruleUnique']
         ];
     }
@@ -62,7 +64,13 @@ class MarketDemand extends AbstractActiveRecord
      */
     public function ruleUnique()
     {
-        if (MarketDemand::findOne(['typeID' => $this->typeID, 'stationID' => $this->stationID])) {
+        $model = MarketDemand::findOne([
+            'typeID' => $this->typeID,
+            'stationID' => $this->stationID,
+            'userID' => $this->userID
+        ]);
+
+        if ($model) {
             $this->addError('typeID', $this->invTypes->typeName . ' already added to list.');
         }
     }
@@ -72,7 +80,7 @@ class MarketDemand extends AbstractActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInvTypes()
+    public function getInvType()
     {
         return $this->hasOne(InvTypes::className(), ['typeID' => 'typeID']);
     }
@@ -95,7 +103,10 @@ class MarketDemand extends AbstractActiveRecord
      */
     public function getPriceBuy()
     {
-        return Price::findOne(['typeID' => $this->typeID, 'type' => Price::TYPE_BUY]);
+        return Price::findOne([
+            'typeID' => $this->typeID,
+            'type' => Price::TYPE_BUY
+        ]);
     }
 
     /**
@@ -103,7 +114,10 @@ class MarketDemand extends AbstractActiveRecord
      */
     public function getPriceSell()
     {
-        return Price::findOne(['typeID' => $this->typeID, 'type' => Price::TYPE_SELL]);
+        return Price::findOne([
+            'typeID' => $this->typeID,
+            'type' => Price::TYPE_SELL
+        ]);
     }
 
     ### function
@@ -200,7 +214,7 @@ class MarketDemand extends AbstractActiveRecord
     public function getTransportPrice()
     {
         $price = 0;
-        $item = $this->invTypes;
+        $item = $this->invType;
         $pricePerM3 = \Yii::$app->params['demand']['iskPerM3'];
 
         if ($item && $item->volume && $pricePerM3) {

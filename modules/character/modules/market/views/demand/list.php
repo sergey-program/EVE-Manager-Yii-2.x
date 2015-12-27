@@ -56,7 +56,7 @@ use yii\helpers\Html;
                             <img class="img-thumbnail" src="http://image.eveonline.com/Type/<?= $marketDemand->typeID; ?>_32.png">
                         </span>
 
-                        <span style="font-weight: bold;"><?= $marketDemand->invTypes->typeName; ?></span>
+                        <span style="font-weight: bold;"><?= $marketDemand->invType->typeName; ?></span>
                         <span class="margin-left-15"><?php if ($marketDemand->type == MarketDemand::TYPE_BUY): ?>Buy <?php else: ?>Sell <?php endif; ?></span>
                     </li>
 

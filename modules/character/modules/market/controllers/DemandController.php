@@ -51,7 +51,10 @@ class DemandController extends AbstractMarketController
             ->addBread(['label' => 'List'])
             ->setCharacter($character);
 
-        $marketDemands = MarketDemand::findAll(['characterID' => $characterID]);
+        $marketDemands = MarketDemand::findAll([
+            'characterID' => $characterID,
+            'userID' => \Yii::$app->user->id
+        ]);
 
         return $this->render('list', ['marketDemands' => $marketDemands]);
     }
@@ -75,6 +78,7 @@ class DemandController extends AbstractMarketController
 
         $marketDemand = new MarketDemand();
         $marketDemand->characterID = $characterID;
+        $marketDemand->userID = \Yii::$app->user->id;
 
         if ($this->isAjax()) {
             $type = $this->get('sType');
