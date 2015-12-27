@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\station\models;
+namespace app\models;
 
 use app\models\api\eve\ConquerableStation;
 use yii\base\Model;
@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
 /**
  * Class SearchConquerableStation
  *
- * @package app\modules\station\models
+ * @package app\models
  */
 class SearchConquerableStation extends ConquerableStation
 {

@@ -44,12 +44,12 @@ AppAsset::register($this);
                 ['label' => 'About', 'url' => ['/about/index']],
                 ['label' => 'Api', 'url' => ['/api']],
                 ['label' => 'Characters', 'url' => ['/characters']],
-                ['label' => 'Station', 'url' => ['/station/index/index']],
+                ['label' => 'Station', 'url' => ['/stations']],
                 ['label' => 'Prices', 'url' => ['/prices/index/index']],
-                Yii::$app->user->isGuest ?
+                \Yii::$app->user->isGuest ?
                     ['label' => 'Login', 'url' => ['/auth/login']] :
                     [
-                        'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                        'label' => 'Logout (' . \Yii::$app->user->identity->username . ')',
                         'url' => ['/auth/logout'],
                         'linkOptions' => ['data-method' => 'post']
                     ],
