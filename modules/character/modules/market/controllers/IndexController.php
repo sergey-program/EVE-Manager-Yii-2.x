@@ -18,10 +18,7 @@ class IndexController extends AbstractMarketController
      */
     public function actionIndex($characterID)
     {
-        $this
-            ->getView()
-            ->addBread('Index')
-            ->setCharacter($this->loadCharacter($characterID));;
+        $this->getView()->addBread('Index');
 
         return $this->render('index');
     }

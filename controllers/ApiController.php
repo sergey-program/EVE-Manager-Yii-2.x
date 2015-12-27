@@ -1,27 +1,47 @@
 <?php
 
-namespace app\modules\api\controllers;
+namespace app\controllers;
 
-use app\modules\api\controllers\extend\AbstractApiController;
+use app\controllers\extend\AbstractController;
 use app\models\Api;
-use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 /**
- * Class IndexController
+ * Class ApiController
  *
- * @package app\modules\api\controllers
+ * @package app\controllers
  */
-class IndexController extends AbstractApiController
+class ApiController extends AbstractController
 {
-    /**
-     * @return string
-     */
-    public function actionIndex()
-    {
-        Url::remember(Url::current(), self::REMEMBER_NAME);
-        $this->getView()->addBread('Index');
+    public $defaultAction = 'list';
+    public $layout = 'backend';
 
-        return $this->render('index');
+    /**
+     *
+     */
+    public function init()
+    {
+        parent::init();
+
+        $this->getView()->addBread(['label' => 'Api', 'url' => ['/api']]);
+    }
+
+    /**
+     * @param int $apiID
+     *
+     * @return Api
+     * @throws NotFoundHttpException
+     */
+    protected function loadApi($apiID)
+    {
+        /** @var Api $model */
+        $model = Api::find()->where(['id' => $apiID, 'userID' => \Yii::$app->user->id])->one();
+
+        if (!$model) {
+            throw new NotFoundHttpException('Api not found.');
+        }
+
+        return $model;
     }
 
     /**
@@ -29,9 +49,7 @@ class IndexController extends AbstractApiController
      */
     public function actionList()
     {
-        Url::remember(Url::current(), self::REMEMBER_NAME);
         $this->getView()->addBread('List');
-
         $apis = Api::find()->where(['userID' => \Yii::$app->user->id])->all();
 
         return $this->render('list', ['apis' => $apis]);
@@ -42,7 +60,6 @@ class IndexController extends AbstractApiController
      */
     public function actionAdd()
     {
-        Url::remember(Url::current(), self::REMEMBER_NAME);
         $this->getView()->addBread('Add');
 
         $api = new Api();
@@ -51,7 +68,7 @@ class IndexController extends AbstractApiController
 
         if ($this->isPost() && $api->load($this->post())) {
             if ($api->save()) {
-                return $this->redirect(['index/list']);
+                return $this->redirect(['/api']);
             }
         }
 
@@ -66,12 +83,16 @@ class IndexController extends AbstractApiController
      */
     public function actionUpdate($apiID)
     {
-        $api = $this->loadApi($apiID);
-        $api
-            ->updateApiKeyInfo()
-            ->updateCharacters();
+        try {
+            $api = $this->loadApi($apiID);
+            $api
+                ->updateApiKeyInfo()
+                ->updateCharacters();
+        } catch (\Exception $exception) {
+            // do nothing
+        }
 
-        return $this->redirect(Url::previous(self::REMEMBER_NAME));
+        return $this->redirect(['/api']);
     }
 
     /**
@@ -88,6 +109,6 @@ class IndexController extends AbstractApiController
             // do nothing
         }
 
-        return $this->redirect(Url::previous(self::REMEMBER_NAME));
+        return $this->redirect(['/api']);
     }
 }

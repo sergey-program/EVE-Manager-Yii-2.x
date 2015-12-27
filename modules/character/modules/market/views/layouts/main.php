@@ -11,23 +11,18 @@ use yii\helpers\Url;
 <?php $this->beginContent('@app/views/layouts/backend.php'); ?>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
+            <div class="list-group text-center">
+                <a class="list-group-item" href="<?= Url::to(['index/index', 'characterID' => $this->getCharacter()->characterID]); ?>"><?= $this->getCharacter()->characterName; ?></a>
+            </div>
+
             <div class="list-group">
-                <a class="list-group-item" href="<?= Url::to(['/character/market/index', 'characterID' => $this->getCharacter()->characterID]); ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> <?= $this->getCharacter()->characterName; ?></span>
-                </a>
-
-                <a class="list-group-item" href="<?= Url::to(['/character/market/order/index', 'characterID' => $this->getCharacter()->characterID]) ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Orders</span>
-                </a>
-
-                <a class="list-group-item" href="<?= Url::to(['/character/market/demand/index', 'characterID' => $this->getCharacter()->characterID]) ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Demands</span>
-                </a>
+                <a class="list-group-item" href="<?= Url::to(['order/index', 'characterID' => $this->getCharacter()->characterID]) ?>">Orders</a>
+                <a class="list-group-item" href="<?= Url::to(['demand/index', 'characterID' => $this->getCharacter()->characterID]) ?>">Demands</a>
             </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <?= $content; ?>
         </div>
     </div>

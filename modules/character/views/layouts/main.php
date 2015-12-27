@@ -11,19 +11,18 @@ use yii\helpers\Url;
 <?php $this->beginContent('@app/views/layouts/backend.php'); ?>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="list-group">
-                <a class="list-group-item" href="<?= Url::to(['index/index', 'characterID' => \Yii::$app->params['character']->characterID]); ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Index</span>
-                </a>
+                <a class="list-group-item text-center" href="<?= Url::to(['index/index', 'characterID' => $this->getCharacter()->characterID]); ?>"><?= $this->getCharacter()->characterName; ?></a>
+            </div>
 
-                <a class="list-group-item" href="<?= Url::to(['market/index', 'characterID' => \Yii::$app->params['character']->characterID]); ?>">
-                    <span><i class="glyphicon glyphicon-chevron-right pull-right">&nbsp;</i> Market</span>
-                </a>
+            <div class="list-group">
+                <a class="list-group-item" href="<?= Url::to(['market/index', 'characterID' => $this->getCharacter()->characterID]); ?>">Market</a>
+                <a class="list-group-item disabled" href="<?= Url::to(['assets/index', 'characterID' => $this->getCharacter()->characterID]); ?>">Assets</a>
             </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <?= $content; ?>
         </div>
     </div>

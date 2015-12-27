@@ -19,12 +19,10 @@ class IndexController extends AbstractCharacterController
      */
     public function actionIndex($characterID)
     {
-        $character = $this->loadCharacter($characterID);
+        $this->getView()->addBread(['label' => $this->getCharacter()->characterName]);
 
-        $this
-            ->getView()
-            ->addBread(['label' => $character->characterName]);
-
-        return $this->render('index', ['character' => $character]);
+        return $this->render('index');
     }
+
+
 }

@@ -18,16 +18,31 @@ abstract class AbstractCharacterController extends AbstractController
     public $layout = 'main';
 
     /**
-     *
+     * Search characterID and load model to view class.
      */
     public function init()
     {
         parent::init();
 
+        if ($this->get('characterID', false)) {
+            $character = $this->loadCharacter($this->get('characterID'));
+            $this->getView()->setCharacter($character);
+        }
+
         $this->getView()->addBread([
             'label' => 'Characters',
             'url' => ['/characters/index/list']
         ]);
+    }
+
+    /**
+     * Simple wrapper to get from view class, loaded on init method.
+     *
+     * @return Character|null
+     */
+    protected function getCharacter()
+    {
+        return $this->getView()->getCharacter();
     }
 
     /**

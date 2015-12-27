@@ -8,12 +8,12 @@ use yii\helpers\Url;
  */
 ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h1 class="panel-title">List</h1>
-    </div>
+<div class="row">
+    <div class="col-md-12">
 
-    <div class="panel-body">
+        <p class="text-center">
+            <a href="<?= Url::to(['api/add']); ?>" class="btn btn-primary">Add new api</a>
+        </p>
 
         <?php if ($apis) : ?>
             <?php foreach ($apis as $api): ?>
@@ -50,7 +50,7 @@ use yii\helpers\Url;
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col-md-2 text-center">
-                                                <img class="img-thumbnail" title="<?= $character->characterName; ?>" src="<?= $character->getImageSrc(64); ?>">
+                                                <img class="img-thumbnail" title="<?= $character->characterName; ?>" src="<?= $character->getImageSrc(128); ?>">
                                             </div>
 
                                             <div class="col-md-10">
@@ -85,14 +85,12 @@ use yii\helpers\Url;
                     </div>
 
                     <div class="panel-footer text-center">
-                        <a href="<?= Url::to(['index/update', 'apiID' => $api->id]); ?>" class="btn btn-info">Update</a>
-                        <a href="<?= Url::to(['index/delete', 'apiID' => $api->id]); ?>" class="btn btn-danger">Delete</a>
+                        <a href="<?= Url::to(['api/update', 'apiID' => $api->id]); ?>" class="btn btn-info">Update</a>
+                        <a href="<?= Url::to(['api/delete', 'apiID' => $api->id]); ?>" class="btn btn-danger">Delete</a>
                     </div>
                 </div>
             <?php endforeach; ?>
-
-        <?php else: ?>
-            <p class="alert alert-danger text-center">No api presented.</p>
         <?php endif; ?>
+
     </div>
 </div>

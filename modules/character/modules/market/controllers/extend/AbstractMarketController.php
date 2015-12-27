@@ -24,9 +24,15 @@ abstract class AbstractMarketController extends AbstractCharacterController
     {
         parent::init();
 
-        $this->getView();
-//            ->addBread(['label' => $this->mCharacter->characterName, 'url' => ['/character/index/index', 'characterID' => $this->mCharacter->characterID]])
-//            ->addBread(['label' => 'Market', 'url' => ['/character/market/index', 'characterID' => $this->mCharacter->characterID]]);
+        $this->getView()
+            ->addBread([
+                'label' => $this->getCharacter()->characterName,
+                'url' => ['/character/index/index', 'characterID' => $this->getCharacter()->characterID]
+            ])
+            ->addBread([
+                'label' => 'Market',
+                'url' => ['/character/market/index', 'characterID' => $this->getCharacter()->characterID]
+            ]);
     }
 
 

@@ -42,8 +42,8 @@ AppAsset::register($this);
             'items' => [
                 ['label' => 'Home', 'url' => Yii::$app->getHomeUrl()],
                 ['label' => 'About', 'url' => ['/about/index']],
-                ['label' => 'Api', 'url' => ['/api/index/index']],
-                ['label' => 'Characters', 'url' => ['/characters/index/index']],
+                ['label' => 'Api', 'url' => ['/api']],
+                ['label' => 'Characters', 'url' => ['/characters']],
                 ['label' => 'Station', 'url' => ['/station/index/index']],
                 ['label' => 'Prices', 'url' => ['/prices/index/index']],
                 Yii::$app->user->isGuest ?

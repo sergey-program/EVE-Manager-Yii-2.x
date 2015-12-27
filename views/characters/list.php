@@ -8,22 +8,25 @@ use yii\helpers\Url;
  */
 ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h1 class="panel-title">List</h1>
-    </div>
-
-    <div class="panel-body">
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
 
         <?php if ($characters) : ?>
             <ul class="list-group">
 
                 <?php foreach ($characters as $character): ?>
                     <li class="list-group-item">
+                        <?php if ($character->allianceID): ?>
+                            <img class="img-thumbnail" src="<?= $character->getAllianceImageSrc(); ?>" title="<?= $character->allianceName; ?>">
+                        <?php else: ?>
+                            <div style="width:42px; display: inline-block;">&nbsp;</div>
+                        <?php endif; ?>
+
+
                         <img class="img-thumbnail" src="<?= $character->getCorporationImageSrc(); ?>" title="<?= $character->corporationName; ?>">
                         <img class="img-thumbnail" src="<?= $character->getImageSrc(); ?>" title="<?= $character->characterName; ?>">
-                        
-                        <a href="<?= Url::to(['/character/index/index', 'characterID' => $character->characterID]); ?>">
+
+                        <a href="<?= Url::to(['/character/index/index', 'characterID' => $character->characterID]); ?>" style="margin-left: 10px;">
                             <?= $character->characterName; ?>
                         </a>
                     </li>
@@ -33,5 +36,6 @@ use yii\helpers\Url;
         <?php else: ?>
             <p class="alert alert-warning text-center">No characters presented...</p>
         <?php endif; ?>
+
     </div>
 </div>

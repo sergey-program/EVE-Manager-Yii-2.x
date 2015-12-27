@@ -53,7 +53,7 @@ abstract class AbstractController extends Controller
      * @param string|null $varName
      * @param string|null $defaultValue
      *
-     * @return mixed
+     * @return array|string
      */
 
     public function post($varName = null, $defaultValue = null)
@@ -65,7 +65,7 @@ abstract class AbstractController extends Controller
      * @param string|null $varName
      * @param string|null $defaultValue
      *
-     * @return array|mixed
+     * @return array|string
      */
     public function get($varName = null, $defaultValue = null)
     {
