@@ -3,17 +3,23 @@
 namespace app\forms;
 
 use app\components\UserIdentity;
-use app\models\User;
-use Yii;
 use yii\base\Model;
 
+/**
+ * Class FormLogin
+ *
+ * @package app\forms
+ */
 class FormLogin extends Model
 {
     public $username;
     public $password;
     public $rememberMe = true;
 
-    private $_mUserIdentity;
+    /**
+     * @var UserIdentity
+     */
+    private $userIdentity;
 
     /**
      * @return array the validation rules.
@@ -28,16 +34,20 @@ class FormLogin extends Model
     }
 
     /**
-     * @param string $sAttribute
-     * @param array  $aParam
+     * @param string $attribute
+     * @param array  $params
      */
-    public function ruleValidatePassword($sAttribute, $aParam)
+    public function ruleValidatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $mUserIdentity = $this->getUserIdentity();
+            $userIdentity = $this->getUserIdentity();
 
-            if (!$mUserIdentity || !$this->checkPassword($this->password, $mUserIdentity->password)) {
-                $this->addError($sAttribute, 'Incorrect username or password.');
+            if ($userIdentity) {
+                if (!\Yii::$app->security->validatePassword($this->password, $userIdentity->password)) {
+                    $this->addError($attribute, 'Incorrect username or password.');
+                }
+            } else {
+                $this->addError($attribute, 'Invalid identity.');
             }
         }
     }
@@ -48,42 +58,21 @@ class FormLogin extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUserIdentity(), $this->getRememberTime());
+            return \Yii::$app->user->login($this->getUserIdentity(), ($this->rememberMe ? 3600 * 24 * 30 : 0));
         }
 
         return false;
     }
 
     /**
-     * @return int
-     */
-    private function getRememberTime()
-    {
-        return $this->rememberMe ? 3600 * 24 * 30 : 0;
-    }
-
-    /**
-     * @return User|null
+     * @return UserIdentity|null
      */
     public function getUserIdentity()
     {
-        if (!$this->_mUserIdentity) {
-            $this->_mUserIdentity = UserIdentity::findOne(['username' => $this->username]);
+        if (!$this->userIdentity) {
+            $this->userIdentity = UserIdentity::findOne(['username' => $this->username]);
         }
 
-        return $this->_mUserIdentity;
-    }
-
-    /**
-     * @param string $sOriginalPassword
-     * @param string $sHashedPassword
-     *
-     * @return bool
-     * @throws \yii\base\InvalidConfigException
-     */
-    private function checkPassword($sOriginalPassword, $sHashedPassword)
-    {
-        // @todo add validation on incorrect hash exception
-        return Yii::$app->getSecurity()->validatePassword($sOriginalPassword, $sHashedPassword);
+        return $this->userIdentity;
     }
 }

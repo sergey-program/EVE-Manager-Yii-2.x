@@ -2,9 +2,7 @@
 
 namespace app\commands;
 
-use Yii;
 use yii\console\Controller;
-use app\models\User;
 
 /**
  * Class RbacController
@@ -14,39 +12,24 @@ use app\models\User;
 class RbacController extends Controller
 {
     /**
-     *
+     * Create default roles for site.
      */
     public function actionInit()
     {
-        // assign roles
-        $oAuthManager = \Yii::$app->authManager;
-        $oAuthManager->removeAll();
+        $am = \Yii::$app->authManager;
+        $am->removeAll();
 
         // role user
-        $oRoleUser = $oAuthManager->createRole('user');
-        $oRoleUser->description = 'Registered user';
-        $oAuthManager->add($oRoleUser);
+        $roleUser = $am->createRole('user');
+        $roleUser->description = 'Registered user.';
+        $am->add($roleUser);
 
-        // create default users
-        $aDefaultUser = \Yii::$app->params['aDefaultUser'];
-        $oSecurity = \Yii::$app->security;
+        $roleDirector = $am->createRole('director');
+        $roleDirector->description = 'Registered director.';
+        $am->add($roleDirector);
 
-        foreach ($aDefaultUser as $sUsername => $aUserData) {
-            $mUser = User::findOne(['username' => $aUserData['username']]);
-
-            if (!$mUser) {
-                $mUser = new User();
-                $mUser->username = $sUsername;
-                $mUser->password = $oSecurity->generatePasswordHash($aUserData['password']);
-                $mUser->email = $aUserData['email'];
-                $mUser->authKey = $oSecurity->generateRandomString();
-            }
-
-            if ($mUser->validate()) {
-                $mUser->save();
-                // assign role to each
-                $oAuthManager->assign($oAuthManager->getRole($aUserData['role']), $mUser->id);
-            }
-        }
+        $roleAdmin = $am->createRole('admin');
+        $roleAdmin->description = 'Administrator.';
+        $am->add($roleAdmin);
     }
 }

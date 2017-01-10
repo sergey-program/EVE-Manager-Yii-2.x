@@ -13,20 +13,17 @@ use app\models\extend\AbstractActiveRecord;
  * @property string $username
  * @property string $password
  * @property string $email
- * @property int    $timeCreate
  * @property string $authKey
+ * @property int    $timeCreate
  */
 class User extends AbstractActiveRecord
 {
-    const STATUS_ACTIVE = 'active';
-    const STATUS_DISABLED = 'disabled';
-
     /**
      * @return string
      */
     public static function tableName()
     {
-        return 'user';
+        return '{{%user}}';
     }
 
     /**
@@ -35,7 +32,8 @@ class User extends AbstractActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password', 'email', 'authKey'], 'required'],
+            [['username', 'password', 'authKey'], 'required'],
+            ['email', 'safe'],
             ['email', 'email']
         ];
     }
@@ -46,7 +44,11 @@ class User extends AbstractActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID'
+            'id' => 'ID',
+            'username' => 'Username',
+            'password' => 'Password',
+            'authKey' => 'Auth. key',
+            'timeCreate' => 'Time create'
         ];
     }
 

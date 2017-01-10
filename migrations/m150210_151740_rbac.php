@@ -1,7 +1,6 @@
 <?php
 
 use yii\db\Migration;
-use yii\db\mysql\Schema;
 
 /**
  * Class m150210_151740_rbac
@@ -17,17 +16,15 @@ class m150210_151740_rbac extends Migration
      */
     private function checkAuthManagerTables()
     {
-        $oDB = \Yii::$app->getDb();
-        $oAuthManager = \Yii::$app->getAuthManager();
+        $db = \Yii::$app->db;
+        $am = \Yii::$app->authManager;
 
-        $bTableSchema = (
-            $oDB->getTableSchema($oAuthManager->itemTable, true) &&
-            $oDB->getTableSchema($oAuthManager->itemChildTable, true) &&
-            $oDB->getTableSchema($oAuthManager->assignmentTable, true) &&
-            $oDB->getTableSchema($oAuthManager->ruleTable, true)
+        return (
+            $db->getTableSchema($am->itemTable, true) &&
+            $db->getTableSchema($am->itemChildTable, true) &&
+            $db->getTableSchema($am->assignmentTable, true) &&
+            $db->getTableSchema($am->ruleTable, true)
         );
-
-        return $bTableSchema;
     }
 
     /**
@@ -43,12 +40,13 @@ class m150210_151740_rbac extends Migration
             return false;
         }
 
-        $this->createTable('user', [
-            'id' => 'pk',
-            'username' => Schema::TYPE_STRING . ' NOT NULL',
-            'password' => Schema::TYPE_STRING . ' NOT NULL',
-            'email' => Schema::TYPE_STRING . ' NOT NULL',
-            'authKey' => Schema::TYPE_STRING . ' NOT NULL'
+        $this->createTable('em2_user', [
+            'id' => $this->primaryKey(),
+            'username' => $this->string(255)->notNull(),
+            'password' => $this->string(255)->notNull(),
+            'email' => $this->string(255)->null(),
+            'authKey' => $this->string(255)->notNull(),
+            'timeCreate' => $this->integer()->unsigned()->null()
         ]);
 
         return true;
