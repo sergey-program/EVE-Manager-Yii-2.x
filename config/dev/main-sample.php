@@ -2,13 +2,11 @@
 
 $aConfig = [
     'id' => 'main',
-    'name' => 'EVE Manager 2',
+    'name' => 'EVE Manager',
     'charset' => 'UTF-8',
-    'language' => 'ru',
+    'language' => 'en',
     'basePath' => FILE_PATH_ROOT,
-    'bootstrap' => [
-        'log'
-    ],
+    'bootstrap' => ['log'],
     'params' => require_once(FILE_PATH_CONFIG_ENV . '_param.php'),
     'defaultRoute' => 'index/index',
     'components' => [
@@ -19,14 +17,14 @@ $aConfig = [
             'enableAutoLogin' => true,
             'loginUrl' => ['auth/login']
         ],
-        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
+//        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => require(FILE_PATH_CONFIG_ENV . '_routes.php')
         ],
         'request' => [
-            'cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7',
+            'cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7', // add manually some salt
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

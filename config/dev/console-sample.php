@@ -1,6 +1,6 @@
 <?php
 
-Yii::setAlias('@tests', FILE_PATH_ROOT . '/tests');
+\Yii::setAlias('@tests', FILE_PATH_ROOT . '/tests');
 
 $aConfig = [
     'id' => 'main-console',
