@@ -64,7 +64,7 @@ class ErrorController extends AbstractController
 
             $name .= ($code) ? ' (#' . $code . ')' : '';
 
-            if ($this->isAjax()) {
+            if (\Yii::$app->request->isAjax) {
                 return $name . ':' . $message;
             }
 

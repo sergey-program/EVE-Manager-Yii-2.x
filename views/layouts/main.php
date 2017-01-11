@@ -1,9 +1,11 @@
 <?php
-use yii\helpers\Html;
+
+use app\assets\AppAsset;
+use app\components\ViewExtended;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use app\components\ViewExtended;
-use app\assets\AppAsset;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 
@@ -13,70 +15,71 @@ AppAsset::register($this);
  */
 ?>
 
-<?php $this->beginPage() ?>
-    <!DOCTYPE html>
-    <html lang="<?= Yii::$app->language ?>">
+<?php $this->beginPage(); ?>
 
-    <head>
-        <meta charset="<?= Yii::$app->charset ?>"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <?= Html::csrfMetaTags() ?>
-        <title><?= Html::encode($this->title) ?></title>
-        <?php $this->head() ?>
-        <link rel="shortcut icon" href="<?= Yii::$app->getRequest()->getBaseUrl(); ?>/favicon.ico" type="image/x-icon"/>
-    </head>
+<!DOCTYPE html>
+<html lang="<?= \Yii::$app->language; ?>">
 
-    <body>
+<head>
+    <title><?= Html::encode($this->title); ?></title>
 
-    <?php $this->beginBody() ?>
-    <div class="wrap">
-        <?php
-        NavBar::begin([
-            'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->getHomeUrl(),
-            'options' => ['class' => 'navbar-inverse navbar-fixed-top']
-        ]);
+    <meta charset="<?= \Yii::$app->charset; ?>"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Home', 'url' => Yii::$app->getHomeUrl()],
-                ['label' => 'About', 'url' => ['/about/index']],
-                ['label' => 'Api', 'url' => ['/api']],
-                ['label' => 'Characters', 'url' => ['/characters']],
-                ['label' => 'Station', 'url' => ['/stations']],
-                ['label' => 'Prices', 'url' => ['/prices/index/index']],
-                \Yii::$app->user->isGuest ?
-                    ['label' => 'Login', 'url' => ['/auth/login']] :
-                    [
-                        'label' => 'Logout (' . \Yii::$app->user->identity->username . ')',
-                        'url' => ['/auth/logout'],
-                        'linkOptions' => ['data-method' => 'post']
-                    ],
-            ],
-        ]);
-        NavBar::end();
-        ?>
+    <?php /* <link rel="shortcut icon" href="<?= Yii::$app->getRequest()->getBaseUrl(); ?>/favicon.ico" type="image/x-icon"/> */ ?>
+    <?= Html::csrfMetaTags(); ?>
+    <?php $this->head(); ?>
+</head>
 
-        <div class="container">
-            <?php if (isset($this->blocks[ViewExtended::PARAM_NAME_BREAD])): ?>
-                <?= $this->blocks[ViewExtended::PARAM_NAME_BREAD]; ?>
-            <?php endif; ?>
+<body>
+<?php $this->beginBody(); ?>
 
-            <?= $content ?>
-        </div>
+<div class="wrap">
+    <?php NavBar::begin(['brandLabel' => \Yii::$app->name, 'brandUrl' => \Yii::$app->homeUrl, 'options' => ['class' => 'navbar-inverse navbar-fixed-top']]); ?>
+
+    <?= Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => [
+            ['label' => 'Home', 'url' => Yii::$app->getHomeUrl()],
+
+            ['label' => 'About', 'url' => ['/about/index']],
+            ['label' => 'Api', 'url' => ['/api']],
+            ['label' => 'Characters', 'url' => ['/characters']],
+            ['label' => 'Station', 'url' => ['/stations']],
+            ['label' => 'Prices', 'url' => ['/prices/index/index']],
+            \Yii::$app->user->isGuest ?
+                ['label' => 'Sign In', 'url' => Url::to(['/auth/sign-in'])] :
+                [
+                    'label' => 'Sign Out (' . \Yii::$app->user->identity->characterName . ')',
+                    'url' => ['/auth/sign-out']
+
+                ],
+        ],
+    ]);
+    ?>
+
+    <?php NavBar::end(); ?>
+
+    <div class="container">
+        <?php if (isset($this->blocks[ViewExtended::PARAM_NAME_BREAD])): ?>
+            <?= $this->blocks[ViewExtended::PARAM_NAME_BREAD]; ?>
+        <?php endif; ?>
+
+        <?= $content ?>
     </div>
+</div>
 
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
-        </div>
-    </footer>
+<footer class="footer">
+    <div class="container">
+        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-right"><?= \Yii::powered(); ?></p>
+    </div>
+</footer>
 
-    <?php $this->endBody() ?>
-    </body>
+<?php $this->endBody() ?>
+</body>
 
-    </html>
+</html>
 
 <?php $this->endPage() ?>
+

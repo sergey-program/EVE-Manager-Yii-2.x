@@ -2,7 +2,6 @@
 
 namespace app\components;
 
-use Yii;
 use yii\web\User;
 
 /**
@@ -19,25 +18,23 @@ class UserExtended extends User
      */
     public function hasRole($role)
     {
-        return Yii::$app->authManager->checkAccess(Yii::$app->user->id, $role);
+        return \Yii::$app->authManager->checkAccess(\Yii::$app->user->id, $role);
     }
 
     /**
      * @return string|null
      */
-    public function getUsername()
+    public function getCharacterName1()
     {
-        $username = null;
-
         if (!$this->isGuest) {
             /** @var UserIdentity $userIdentity */
             $userIdentity = $this->getIdentity();
 
             if ($userIdentity) {
-                $username = $userIdentity->username;
+                return $userIdentity->characterName;
             }
         }
 
-        return $username;
+        return null;
     }
 }

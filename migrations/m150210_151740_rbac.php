@@ -42,10 +42,19 @@ class m150210_151740_rbac extends Migration
 
         $this->createTable('em2_user', [
             'id' => $this->primaryKey(),
-            'username' => $this->string(255)->notNull(),
-            'password' => $this->string(255)->notNull(),
-            'email' => $this->string(255)->null(),
+            'characterName' => $this->string(255)->null()->comment('Character Name'),
+            'characterID' => $this->integer()->unsigned()->null()->comment('Character ID'),
             'authKey' => $this->string(255)->notNull(),
+            'timeCreate' => $this->integer()->unsigned()->null()
+        ]);
+
+        $this->createTable('em2_user_token', [
+            'id' => $this->primaryKey(),
+            'userID' => $this->integer()->notNull(),
+            'accessToken' => $this->string()->null(),
+            'tokenType' => $this->string()->null(),
+            'expiresIn' => $this->integer()->null(),
+            'refreshToken' => $this->string(255)->null(),
             'timeCreate' => $this->integer()->unsigned()->null()
         ]);
 
@@ -57,7 +66,8 @@ class m150210_151740_rbac extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('user');
+        $this->dropTable('em2_user');
+        $this->dropTable('em2_user_token');
         echo "m150210_151740_rbac reverted.\n";
 
         return true;

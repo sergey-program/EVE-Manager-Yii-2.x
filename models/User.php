@@ -10,9 +10,8 @@ use app\models\extend\AbstractActiveRecord;
  * @package app\models
  *
  * @property int    $id
- * @property string $username
- * @property string $password
- * @property string $email
+ * @property string $characterName
+ * @property string $characterID
  * @property string $authKey
  * @property int    $timeCreate
  */
@@ -32,9 +31,10 @@ class User extends AbstractActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password', 'authKey'], 'required'],
-            ['email', 'safe'],
-            ['email', 'email']
+            ['authKey', 'default', 'value' => md5(time() + mt_rand(1, 1000))],
+            ['authKey', 'required'],
+            ['timeCreate', 'default', 'value' => time()],
+            [['characterName', 'characterID', 'timeCreate'], 'safe']
         ];
     }
 
@@ -45,8 +45,8 @@ class User extends AbstractActiveRecord
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
-            'password' => 'Password',
+            'characterName' => 'Character name',
+            'characterID' => 'Character ID',
             'authKey' => 'Auth. key',
             'timeCreate' => 'Time create'
         ];
