@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use app\models\extend\AbstractActiveRecord;
+use app\models\extend\AbstractAccessToken;
 
 /**
  * Class UserToken
@@ -17,7 +17,7 @@ use app\models\extend\AbstractActiveRecord;
  * @property string $refreshToken
  * @property int    $timeCreate
  */
-class UserToken extends AbstractActiveRecord
+class UserToken extends AbstractAccessToken
 {
     /**
      * @return string

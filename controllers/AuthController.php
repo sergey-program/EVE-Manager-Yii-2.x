@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use app\components\UserIdentity;
 use app\controllers\extend\AbstractController;
+use app\models\extend\AbstractAccessToken;
 use app\models\UserToken;
+use yii\web\BadRequestHttpException;
 
 /**
  * Class AuthController
@@ -20,29 +22,18 @@ class AuthController extends AbstractController
      */
     public function actionSignIn()
     {
-        $scopes = [
-            'characterAccountRead', 'characterAssetsRead', 'characterBookmarksRead',
-            'characterCalendarRead', 'characterChatChannelsRead', 'characterClonesRead', 'characterContactsRead',
-            'characterContactsWrite', 'characterContractsRead', 'characterFactionalWarfareRead',
-            'characterFittingsRead', 'characterFittingsWrite', 'characterIndustryJobsRead', 'characterKillsRead',
-            'characterLocationRead', 'characterLoyaltyPointsRead', 'characterMailRead', 'characterMarketOrdersRead',
-            'characterMedalsRead', 'characterNavigationWrite', 'characterNotificationsRead',
-            'characterOpportunitiesRead', 'characterResearchRead', 'characterSkillsRead', 'characterStatsRead',
-            'characterWalletRead', 'corporationAssetsRead', 'corporationBookmarksRead', 'corporationContactsRead',
-            'corporationContractsRead', 'corporationFactionalWarfareRead', 'corporationIndustryJobsRead',
-            'corporationKillsRead', 'corporationMarketOrdersRead', 'corporationMedalsRead',
-            'corporationMembersRead', 'corporationShareholdersRead', 'corporationStructuresRead',
-            'corporationWalletRead', 'fleetRead', 'fleetWrite', 'publicData', 'remoteClientUI', 'structureVulnUp'];
+        return $this->render('sign-in');
+    }
 
-        $url = 'https://login.eveonline.com/oauth/authorize/';
-        $url .= '?client_id=' . \Yii::$app->params['application']['clientID'];
-        $url .= '&response_type=code';
-        $url .= '&redirect_uri=http://eve-manager/callback-url';
-        $url .= '&scope=characterAssetsRead%20characterChatChannelsRead%20characterContactsRead%20characterLocationRead%20characterMailRead%20characterMarketOrdersRead%20characterNotificationsRead%20characterSkillsRead%20characterWalletRead';
-//        $url .= '&scope=' . implode("%20",$scopes);
-        $url .= '&state=uniquestate123';
 
-        return $this->render('sign-in', ['signInUrl' => $url]);
+    /**
+     * @return \yii\web\Response
+     */
+    public function actionSignOut()
+    {
+        \Yii::$app->user->logout(false);
+
+        return $this->goHome();
     }
 
     /**
@@ -53,11 +44,9 @@ class AuthController extends AbstractController
      */
     public function actionSignInCallback()
     {
-        $ssoCode = $this->get('code');
+        $code = \Yii::$app->session->getFlash('code');
 
-        // get token
-        $dataToken = $this->getAccessToken($ssoCode);
-        // get character
+        $dataToken = AbstractAccessToken::getAccessTokenByCode($code);
         $dataCharacter = $this->getCharacterData($dataToken['access_token']);
 
         // create user
@@ -69,57 +58,26 @@ class AuthController extends AbstractController
             $userIdentity->characterName = $dataCharacter['CharacterName'];
 
             if (!$userIdentity->save()) {
-                throw new \Exception('Cannot create new user.');
+                throw new \ErrorException('Cannot create new user.');
             }
         }
 
-        // create token
-        $userToken = new UserToken();
-        $userToken->userID = $userIdentity->id;
-        $userToken->accessToken = $dataToken['access_token'];
-        $userToken->tokenType = $dataToken['token_type'];
-        $userToken->expiresIn = $dataToken['expires_in'];
-        $userToken->refreshToken = $dataToken['refresh_token'];
-        $userToken->save();
+        // update/create token
+        $userToken = UserToken::findOne(['userID' => $userIdentity->id]);
+
+        if (!$userToken) {
+            $userToken = new UserToken();
+            $userToken->userID = $userIdentity->id;
+            $userToken->save();
+        }
+
+        $userToken->updateAccessTokenBy($dataToken);
 
         if (\Yii::$app->user->login($userIdentity, 3600 * 24 * 30)) {
             return $this->goHome();
         }
 
-        return $this->render('sign-in-callback', ['code' => $ssoCode]);
-    }
-
-    /**
-     * @param string $ssoCode
-     *
-     * @return mixed
-     */
-    private function getAccessToken($ssoCode)
-    {
-        $basic = base64_encode(\Yii::$app->params['application']['clientID'] . ':' . \Yii::$app->params['application']['secret']);
-
-        $curl = curl_init('https://login.eveonline.com/oauth/token');
-
-        curl_setopt_array($curl, [
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => 'grant_type=authorization_code&code=' . $ssoCode,
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Basic ' . $basic,
-                'Content-Type: application/x-www-form-urlencoded',
-                'Host: login.eveonline.com'
-            ],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FRESH_CONNECT => true
-        ]);
-
-        $resultString = curl_exec($curl);
-
-        // $resultString['access_token']
-        // $resultString['token_type']
-        // $resultString['expires_in']
-        // $resultString['refresh_token']
-
-        return json_decode($resultString, true);
+        throw new BadRequestHttpException('Cannot login.');
     }
 
     /**
@@ -147,35 +105,4 @@ class AuthController extends AbstractController
 
         return json_decode($resultString, true);
     }
-
-    /**
-     * @return string|\yii\web\Response
-     */
-//    public function actionLogin()
-//    {
-//        if (!\Yii::$app->user->isGuest) {
-//            return $this->goHome();
-//        }
-//
-//        $this->getView()->setTitle('Login');
-//
-//        $fLogin = new FormLogin();
-//
-//        if ($fLogin->load($this->getPost()) && $fLogin->login()) {
-//            return $this->goBack();
-//        }
-//
-//        return $this->render('login', ['fLogin' => $fLogin]);
-//    }
-
-    /**
-     * @return \yii\web\Response
-     */
-    public function actionLogout()
-    {
-        \Yii::$app->user->logout(false);
-
-        return $this->goHome();
-    }
-
 }

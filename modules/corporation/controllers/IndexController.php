@@ -12,8 +12,19 @@ use app\modules\corporation\controllers\extend\AbstractCorporationController;
 class IndexController extends AbstractCorporationController
 {
 
-    public function actionIndex()
+    /**
+     * @return string
+     */
+    public function actionInstall()
     {
-        echo 123;
+        return $this->render('install');
+    }
+
+    public function actionInstallCallback()
+    {
+        $code = \Yii::$app->session->getFlash('code');
+
+        //
+
     }
 }

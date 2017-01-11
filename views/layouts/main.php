@@ -40,13 +40,12 @@ AppAsset::register($this);
     <?= Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => Yii::$app->getHomeUrl()],
-
-            ['label' => 'About', 'url' => ['/about/index']],
-            ['label' => 'Api', 'url' => ['/api']],
-            ['label' => 'Characters', 'url' => ['/characters']],
-            ['label' => 'Station', 'url' => ['/stations']],
-            ['label' => 'Prices', 'url' => ['/prices/index/index']],
+            ['label' => 'Install Corporation', 'url' => ['/corporation/index/install']],
+//            ['label' => 'About', 'url' => ['/about/index']],
+//            ['label' => 'Api', 'url' => ['/api']],
+//            ['label' => 'Characters', 'url' => ['/characters']],
+//            ['label' => 'Station', 'url' => ['/stations']],
+//            ['label' => 'Prices', 'url' => ['/prices/index/index']],
             \Yii::$app->user->isGuest ?
                 ['label' => 'Sign In', 'url' => Url::to(['/auth/sign-in'])] :
                 [
