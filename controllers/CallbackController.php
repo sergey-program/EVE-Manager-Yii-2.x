@@ -26,7 +26,7 @@ class CallbackController extends AbstractController
         }
 
         if (EveSSO::isAction(EveSSO::ACTION_IC)) {
-            return $this->redirect(['/corporation/index/install-callback']);
+            return $this->redirect(['/corporation/install/index-callback']);
         }
 
         throw new BadRequestHttpException('Unknown action.');

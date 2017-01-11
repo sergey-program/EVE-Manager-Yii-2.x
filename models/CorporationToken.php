@@ -5,26 +5,26 @@ namespace app\models;
 use app\models\extend\AbstractAccessToken;
 
 /**
- * Class UserToken
+ * Class CorporationToken
  *
  * @package app\models
  *
  * @property int    $id
- * @property int    $userID
+ * @property int    $corporationID
  * @property string $accessToken
  * @property string $tokenType
- * @property int    $expiresIn
  * @property string $refreshToken
+ * @property int    $expiresIn
  * @property int    $timeUpdate
  */
-class UserToken extends AbstractAccessToken
+class CorporationToken extends AbstractAccessToken
 {
     /**
      * @return string
      */
     public static function tableName()
     {
-        return '{{%user_token}}';
+        return '{{%corporation_token}}';
     }
 
     /**
@@ -33,8 +33,9 @@ class UserToken extends AbstractAccessToken
     public function rules()
     {
         return [
-            ['userID', 'required'],
-            [['accessToken', 'tokenType', 'expiresIn', 'refreshToken', 'timeCreate'], 'safe']
+            ['timeUpdate', 'default', 'value' => time()],
+            ['corporationID', 'required'],
+            [['accessToken', 'tokenType', 'refreshToken', 'expiresIn', 'timeUpdate'], 'safe']
         ];
     }
 

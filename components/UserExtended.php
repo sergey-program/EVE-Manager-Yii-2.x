@@ -24,7 +24,7 @@ class UserExtended extends User
     /**
      * @return string|null
      */
-    public function getCharacterName1()
+    public function getCharacterName()
     {
         if (!$this->isGuest) {
             /** @var UserIdentity $userIdentity */

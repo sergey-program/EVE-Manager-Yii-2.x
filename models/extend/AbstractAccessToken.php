@@ -12,7 +12,7 @@ namespace app\models\extend;
  * @property string $tokenType
  * @property int    $expiresIn
  * @property string $refreshToken
- * @property int    $timeCreate
+ * @property int    $timeUpdate
  */
 abstract class AbstractAccessToken extends AbstractActiveRecord
 {
@@ -24,7 +24,7 @@ abstract class AbstractAccessToken extends AbstractActiveRecord
     public function accessTokenIsExpired()
     {
         // -30 second to be sure
-        return ($this->timeCreate + $this->expiresIn - 30) > time();
+        return ($this->timeUpdate + $this->expiresIn - 30) > time();
     }
 
     /**

@@ -43,19 +43,19 @@ class m150210_151740_rbac extends Migration
         $this->createTable('em2_user', [
             'id' => $this->primaryKey(),
             'characterName' => $this->string(255)->null()->comment('Character Name'),
-            'characterID' => $this->integer()->unsigned()->null()->comment('Character ID'),
+            'characterID' => $this->bigInteger()->unsigned()->null()->comment('Character ID'),
             'authKey' => $this->string(255)->notNull(),
             'timeCreate' => $this->integer()->unsigned()->null()
         ]);
 
         $this->createTable('em2_user_token', [
             'id' => $this->primaryKey(),
-            'userID' => $this->integer()->notNull(),
-            'accessToken' => $this->string()->null(),
-            'tokenType' => $this->string()->null(),
+            'userID' => $this->integer()->unsigned()->notNull(),
+            'accessToken' => $this->string(255)->null(),
+            'tokenType' => $this->string(255)->null(),
             'expiresIn' => $this->integer()->null(),
             'refreshToken' => $this->string(255)->null(),
-            'timeCreate' => $this->integer()->unsigned()->null()
+            'timeUpdate' => $this->integer()->unsigned()->null()->comment('When token was updated last time')
         ]);
 
         return true;

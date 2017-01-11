@@ -2,6 +2,7 @@
 
 use app\assets\AppAsset;
 use app\components\ViewExtended;
+use app\models\Corporation;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
@@ -40,19 +41,10 @@ AppAsset::register($this);
     <?= Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Install Corporation', 'url' => ['/corporation/index/install']],
-//            ['label' => 'About', 'url' => ['/about/index']],
-//            ['label' => 'Api', 'url' => ['/api']],
-//            ['label' => 'Characters', 'url' => ['/characters']],
-//            ['label' => 'Station', 'url' => ['/stations']],
-//            ['label' => 'Prices', 'url' => ['/prices/index/index']],
-            \Yii::$app->user->isGuest ?
-                ['label' => 'Sign In', 'url' => Url::to(['/auth/sign-in'])] :
-                [
-                    'label' => 'Sign Out (' . \Yii::$app->user->identity->characterName . ')',
-                    'url' => ['/auth/sign-out']
-
-                ],
+            ['label' => 'Install Corporation', 'url' => ['/corporation/install/index'], 'visible' => Corporation::checkCanInstall(false)],
+            \Yii::$app->user->isGuest
+                ? ['label' => 'Sign In', 'url' => Url::to(['/auth/sign-in'])]
+                : ['label' => 'Sign Out (' . \Yii::$app->user->characterName . ')', 'url' => ['/auth/sign-out']],
         ],
     ]);
     ?>
