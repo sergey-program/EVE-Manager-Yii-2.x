@@ -9,13 +9,15 @@ use app\models\extend\AbstractAccessToken;
  *
  * @package app\models
  *
- * @property int    $id
- * @property int    $corporationID
- * @property string $accessToken
- * @property string $tokenType
- * @property string $refreshToken
- * @property int    $expiresIn
- * @property int    $timeUpdate
+ * @property int         $id
+ * @property int         $corporationID
+ * @property string      $accessToken
+ * @property string      $tokenType
+ * @property string      $refreshToken
+ * @property int         $expiresIn
+ * @property int         $timeUpdate
+ *
+ * @property Corporation $corporation
  */
 class CorporationToken extends AbstractAccessToken
 {
@@ -50,6 +52,14 @@ class CorporationToken extends AbstractAccessToken
     }
 
     ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCorporation()
+    {
+        return $this->hasOne(Corporation::className(), ['id' => 'corporationID']);
+    }
 
     ### functions
 }

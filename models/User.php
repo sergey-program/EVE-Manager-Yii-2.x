@@ -9,11 +9,13 @@ use app\models\extend\AbstractActiveRecord;
  *
  * @package app\models
  *
- * @property int    $id
- * @property string $characterName
- * @property string $characterID
- * @property string $authKey
- * @property int    $timeCreate
+ * @property int       $id
+ * @property string    $characterName
+ * @property string    $characterID
+ * @property string    $authKey
+ * @property int       $timeCreate
+ *
+ * @property UserToken $token
  */
 class User extends AbstractActiveRecord
 {
@@ -53,6 +55,14 @@ class User extends AbstractActiveRecord
     }
 
     ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getToken()
+    {
+        return $this->hasOne(UserToken::className(), ['userID' => 'id']);
+    }
 
     ### functions
 }

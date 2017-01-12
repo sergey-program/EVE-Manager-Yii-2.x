@@ -52,11 +52,13 @@ abstract class AbstractAccessToken extends AbstractActiveRecord
     /**
      * Do call to get new access token by refresh token and update model.
      *
+     * @param bool $force
+     *
      * @return void
      */
-    public function refreshAccessToken()
+    public function refreshAccessToken($force = false)
     {
-        if ($this->accessTokenIsExpired()) { // call only if token expired
+        if ($this->accessTokenIsExpired() || $force) { // call only if token expired
             $clientID = \Yii::$app->params['application']['clientID'];
             $secret = \Yii::$app->params['application']['secret'];
             $curl = curl_init();

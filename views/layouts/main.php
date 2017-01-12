@@ -42,9 +42,11 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Install Corporation', 'url' => ['/corporation/install/index'], 'visible' => Corporation::checkCanInstall(false)],
+            ['label' => 'Members', 'url' => ['/corporation/members/index'], 'visible' => !Corporation::checkCanInstall(false)],
             \Yii::$app->user->isGuest
                 ? ['label' => 'Sign In', 'url' => Url::to(['/auth/sign-in'])]
                 : ['label' => 'Sign Out (' . \Yii::$app->user->characterName . ')', 'url' => ['/auth/sign-out']],
+
         ],
     ]);
     ?>

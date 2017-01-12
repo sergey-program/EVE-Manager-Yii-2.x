@@ -10,12 +10,14 @@ use yii\web\ForbiddenHttpException;
  *
  * @package app\models
  *
- * @property int $id
- * @property int $corporationID
- * @property int $corporationName
- * @property int $characterID
- * @property int $characterName
- * @property int $timeCreate
+ * @property int              $id
+ * @property int              $corporationID
+ * @property string           $corporationName
+ * @property int              $characterID
+ * @property string           $characterName
+ * @property int              $timeCreate
+ *
+ * @property CorporationToken $token
  */
 class Corporation extends AbstractActiveRecord
 {
@@ -49,6 +51,14 @@ class Corporation extends AbstractActiveRecord
     }
 
     ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getToken()
+    {
+        return $this->hasOne(CorporationToken::className(), ['corporationID' => 'id']);
+    }
 
     ### functions
 

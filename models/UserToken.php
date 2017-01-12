@@ -16,6 +16,8 @@ use app\models\extend\AbstractAccessToken;
  * @property int    $expiresIn
  * @property string $refreshToken
  * @property int    $timeUpdate
+ *
+ * @property User   $user
  */
 class UserToken extends AbstractAccessToken
 {
@@ -49,6 +51,14 @@ class UserToken extends AbstractAccessToken
     }
 
     ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'userID']);
+    }
 
     ### functions
 }
