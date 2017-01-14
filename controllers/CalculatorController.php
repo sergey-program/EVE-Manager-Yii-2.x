@@ -3,8 +3,7 @@
 namespace app\controllers;
 
 use app\controllers\extend\AbstractController;
-use app\forms\FormCalculatorPlanetology;
-use app\models\dump\InvTypes;
+use app\forms\FormCalculator;
 
 /**
  * Class CalculatorController
@@ -16,17 +15,17 @@ class CalculatorController extends AbstractController
     /**
      * @return string
      */
-    public function actionPlanetology()
+    public function actionIndex()
     {
-        $formCalculatorPlanetology = new FormCalculatorPlanetology();
+        $formCalculator = new FormCalculator();
         $items = [];
 
-        if (\Yii::$app->request->isPost && $formCalculatorPlanetology->load($this->post())) {
-            $items = $formCalculatorPlanetology->parse();
+        if (\Yii::$app->request->isPost && $formCalculator->load($this->post())) {
+            $items = $formCalculator->parse();
         }
 
-        return $this->render('planetology', [
-            'formCalculatorPlanetology' => $formCalculatorPlanetology,
+        return $this->render('index', [
+            'formCalculator' => $formCalculator,
             'items' => $items
         ]);
     }
