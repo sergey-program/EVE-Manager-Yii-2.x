@@ -54,7 +54,7 @@ abstract class AbstractAccessToken extends AbstractActiveRecord
      *
      * @param bool $force
      *
-     * @return void
+     * @return $this
      */
     public function refreshAccessToken($force = false)
     {
@@ -81,6 +81,8 @@ abstract class AbstractAccessToken extends AbstractActiveRecord
 
             $this->updateAccessTokenBy($result);
         }
+
+        return $this;
     }
 
     /**

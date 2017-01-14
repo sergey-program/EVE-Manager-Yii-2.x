@@ -1,13 +1,13 @@
 <?php
 
-namespace app\models;
+namespace app\models\dump;
 
 use app\models\extend\AbstractActiveRecord;
 
 /**
  * Class InvTypes
  *
- * @package app\models
+ * @package app\models\dump
  *
  * @property $typeID
  * @property $groupID
