@@ -2,7 +2,7 @@
 
 \Yii::setAlias('@tests', FILE_PATH_ROOT . '/tests');
 
-$aConfig = [
+$config = [
     'id' => 'main-console',
     'basePath' => FILE_PATH_ROOT,
     'bootstrap' => ['log'],
@@ -26,4 +26,4 @@ $aConfig = [
     ]
 ];
 
-return $aConfig;
+return $config;

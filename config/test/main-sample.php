@@ -1,6 +1,6 @@
 <?php
 
-$aConfig = [
+$config = [
     'id' => 'main',
     'name' => 'EVE Manager',
     'charset' => 'UTF-8',
@@ -17,14 +17,14 @@ $aConfig = [
             'enableAutoLogin' => true,
             'loginUrl' => ['auth/login']
         ],
-//        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
+        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => require(FILE_PATH_CONFIG_ENV . '_routes.php')
         ],
         'request' => [
-            'cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7', // add manually some salt
+            'cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7', // change salt manually
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -46,15 +46,16 @@ $aConfig = [
     ],
     'modules' => [
         'debug' => 'yii\debug\Module',
+        //
+        'corporation' => 'app\modules\corporation\Module',
         'character' => 'app\modules\character\Module',
         'prices' => 'app\modules\prices\Module'
     ]
 ];
 
-if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
-    $aConfig['bootstrap'][] = 'debug';
-    $aConfig['modules']['debug'] = 'yii\debug\Module';
+if (YII_DEBUG) {
+    $config['bootstrap'][] = 'debug';
+    $config['modules']['debug'] = 'yii\debug\Module';
 }
 
-return $aConfig;
+return $config;
