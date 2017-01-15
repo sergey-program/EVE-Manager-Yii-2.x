@@ -6,7 +6,7 @@ class m170111_223115_corporation_member extends Migration
 {
     public function safeUp()
     {
-        $this->createTable('em2_corporation_member', [
+        $this->createTable('_corporation_member', [
             'id' => $this->primaryKey(),
             'characterID' => $this->integer()->unsigned()->null(),
             'characterName' => $this->string(255)->null(),
@@ -29,7 +29,7 @@ class m170111_223115_corporation_member extends Migration
 
     public function safeDown()
     {
-        $this->dropTable('em2_corporation_member');
+        $this->dropTable('_corporation_member');
         echo "m170111_223115_corporation_member reverted.\n";
 
         return true;

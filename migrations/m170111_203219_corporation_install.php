@@ -6,7 +6,7 @@ class m170111_203219_corporation_install extends Migration
 {
     public function safeUp()
     {
-        $this->createTable('em2_corporation', [
+        $this->createTable('_corporation', [
             'id' => $this->primaryKey(),
             'corporationID' => $this->bigInteger()->null(),
             'corporationName' => $this->string(255)->null(),
@@ -15,10 +15,10 @@ class m170111_203219_corporation_install extends Migration
             'timeCreate' => $this->integer()->unsigned()->null()
         ]);
 
-        $this->createTable('em2_corporation_token', [
+        $this->createTable('_corporation_token', [
             'id' => $this->primaryKey(),
             'corporationID' => $this->bigInteger()->notNull()->comment('AI from corporation table'),
-            'tokenType'=>$this->string(255)->null(),
+            'tokenType' => $this->string(255)->null(),
             'accessToken' => $this->string(255)->null(),
             'refreshToken' => $this->string(255)->null(),
             'expiresIn' => $this->integer()->null(),
@@ -30,8 +30,8 @@ class m170111_203219_corporation_install extends Migration
 
     public function safeDown()
     {
-        $this->dropTable('em2_corporation');
-        $this->dropTable('em2_corporation_token');
+        $this->dropTable('_corporation');
+        $this->dropTable('_corporation_token');
         echo "m170111_203219_corporation_install reverted.\n";
 
         return true;

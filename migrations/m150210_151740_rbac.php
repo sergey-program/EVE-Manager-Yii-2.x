@@ -40,7 +40,7 @@ class m150210_151740_rbac extends Migration
             return false;
         }
 
-        $this->createTable('em2_user', [
+        $this->createTable('_user', [
             'id' => $this->primaryKey(),
             'characterName' => $this->string(255)->null()->comment('Character Name'),
             'characterID' => $this->bigInteger()->unsigned()->null()->comment('Character ID'),
@@ -48,7 +48,7 @@ class m150210_151740_rbac extends Migration
             'timeCreate' => $this->integer()->unsigned()->null()
         ]);
 
-        $this->createTable('em2_user_token', [
+        $this->createTable('_user_token', [
             'id' => $this->primaryKey(),
             'userID' => $this->integer()->unsigned()->notNull(),
             'accessToken' => $this->string(255)->null(),
@@ -66,8 +66,8 @@ class m150210_151740_rbac extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('em2_user');
-        $this->dropTable('em2_user_token');
+        $this->dropTable('_user');
+        $this->dropTable('_user_token');
         echo "m150210_151740_rbac reverted.\n";
 
         return true;
