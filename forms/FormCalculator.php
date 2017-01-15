@@ -2,23 +2,24 @@
 
 namespace app\forms;
 
-use app\components\eveCrest\MarketOrders;
-use app\models\dump\InvTypes;
+use app\components\eve\Item;
 use yii\base\Model;
 
 /**
  * Class FormCalculator
  *
  * @package app\forms
- *
- * @property string $list
- * @property int    $percent
  */
 class FormCalculator extends Model
 {
-    public $list;
+    const FILTER_PI = 'pi';
+
+    /** @var string $input */
+    public $input;
+    /** @var int|float $input */
     public $percent;
-    public $onlyPI;
+    /** @var string $input */
+    public $filter;
 
     /**
      * @return array
@@ -26,19 +27,24 @@ class FormCalculator extends Model
     public function rules()
     {
         return [
-            [['list', 'percent', 'onlyPI'], 'safe'],
-            ['onlyPI', 'boolean'],
+            ['input', 'trim'],
+            ['input', 'required'],
+            [['input', 'percent', 'filter'], 'safe'],
             ['percent', 'integer']
         ];
     }
 
+    /**
+     * @return array
+     */
     public function attributeLabels()
     {
         return [
-            'onlyPI' => 'Use only PI',
-            'percent' => 'Also count percent'
+            'filter' => 'Filter',
+            'reprocess' => 'Only reprocessed materials'
         ];
     }
+
     ### functions
 
     /**
@@ -46,44 +52,25 @@ class FormCalculator extends Model
      */
     public function parse()
     {
-        $result = [];
-        $invTypeNames = [];
+        $items = [];
+        $rows = explode("\n", $this->input);
 
-        // parse copy paste
-        $rows = explode("\n", $this->list);
-
-        if (is_array($rows)) {
-            foreach ($rows as $row) {
-                $item = explode("\t", $row);
-                $invTypeNames[] = trim($item[0]);
-                $result[] = [
-                    'typeName' => trim($item[0]),
-                    'count' => preg_replace("/\s+/u", '', $item[1])
-                ];
-            }
+        foreach ($rows as $row) {
+            $columns = explode("\t", $row);
+            $items['input'][] = new Item([
+                'typeName' => trim($columns[0]),
+                'quantity' => preg_replace("/\s+/u", '', $columns[1])
+            ]);
         }
 
-        // get typeID for parsed items
-        /** @var InvTypes[] $invTypes */
-        $invTypes = InvTypes::find()->where(['typeName' => $invTypeNames])->all();
-
-        foreach ($result as $resultKey => $resultItem) {
-            foreach ($invTypes as $invType) {
-                if ($resultItem['typeName'] == $invType->typeName) {
-
-                    if ($this->onlyPI && !in_array($invType->groupID, ['1033', '1042'])) {
-                        unset($result[$resultKey]);
-                        continue;
-                    }
-
-                    $result[$resultKey]['typeID'] = $invType->typeID;
-
-                    $result[$resultKey]['buy'] = MarketOrders::getPrice($invType->typeID, MarketOrders::ORDER_TYPE_BUY);
-                    $result[$resultKey]['sell'] = MarketOrders::getPrice($invType->typeID, MarketOrders::ORDER_TYPE_SELL);
+        if ($this->filter == self::FILTER_PI) {
+            foreach ($items['input'] as $item) {
+                if (in_array($item->groupID, ['1033', '1042'])) { // t0 and t1 pi
+                    $items['filter'][] = $item;
                 }
             }
         }
 
-        return $result;
+        return $items;
     }
 }

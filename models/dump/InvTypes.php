@@ -9,19 +9,21 @@ use app\models\extend\AbstractActiveRecord;
  *
  * @package app\models\dump
  *
- * @property $typeID
- * @property $groupID
- * @property $typeName
- * @property $description
- * @property $mass
- * @property $volume
- * @property $capacity
- * @property $portionSize
- * @property $raceID
- * @property $basePrice
- * @property $published
- * @property $marketGroupID
- * @property $chanceOfDuplicating
+ * @property                    $typeID
+ * @property                    $groupID
+ * @property                    $typeName
+ * @property                    $description
+ * @property                    $mass
+ * @property                    $volume
+ * @property                    $capacity
+ * @property                    $portionSize
+ * @property                    $raceID
+ * @property                    $basePrice
+ * @property                    $published
+ * @property                    $marketGroupID
+ * @property                    $chanceOfDuplicating
+ *
+ * @property InvTypeMaterials[] $invTypeMaterials
  */
 class InvTypes extends AbstractActiveRecord
 {
@@ -50,6 +52,14 @@ class InvTypes extends AbstractActiveRecord
     }
 
     ### relations
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvTypeMaterials()
+    {
+        return $this->hasMany(InvTypeMaterials::className(), ['typeID' => 'typeID']);
+    }
 
     ### functions
 }

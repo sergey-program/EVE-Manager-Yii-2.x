@@ -1,5 +1,7 @@
 <?php
 
+use app\components\eve\Item;
+use app\forms\FormCalculator;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 
@@ -20,9 +22,11 @@ use yii\bootstrap\Html;
             <?php $form = ActiveForm::begin(); ?>
 
             <div class="panel-body">
-                <?= $form->field($formCalculator, 'list', ['enableLabel' => false])->textarea(['rows' => 15]); ?>
+                <?= $form->field($formCalculator, 'input', ['enableLabel' => false, 'enableError' => false])->textarea(['rows' => 15]); ?>
                 <?= $form->field($formCalculator, 'percent')->textInput(['placeholder' => '15']); ?>
-                <?= $form->field($formCalculator, 'onlyPI')->checkbox(); ?>
+                <?= $form->field($formCalculator, 'filter')->dropDownList([
+                    FormCalculator::FILTER_PI => 'Only PI (T0 and T1 reactions).'
+                ], ['prompt' => "Don't use filter."]); ?>
             </div>
 
             <div class="panel-footer text-center">
@@ -34,83 +38,48 @@ use yii\bootstrap\Html;
     </div>
 
     <div class="col-md-8">
-        <?php if ($items): ?>
+        <?php if (!empty($items)): ?>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h1 class="panel-title">Result <?= count($items); ?></h1>
+                    <h1 class="panel-title">Result <?= count($items); ?>. <?= $formCalculator->filter; ?></h1>
                 </div>
 
                 <div class="panel-body">
-                    <?php if (!empty($items)): ?>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Qty</td>
+                            <td>Item</td>
+                            <td>Price (unit)</td>
+                            <td>Price (total)</td>
+                        </tr>
 
-                        <div class="col-md-6">
-                            <?php
-                            $totalBuy = 0; // bot list
-                            $totalSell = 0; // top list
-
-                            foreach ($items as $item) {
-                                $totalBuy += $item['buy'] * $item['count'];
-                                $totalSell += $item['sell'] * $item['count'];
-                            }
-                            ?>
-
-                            Jita sell <strong><?= number_format($totalSell, 2, '.', ' '); ?></strong>
-                            <br/>
-                            Jita buy <strong><?= number_format($totalBuy, 2, '.', ' '); ?></strong>
-                        </div>
-
-                        <div class="col-md-6">
-                            <?php if ($formCalculator->percent): ?>
-                                <?php
-                                $totalSellPercent = round($totalSell * ($formCalculator->percent / 100), 2);
-                                $totalBuyPercent = round($totalBuy * ($formCalculator->percent / 100), 2);
-                                ?>
-                                Corp sell <strong><?= number_format($totalSell + $totalSellPercent, 2, '.', ' '); ?></strong>
-                                (+<?= number_format($totalSellPercent, 2, '.', ' '); ?>)
-                                <br/>
-                                Corp price <strong><?= number_format($totalBuy - $totalBuyPercent, 2, '.', ' '); ?></strong>
-                                (-<?= number_format($totalBuyPercent, 2, '.', ' '); ?>)
-                            <?php endif; ?>
-                        </div>
-
-
-                        <table class="table table-bordered">
-                            <tr>
-                                <td>Qty</td>
-                                <td>Item</td>
-                                <td>Price (unit)</td>
-                                <td>Price (total)</td>
-                            </tr>
-
-                            <?php foreach ($items as $item): ?>
+                        <?php if ($formCalculator->filter): ?>
+                            <?php foreach ($items['filter'] as $item): ?>
+                                <?php /** @var Item $item */ ?>
                                 <tr>
-                                    <td class="text-right"><?= number_format($item['count'], 0, '.', ' '); ?></td>
+                                    <td><?= $item->quantity; ?></td>
+                                    <td><?= $item->typeName; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <?php foreach ($items['input'] as $item): ?>
+                                <?php /** @var Item $item */ ?>
+                                <tr>
+                                    <td><?= $item->quantity; ?></td>
+                                    <td><?= $item->typeName; ?></td>
                                     <td>
-                                        <img src="https://image.eveonline.com/Type/<?= $item['typeID']; ?>_32.png" class="pull-right">
-
-                                        <?= $item['typeName']; ?>
+                                        <?= $item->getPriceBuy(); ?>
                                         <br/>
-                                        <small class="text-muted">typeID: <?= $item['typeID']; ?></small>
-                                    </td>
-
-                                    <td class="text-right">
-                                        <?= number_format($item['sell'], 2, '.', ' '); ?>
-                                        <br/>
-                                        <?= number_format($item['buy'], 2, '.', ' '); ?>
-                                    </td>
-
-                                    <td class="text-right">
-                                        <?= number_format($item['sell'] * $item['count'], 2, '.', ' '); ?>
-                                        <br/>
-                                        <?= number_format($item['buy'] * $item['count'], 2, '.', ' '); ?>
+                                        <?= $item->getPriceSell(); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                        </table>
-
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </table>
                 </div>
             </div>
+
         <?php else: ?>
             <p class="alert alert-info text-center">Empty input.</p>
         <?php endif; ?>
