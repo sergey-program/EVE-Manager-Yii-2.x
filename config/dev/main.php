@@ -1,0 +1,60 @@
+<?php
+
+$aConfig = [
+    'id' => 'main',
+    'name' => 'EVE Manager',
+    'charset' => 'UTF-8',
+    'language' => 'en',
+    'basePath' => FILE_PATH_ROOT,
+    'bootstrap' => ['log'],
+    'params' => require_once(FILE_PATH_CONFIG_ENV . '_param.php'),
+    'defaultRoute' => 'index/index',
+    'components' => [
+        'db' => require_once(FILE_PATH_CONFIG_ENV . '_db.php'),
+        'user' => [
+            'class' => 'app\components\UserExtended',
+            'identityClass' => 'app\components\UserIdentity',
+            'enableAutoLogin' => true,
+            'loginUrl' => ['auth/login']
+        ],
+        'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => require(FILE_PATH_CONFIG_ENV . '_routes.php')
+        ],
+        'request' => [
+            'cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7', // add manually some salt
+        ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
+        'errorHandler' => [
+            'errorAction' => 'error/index',
+        ],
+        'view' => [
+            'class' => 'app\components\ViewExtended'
+        ],
+        // send all mails to a file by default. You have to set
+        // 'useFileTransport' to false and configure a transport
+        // for the mailer to send real emails.
+        //'mailer' => ['class' => 'yii\swiftmailer\Mailer','useFileTransport' => true,],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [['class' => 'yii\log\FileTarget', 'levels' => ['error', 'warning']]],
+        ]
+    ],
+    'modules' => [
+        'debug' => 'yii\debug\Module',
+        'character' => 'app\modules\character\Module',
+        'prices' => 'app\modules\prices\Module'
+    ]
+];
+
+if (YII_ENV_DEV) {
+    // configuration adjustments for 'dev' environment
+    $aConfig['bootstrap'][] = 'debug';
+    $aConfig['modules']['debug'] = 'yii\debug\Module';
+}
+
+return $aConfig;
