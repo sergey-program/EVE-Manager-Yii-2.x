@@ -53,7 +53,8 @@ class EveSSO
                 'characterWalletRead'
             ];
 
-            $url .= '&redirect_uri=http://eve-manager/callback-url?' . self::VN . '=' . self::ACTION_SI;
+            $callbackUrl = \Yii::$app->params['application']['callbackUrl'];
+            $url .= '&redirect_uri=' . $callbackUrl . '?' . self::VN . '=' . self::ACTION_SI;
             $url .= '&scope=' . implode('%20', $scopes);
 
             return $url;
