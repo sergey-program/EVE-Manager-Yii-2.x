@@ -39,16 +39,58 @@ use yii\bootstrap\Html;
 
     <div class="col-md-9">
         <?php if (!empty($items)): ?>
+            <?php
+            /** @var Item[] $showItems */
+            $showItems = $formCalculator->filter ? $items['filter'] : $items['input'];
+            ?>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <?= count($items); ?> item(s).
+                        <?= count($showItems); ?> item(s).
                         <?= $formCalculator->filter ? 'Applied filter "' . $formCalculator->filter . '".' : ''; ?>
                     </h1>
                 </div>
 
                 <div class="panel-body">
+                    <?php
+                    $price = ['buy' => 0, 'percentBuy' => 0, 'sell' => 0, 'percentSell' => 0];
+
+                    foreach ($showItems as $item) {
+                        $price['buy'] += $item->getPriceBuy($item->quantity);
+
+                        $price['percentBuy'] += $item->getPriceBuy($item->quantity) * ($formCalculator->percent / 100);
+                        $price['percentSell'] += $item->getPriceSell($item->quantity) * ($formCalculator->percent / 100);
+
+                        $price['sell'] += $item->getPriceSell($item->quantity);
+                    }
+                    ?>
+
+                    <div class="maring-15">
+                        <table class="table text-right">
+                            <tr>
+                                <td title="Jita Sell Orders">JS <?= number_format($price['sell'], 2, '.', ' '); ?></td>
+
+                                <td title="Percent">
+                                    + <?= number_format($price['percentSell'], 2, '.', ' '); ?>
+                                    <small class="text-muted"><?= $formCalculator->percent; ?>%</small>
+                                </td>
+
+                                <td title="Percent Sell"><?= number_format($price['sell'] + $price['percentSell'], 2, '.', ' '); ?></td>
+                            </tr>
+
+                            <tr>
+                                <td title="Jita Buy Orders">JB <?= number_format($price['buy'], 2, '.', ' '); ?></td>
+
+                                <td title="Percent">
+                                    - <?= number_format($price['percentBuy'], 2, '.', ' '); ?>
+                                    <small class="text-muted"><?= $formCalculator->percent; ?>%</small>
+                                </td>
+                                <td title="Percent Buy"><?= number_format($price['buy'] - $price['percentBuy'], 2, '.', ' '); ?></td>
+                            </tr>
+                        </table>
+                    </div>
+
                     <table class="table table-bordered">
                         <tr>
                             <td>Quantity</td>
@@ -56,8 +98,6 @@ use yii\bootstrap\Html;
                             <td>Price (unit)</td>
                             <td>Price (total)</td>
                         </tr>
-
-                        <?php $showItems = $formCalculator->filter ? $items['filter'] : $items['input']; ?>
 
                         <?php foreach ($showItems as $item): ?>
                             <?php /** @var Item $item */ ?>
@@ -68,7 +108,7 @@ use yii\bootstrap\Html;
                                     <div>
                                         <?= $item->typeName; ?>
                                         <br/>
-                                        <small class="text-muted"><?= $item->typeID; ?></small>
+                                        <small class="text-muted">typeID: <?= $item->typeID; ?></small>
                                     </div>
                                 </td>
                                 <td class="text-right">
