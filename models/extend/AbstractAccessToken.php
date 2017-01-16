@@ -24,7 +24,7 @@ abstract class AbstractAccessToken extends AbstractActiveRecord
     public function accessTokenIsExpired()
     {
         // -30 second to be sure
-        return ($this->timeUpdate + $this->expiresIn - 30) > time();
+        return ($this->timeUpdate + $this->expiresIn + 30) < time();
     }
 
     /**
@@ -41,6 +41,7 @@ abstract class AbstractAccessToken extends AbstractActiveRecord
         $this->tokenType = $data['token_type'];
         $this->expiresIn = $data['expires_in'];
         $this->refreshToken = $data['refresh_token'];
+        $this->timeUpdate = time();
 
         if (!$this->save()) {
             throw new \ErrorException('Cannot update token model for user. userID: ' . $this->userID);

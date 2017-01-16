@@ -35,8 +35,9 @@ class UserToken extends AbstractAccessToken
     public function rules()
     {
         return [
+            ['timeUpdate', 'default', 'value' => time()],
             ['userID', 'required'],
-            [['accessToken', 'tokenType', 'expiresIn', 'refreshToken', 'timeCreate'], 'safe']
+            [['accessToken', 'tokenType', 'expiresIn', 'refreshToken', 'timeUpdate'], 'safe']
         ];
     }
 

@@ -14,7 +14,7 @@ use yii\base\InvalidParamException;
 class EveSSO
 {
     const VN = 'action'; // variable name
-    // actions
+
     const ACTION_SI = 'sign-in'; // sign in
     const ACTION_IC = 'install-corporation'; // install corporation
 
@@ -50,7 +50,9 @@ class EveSSO
                 'characterMarketOrdersRead',
                 'characterNotificationsRead',
                 'characterSkillsRead',
-                'characterWalletRead'
+                'characterWalletRead',
+                'esi-assets.read_assets.v1',
+                'esi-wallet.read_character_wallet.v1'
             ];
 
             $callbackUrl = \Yii::$app->params['application']['callbackUrl'];
@@ -78,21 +80,4 @@ class EveSSO
 
         throw new InvalidParamException('Unknown action. Cannot create url by action name "' . $action . '".');
     }
-
-//    public static function getScopes()
-//    {
-//        return [
-//            'characterAccountRead', 'characterAssetsRead', 'characterBookmarksRead',
-//            'characterCalendarRead', 'characterChatChannelsRead', 'characterClonesRead', 'characterContactsRead',
-//            'characterContactsWrite', 'characterContractsRead', 'characterFactionalWarfareRead',
-//            'characterFittingsRead', 'characterFittingsWrite', 'characterIndustryJobsRead', 'characterKillsRead',
-//            'characterLocationRead', 'characterLoyaltyPointsRead', 'characterMailRead', 'characterMarketOrdersRead',
-//            'characterMedalsRead', 'characterNavigationWrite', 'characterNotificationsRead',
-//            'characterOpportunitiesRead', 'characterResearchRead', 'characterSkillsRead', 'characterStatsRead',
-//            'characterWalletRead', 'corporationAssetsRead', 'corporationBookmarksRead', 'corporationContactsRead',
-//            'corporationContractsRead', 'corporationFactionalWarfareRead', 'corporationIndustryJobsRead',
-//            'corporationKillsRead', 'corporationMarketOrdersRead', 'corporationMedalsRead',
-//            'corporationMembersRead', 'corporationShareholdersRead', 'corporationStructuresRead',
-//            'corporationWalletRead', 'fleetRead', 'fleetWrite', 'publicData', 'remoteClientUI', 'structureVulnUp'];
-//    }
 }

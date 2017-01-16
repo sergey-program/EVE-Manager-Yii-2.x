@@ -13,7 +13,7 @@ use yii\bootstrap\Html;
 ?>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h1 class="panel-title">Copy past from EVE</h1>
@@ -37,45 +37,53 @@ use yii\bootstrap\Html;
         </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-9">
         <?php if (!empty($items)): ?>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h1 class="panel-title">Result <?= count($items); ?>. <?= $formCalculator->filter; ?></h1>
+                    <h1 class="panel-title">
+                        <?= count($items); ?> item(s).
+                        <?= $formCalculator->filter ? 'Applied filter "' . $formCalculator->filter . '".' : ''; ?>
+                    </h1>
                 </div>
 
                 <div class="panel-body">
                     <table class="table table-bordered">
                         <tr>
-                            <td>Qty</td>
+                            <td>Quantity</td>
                             <td>Item</td>
                             <td>Price (unit)</td>
                             <td>Price (total)</td>
                         </tr>
 
-                        <?php if ($formCalculator->filter): ?>
-                            <?php foreach ($items['filter'] as $item): ?>
-                                <?php /** @var Item $item */ ?>
-                                <tr>
-                                    <td><?= $item->quantity; ?></td>
-                                    <td><?= $item->typeName; ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <?php foreach ($items['input'] as $item): ?>
-                                <?php /** @var Item $item */ ?>
-                                <tr>
-                                    <td><?= $item->quantity; ?></td>
-                                    <td><?= $item->typeName; ?></td>
-                                    <td>
-                                        <?= $item->getPriceBuy(); ?>
+                        <?php $showItems = $formCalculator->filter ? $items['filter'] : $items['input']; ?>
+
+                        <?php foreach ($showItems as $item): ?>
+                            <?php /** @var Item $item */ ?>
+                            <tr>
+                                <td style="line-height: 42px;" class="text-right"><?= number_format($item->quantity, 0, '.', ' '); ?></td>
+                                <td>
+                                    <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;">
+                                    <div>
+                                        <?= $item->typeName; ?>
                                         <br/>
-                                        <?= $item->getPriceSell(); ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                        <small class="text-muted"><?= $item->typeID; ?></small>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <?= number_format($item->getPriceBuy(), 2, '.', ' '); ?>
+                                    <br/>
+                                    <?= number_format($item->getPriceSell(), 2, '.', ' '); ?>
+                                </td>
+
+                                <td class="text-right">
+                                    <?= number_format($item->getPriceBuy($item->quantity), 2, '.', ' '); ?>
+                                    <br/>
+                                    <?= number_format($item->getPriceSell($item->quantity), 2, '.', ' '); ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </table>
                 </div>
             </div>
@@ -84,4 +92,5 @@ use yii\bootstrap\Html;
             <p class="alert alert-info text-center">Empty input.</p>
         <?php endif; ?>
     </div>
+
 </div>

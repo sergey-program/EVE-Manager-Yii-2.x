@@ -2,7 +2,7 @@
 
 namespace app\components\eve\extend;
 
-use app\components\eveCrest\MarketOrders;
+use app\components\eveEsi\MarketOrders;
 use app\models\dump\InvTypes;
 use yii\base\NotSupportedException;
 use yii\base\Object;
@@ -144,15 +144,17 @@ abstract class AbstractItem extends Object
     }
 
     /**
+     * @param int $quantity
+     *
      * @return int
      */
-    public function getPriceSell()
+    public function getPriceSell($quantity = 1)
     {
         if (is_null($this->priceSell)) {
             $this->setPriceSell(MarketOrders::getPrice($this->typeID, MarketOrders::ORDER_TYPE_SELL));
         }
 
-        return $this->priceSell;
+        return $this->priceSell * $quantity;
     }
 
     /**
@@ -168,14 +170,16 @@ abstract class AbstractItem extends Object
     }
 
     /**
+     * @param int $quantity
+     *
      * @return int
      */
-    public function getPriceBuy()
+    public function getPriceBuy($quantity = 1)
     {
         if (is_null($this->priceBuy)) {
             $this->setPriceBuy(MarketOrders::getPrice($this->typeID, MarketOrders::ORDER_TYPE_BUY));
         }
 
-        return $this->priceBuy;
+        return $this->priceBuy * $quantity;
     }
 }
