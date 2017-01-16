@@ -2,7 +2,6 @@
 
 namespace app\components\eve\extend;
 
-use app\components\eveEsi\MarketOrders;
 use app\models\dump\InvTypes;
 use yii\base\NotSupportedException;
 use yii\base\Object;
@@ -29,14 +28,13 @@ abstract class AbstractItem extends Object
      */
     public function init()
     {
+        // load base data
         if (!$this->typeID || !$this->typeName || !$this->groupID) {
             $filter = null;
 
             if ($this->typeID) {
                 $filter = ['typeID' => $this->typeID];
-            }
-
-            if ($this->typeName) {
+            } elseif ($this->typeName) {
                 $filter = ['typeName' => $this->typeName];
             }
 
@@ -68,14 +66,6 @@ abstract class AbstractItem extends Object
     }
 
     /**
-     * @return int
-     */
-    public function getTypeID()
-    {
-        return $this->typeID;
-    }
-
-    /**
      * @param string $typeName
      *
      * @return $this
@@ -88,14 +78,6 @@ abstract class AbstractItem extends Object
     }
 
     /**
-     * @return string
-     */
-    public function getTypeName()
-    {
-        return $this->typeID;
-    }
-
-    /**
      * @param int $groupID
      *
      * @return $this
@@ -105,14 +87,6 @@ abstract class AbstractItem extends Object
         $this->groupID = $groupID;
 
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getGroupID()
-    {
-        return $this->groupID;
     }
 
     /**
