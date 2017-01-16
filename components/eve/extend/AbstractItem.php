@@ -132,6 +132,21 @@ abstract class AbstractItem extends Object
     }
 
     /**
+     * @return $this
+     */
+    public function getPrices()
+    {
+        $marketOrders = new MarketOrders();
+        $marketOrders->getRows($this->typeID);
+
+        $this
+            ->setPriceSell($marketOrders->getPrice(MarketOrders::ORDER_TYPE_SELL))
+            ->setPriceBuy($marketOrders->getPrice(MarketOrders::ORDER_TYPE_BUY));
+
+        return $this;
+    }
+
+    /**
      * @param float $priceSell
      *
      * @return $this
@@ -151,7 +166,7 @@ abstract class AbstractItem extends Object
     public function getPriceSell($quantity = 1)
     {
         if (is_null($this->priceSell)) {
-            $this->setPriceSell(MarketOrders::getPrice($this->typeID, MarketOrders::ORDER_TYPE_SELL));
+            $this->getPrices();
         }
 
         return $this->priceSell * $quantity;
@@ -177,7 +192,7 @@ abstract class AbstractItem extends Object
     public function getPriceBuy($quantity = 1)
     {
         if (is_null($this->priceBuy)) {
-            $this->setPriceBuy(MarketOrders::getPrice($this->typeID, MarketOrders::ORDER_TYPE_BUY));
+            $this->getPrices();
         }
 
         return $this->priceBuy * $quantity;

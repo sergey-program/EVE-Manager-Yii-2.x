@@ -11,32 +11,39 @@ use app\models\User;
  */
 class MarketOrders
 {
+    /** @var array */
+    public $rows;
+    /** @var int|null|string $regionID */
+    public $regionID;
+
     const ORDER_TYPE_SELL = 'sell';
     const ORDER_TYPE_BUY = 'buy';
 
     /**
-     * @param string|int $typeID
-     * @param string     $orderType
-     * @param int        $regionID
+     * MarketOrders constructor.
      *
-     * @return int
+     * @param int|null $regionID
      */
-    public static function getPrice($typeID, $orderType, $regionID = null)
+    public function __construct($regionID = null)
     {
-        $regionID = is_null($regionID) ? '10000002' : $regionID;
+        $this->regionID = $regionID ? $regionID : '10000002';
+    }
+
+    /**
+     * @param int    $typeID
+     * @param string $regionID Default is Forge region.
+     *
+     * @return $this
+     */
+    public function getRows($typeID)
+    {
         $curl = curl_init();
 
         /** @var User $user */
         $user = User::find()->one();
         $user->token->refreshAccessToken();
 
-        $params = [
-            'type_id=' . $typeID,
-            'order_type=' . $orderType,
-            'page=1'
-        ];
-
-        $url = 'https://esi.tech.ccp.is/latest/markets/' . $regionID . '/orders?' . implode('&', $params);
+        $url = 'https://esi.tech.ccp.is/latest/markets/' . $this->regionID . '/orders?type_id=' . $typeID . '&page=1';
 
         curl_setopt_array($curl, [
                 CURLOPT_URL => $url,
@@ -51,42 +58,50 @@ class MarketOrders
         );
 
         $resultString = curl_exec($curl);
-        $result = json_decode($resultString, true);
+        curl_close($curl);
 
-//        echo '<pre>';
-//        echo print_r($result);
-//        echo '</pre>';
-//        die();
-        $bestPrice = null;
+        $this->rows = json_decode($resultString, true);
 
+        return $this;
+    }
 
-        foreach ($result as $item) {
-            // use only jita 4-4
-            if ($item['location_id'] != '60003760') {
+    /**
+     * @param string $orderType
+     *
+     * @return int
+     */
+    public function getPrice($orderType)
+    {
+        $rowBest = null;
+
+        foreach ($this->rows as $row) {
+            if ($row['location_id'] != '60003760') { // use only jita 4-4
                 continue;
             }
 
-            // assign first any price
-            if (is_null($bestPrice)) {
-                $bestPrice = $item;
-                continue;
-            }
+            if ($orderType == self::ORDER_TYPE_SELL && !$row['is_buy_order']) {
+                if (is_null($rowBest)) {
+                    $rowBest = $row;
+                    continue;
+                }
 
-            if ($orderType == self::ORDER_TYPE_SELL) {
-                if ($bestPrice['price'] > $item['price']) {
-                    $bestPrice = $item;
+                if ($rowBest['price'] > $row['price']) {
+                    $rowBest = $row;
                 }
             }
 
-            if ($orderType == self::ORDER_TYPE_BUY) {
-                if ($bestPrice['price'] < $item['price']) {
-                    $bestPrice = $item;
+            if ($orderType == self::ORDER_TYPE_BUY && $row['is_buy_order']) {
+                if (is_null($rowBest)) {
+                    $rowBest = $row;
+                    continue;
+                }
+
+                if ($rowBest['price'] < $row['price']) {
+                    $rowBest = $row;
                 }
             }
         }
 
-        curl_close($curl);
-
-        return $bestPrice ? $bestPrice['price'] : 0;
+        return $rowBest ? $rowBest['price'] : 0;
     }
 }

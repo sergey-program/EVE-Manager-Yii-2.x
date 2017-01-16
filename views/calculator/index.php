@@ -41,7 +41,7 @@ use yii\bootstrap\Html;
         <?php if (!empty($items)): ?>
             <?php
             /** @var Item[] $showItems */
-            $showItems = $formCalculator->filter ? $items['filter'] : $items['input'];
+            $showItems = ($formCalculator->filter && isset($items['filter'])) ? $items['filter'] : $items['input'];
             ?>
 
             <div class="panel panel-default">
@@ -112,15 +112,15 @@ use yii\bootstrap\Html;
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <?= number_format($item->getPriceBuy(), 2, '.', ' '); ?>
-                                    <br/>
                                     <?= number_format($item->getPriceSell(), 2, '.', ' '); ?>
+                                    <br/>
+                                    <?= number_format($item->getPriceBuy(), 2, '.', ' '); ?>
                                 </td>
 
                                 <td class="text-right">
-                                    <?= number_format($item->getPriceBuy($item->quantity), 2, '.', ' '); ?>
-                                    <br/>
                                     <?= number_format($item->getPriceSell($item->quantity), 2, '.', ' '); ?>
+                                    <br/>
+                                    <?= number_format($item->getPriceBuy($item->quantity), 2, '.', ' '); ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
