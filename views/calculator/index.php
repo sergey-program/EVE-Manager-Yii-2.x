@@ -93,16 +93,15 @@ use yii\bootstrap\Html;
 
                     <table class="table table-bordered">
                         <tr>
-                            <td>Quantity</td>
                             <td>Item</td>
                             <td>Price (unit)</td>
+                            <td>Quantity</td>
                             <td>Price (total)</td>
                         </tr>
 
                         <?php foreach ($showItems as $item): ?>
                             <?php /** @var Item $item */ ?>
                             <tr>
-                                <td style="line-height: 42px;" class="text-right"><?= number_format($item->quantity, 0, '.', ' '); ?></td>
                                 <td>
                                     <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;">
                                     <div>
@@ -112,9 +111,13 @@ use yii\bootstrap\Html;
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <?= number_format($item->getPriceSell(), 2, '.', ' '); ?>
+                                    <span class="text-success" title="Best sell price."><?= number_format($item->getPriceSell(), 2, '.', ' '); ?></span>
                                     <br/>
-                                    <?= number_format($item->getPriceBuy(), 2, '.', ' '); ?>
+                                    <span class="text-danger" title="Best buy price."><?= number_format($item->getPriceBuy(), 2, '.', ' '); ?></span>
+                                </td>
+
+                                <td style="line-height: 42px;" class="text-right">
+                                    x<?= number_format($item->quantity, 0, '.', ' '); ?>
                                 </td>
 
                                 <td class="text-right">

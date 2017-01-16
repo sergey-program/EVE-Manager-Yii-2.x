@@ -22,10 +22,6 @@ abstract class AbstractItem extends Object
     public $groupID;
     /** @var int $quantity */
     public $quantity = 1;
-    /** @var float|int $priceSell */
-    public $priceSell;
-    /** @var float|int $priceBuy */
-    public $priceBuy;
 
     /**
      * @throws NotSupportedException
@@ -129,72 +125,5 @@ abstract class AbstractItem extends Object
         $this->quantity = $quantity;
 
         return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function getPrices()
-    {
-        $marketOrders = new MarketOrders();
-        $marketOrders->getRows($this->typeID);
-
-        $this
-            ->setPriceSell($marketOrders->getPrice(MarketOrders::ORDER_TYPE_SELL))
-            ->setPriceBuy($marketOrders->getPrice(MarketOrders::ORDER_TYPE_BUY));
-
-        return $this;
-    }
-
-    /**
-     * @param float $priceSell
-     *
-     * @return $this
-     */
-    public function setPriceSell($priceSell)
-    {
-        $this->priceSell = $priceSell;
-
-        return $this;
-    }
-
-    /**
-     * @param int $quantity
-     *
-     * @return int
-     */
-    public function getPriceSell($quantity = 1)
-    {
-        if (is_null($this->priceSell)) {
-            $this->getPrices();
-        }
-
-        return $this->priceSell * $quantity;
-    }
-
-    /**
-     * @param float $priceBuy
-     *
-     * @return $this
-     */
-    public function setPriceBuy($priceBuy)
-    {
-        $this->priceBuy = $priceBuy;
-
-        return $this;
-    }
-
-    /**
-     * @param int $quantity
-     *
-     * @return int
-     */
-    public function getPriceBuy($quantity = 1)
-    {
-        if (is_null($this->priceBuy)) {
-            $this->getPrices();
-        }
-
-        return $this->priceBuy * $quantity;
     }
 }

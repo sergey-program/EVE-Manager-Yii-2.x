@@ -11,7 +11,7 @@ use yii\base\NotSupportedException;
  *
  * @package app\components\eve\extend
  */
-abstract class AbstractProcessableItem extends AbstractItem
+abstract class AbstractProcessableItem extends AbstractPriceItem
 {
     /** @var array|Item[] $reprocess */
     public $reprocess = [];
