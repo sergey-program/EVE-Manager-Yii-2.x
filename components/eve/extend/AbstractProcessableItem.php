@@ -30,15 +30,15 @@ abstract class AbstractProcessableItem extends AbstractPriceItem
         /** @var InvTypeMaterials[] $invTypeMaterials */
         $invTypeMaterials = InvTypeMaterials::find()
             ->joinWith('invType')
-            ->where(['typeID' => $this->typeID])
+            ->where(['invTypes.typeID' => $this->typeID])
             ->all();
 
         foreach ($invTypeMaterials as $invTypeMaterial) {
             $this->reprocess[] = new Item([
-                'typeID' => $invTypeMaterial->typeID,
-                'typeName' => $invTypeMaterial->invType->typeName,
+                'typeID' => $invTypeMaterial->materialInvType->typeID,
+                'typeName' => $invTypeMaterial->materialInvType->typeName,
                 'quantity' => $invTypeMaterial->quantity,
-                'groupID' => $invTypeMaterial->invType->groupID
+                'groupID' => $invTypeMaterial->materialInvType->groupID
             ]);
         }
 

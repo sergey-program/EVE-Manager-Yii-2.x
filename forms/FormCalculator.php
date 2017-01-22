@@ -57,10 +57,11 @@ class FormCalculator extends Model
 
         foreach ($rows as $row) {
             $columns = explode("\t", $row);
-            $items['input'][] = new Item([
-                'typeName' => trim($columns[0]),
-                'quantity' => preg_replace("/\s+/u", '', $columns[1])
-            ]);
+            $quantity = preg_replace("/\s+/u", '', $columns[1]);
+
+            if (is_numeric($quantity)) {
+                $items['input'][] = new Item(['typeName' => trim($columns[0]), 'quantity' => $quantity]);
+            }
         }
 
         if ($this->filter == self::FILTER_PI) {

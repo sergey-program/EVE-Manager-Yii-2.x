@@ -126,6 +126,23 @@ use yii\bootstrap\Html;
                                     <?= number_format($item->getPriceBuy($item->quantity), 2, '.', ' '); ?>
                                 </td>
                             </tr>
+
+                            <?php if ($item->calculateReprocess()->reprocess): ?>
+                                <tr>
+                                    <td colspan="4">
+                                        <table class="table">
+                                            <?php foreach ($item->reprocess as $repItem): ?>
+                                                <tr>
+                                                    <td><img src="https://image.eveonline.com/Type/<?= $repItem->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;"></td>
+                                                    <td><?= $repItem->typeName; ?></td>
+                                                    <td><?= $repItem->quantity; ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+
+                                        </table>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </table>
                 </div>
