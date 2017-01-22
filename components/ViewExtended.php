@@ -2,20 +2,19 @@
 
 namespace app\components;
 
-use app\models\api\account\Character;
 use yii\web\View;
 
 /**
  * Class ViewExtended
  *
  * @package app\components
- * @property Character|null $character
  */
 class ViewExtended extends View
 {
-    private $character;
-
-    const PARAM_NAME_BREAD = 'bread';
+    /** Variable names in $this->params array. */
+    const VN_BREAD = 'bread';
+    const VN_PT = 'page_title';
+    const VN_PD = 'page_description';
 
     /**
      * Set default page title.
@@ -24,27 +23,47 @@ class ViewExtended extends View
     {
         parent::init();
 
-        $this->setTitle(\Yii::$app->name);
+        $this->setPageTitle(\Yii::$app->name);
     }
 
     /**
-     * @param string $sPageTitle
+     * @param string $pageTitle
      *
      * @return $this
      */
-    public function setTitle($sPageTitle)
+    public function setPageTitle($pageTitle)
     {
-        $this->title = $sPageTitle;
+        $this->params[self::VN_PT] = $pageTitle;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle()
+    public function getPageTitle()
     {
-        return $this->title;
+        return isset($this->params[self::VN_PT]) ? $this->params[self::VN_PT] : null;
+    }
+
+    /**
+     * @param string $pageDescription
+     *
+     * @return $this
+     */
+    public function setPageDescription($pageDescription)
+    {
+        $this->params[self::VN_PD] = $pageDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPageDescription()
+    {
+        return isset($this->params[self::VN_PD]) ? $this->params[self::VN_PD] : null;
     }
 
     /**
@@ -54,7 +73,7 @@ class ViewExtended extends View
      */
     public function addBread($bread)
     {
-        $this->params[self::PARAM_NAME_BREAD][] = $bread;
+        $this->params[self::VN_BREAD][] = $bread;
 
         return $this;
     }
@@ -66,21 +85,17 @@ class ViewExtended extends View
      */
     public function setBreads(array $bread)
     {
-        $this->params[self::PARAM_NAME_BREAD] = $bread;
+        $this->params[self::VN_BREAD] = $bread;
 
         return $this;
     }
 
     /**
-     * @return null|array
+     * @return array|null
      */
     public function getBreads()
     {
-        if ($this->hasBreads()) {
-            return $this->params[self::PARAM_NAME_BREAD];
-        }
-
-        return null;
+        return ($this->hasBreads()) ? $this->params[self::VN_BREAD] : null;
     }
 
     /**
@@ -88,60 +103,6 @@ class ViewExtended extends View
      */
     public function hasBreads()
     {
-        return (isset($this->params[self::PARAM_NAME_BREAD]) && is_array($this->params[self::PARAM_NAME_BREAD]));
+        return (isset($this->params[self::VN_BREAD]) && is_array($this->params[self::VN_BREAD]));
     }
-
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function setFlash($key, $value)
-    {
-        \Yii::$app->session->setFlash($key, $value);
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function hasFlash($key)
-    {
-        return \Yii::$app->session->hasFlash($key);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
-    public function getFlash($key)
-    {
-        return \Yii::$app->session->getFlash($key);
-    }
-
-    /**
-     * @param Character $character
-     *
-     * @return $this
-     */
-    public function setCharacter(Character $character)
-    {
-        $this->character = $character;
-
-        return $this;
-    }
-
-    /**
-     * @return Character|null
-     */
-    public function getCharacter()
-    {
-        return $this->character;
-    }
-
 }

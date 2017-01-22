@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\EveSSO;
 use app\controllers\extend\AbstractController;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 
 /**
@@ -13,6 +14,21 @@ use yii\web\BadRequestHttpException;
  */
 class CallbackController extends AbstractController
 {
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    ['allow' => true, 'actions' => ['detect'], 'roles' => ['?', '@']]
+                ]
+            ]
+        ];
+    }
+
     /**
      * @return \yii\web\Response
      * @throws \Exception

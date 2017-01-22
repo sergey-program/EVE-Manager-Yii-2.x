@@ -2,6 +2,7 @@
 
 namespace app\controllers\extend;
 
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 /**
@@ -11,6 +12,21 @@ use yii\web\Controller;
  */
 abstract class AbstractController extends Controller
 {
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    ['allow' => true, 'roles' => ['@']]
+                ]
+            ]
+        ];
+    }
+
     /**
      * Redefine return class for autocomplete (IDE).
      *

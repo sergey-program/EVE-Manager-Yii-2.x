@@ -6,6 +6,7 @@ use app\components\UserIdentity;
 use app\controllers\extend\AbstractController;
 use app\models\extend\AbstractAccessToken;
 use app\models\UserToken;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 
 /**
@@ -16,15 +17,31 @@ use yii\web\BadRequestHttpException;
 class AuthController extends AbstractController
 {
     /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    ['allow' => true, 'actions' => ['sign-in', 'sign-in-callback'], 'roles' => ['?']],
+                ]
+            ]
+        ];
+    }
+
+    /**
      * Create link for auth by EVE SSO.
      *
      * @return string
      */
     public function actionSignIn()
     {
+        $this->layout = false;
+
         return $this->render('sign-in');
     }
-
 
     /**
      * @return \yii\web\Response

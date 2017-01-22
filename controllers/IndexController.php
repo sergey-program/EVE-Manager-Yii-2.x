@@ -16,7 +16,11 @@ class IndexController extends AbstractController
      */
     public function actionIndex()
     {
-        $this->getView()->setTitle('Index');
+        $this
+            ->getView()
+            ->addBread('Dashboard')
+            ->setPageTitle('Dashboard')
+            ->setPageDescription('Main page');
 
         return $this->render('index');
     }
@@ -34,12 +38,12 @@ class IndexController extends AbstractController
         $url .= 'response_type=code';
 //        $url .= 'response_type=token';
         $url .= '&redirect_uri=http://eve-manager/callback-url';
-        $url .= '&client_id='.$client1;
+        $url .= '&client_id=' . $client1;
 //        $url .= '&scope=characterContactsRead%20characterContactsWrite';
         $url .= '&scope=characterAssetsRead';
         $url .= '&state=uniquestate123';
 
-        $access_token ='5AyI2_crDJ8BU858uAvIZHVXBNtZMtCLO_bcs7GQOTQiIAZ0cVK6PL42AM_pUsDm_OgyhvCyNPouIsyCCVzEmQ2';
+        $access_token = '5AyI2_crDJ8BU858uAvIZHVXBNtZMtCLO_bcs7GQOTQiIAZ0cVK6PL42AM_pUsDm_OgyhvCyNPouIsyCCVzEmQ2';
 //        $token_type = "Bearer";
 
 //        $url = 'https://api.eveonline.com/char/AssetList.xml.aspx?accessToken='.$access_token;

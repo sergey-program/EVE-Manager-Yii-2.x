@@ -13,31 +13,43 @@ use yii\bootstrap\Html;
 ?>
 
 <div class="row">
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h1 class="panel-title">Copy past from EVE</h1>
+    <div class="col-md-12">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Copy past from EVE</h3>
             </div>
 
             <?php $form = ActiveForm::begin(); ?>
 
-            <div class="panel-body">
-                <?= $form->field($formCalculator, 'input', ['enableLabel' => false, 'enableError' => false])->textarea(['rows' => 15]); ?>
-                <?= $form->field($formCalculator, 'percent')->textInput(['placeholder' => '15']); ?>
-                <?= $form->field($formCalculator, 'filter')->dropDownList([
-                    FormCalculator::FILTER_PI => 'Only PI (T0 and T1 reactions).'
-                ], ['prompt' => "Don't use filter."]); ?>
-            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($formCalculator, 'input', ['enableLabel' => false, 'enableError' => false])->textarea(['rows' => 3]); ?>
+                    </div>
 
-            <div class="panel-footer text-center">
-                <?= Html::submitButton('Calculate', ['class' => 'btn btn-primary']); ?>
+                    <div class="col-md-6">
+                        <div class="col-md-6">
+                            <?= $form->field($formCalculator, 'percent', ['enableLabel' => false, 'enableError' => false])->textInput(['placeholder' => 'Discount percent']); ?>
+                        </div>
+
+                        <div class="col-md-6">
+                            <?= $form->field($formCalculator, 'filter', ['enableLabel' => false, 'enableError' => false])->dropDownList([
+                                FormCalculator::FILTER_PI => 'Only PI (T0 and T1 reactions).'
+                            ], ['prompt' => "Don't use filter."]); ?>
+                        </div>
+
+                        <div class="col-md-12 text-center">
+                            <?= Html::submitButton('Calculate', ['class' => 'btn btn-primary']); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <?php ActiveForm::end(); ?>
         </div>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-6">
         <?php if (!empty($items)): ?>
             <?php
             /** @var Item[] $showItems */
@@ -147,9 +159,6 @@ use yii\bootstrap\Html;
                     </table>
                 </div>
             </div>
-
-        <?php else: ?>
-            <p class="alert alert-info text-center">Empty input.</p>
         <?php endif; ?>
     </div>
 
