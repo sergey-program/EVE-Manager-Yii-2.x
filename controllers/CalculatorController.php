@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\eve\ActionReprocess;
 use app\controllers\extend\AbstractController;
 use app\forms\FormCalculator;
 
@@ -23,9 +24,6 @@ class CalculatorController extends AbstractController
             $formCalculator->parse();
         }
 
-        return $this->render('index', [
-            'formCalculator' => $formCalculator,
-            'itemCollection' => $formCalculator->getItemCollection()
-        ]);
+        return $this->render('index', ['formCalculator' => $formCalculator]);
     }
 }

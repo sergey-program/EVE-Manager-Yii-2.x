@@ -2,15 +2,14 @@
 
 namespace app\components\eve;
 
-use app\models\dump\InvTypeMaterials;
-use yii\helpers\ArrayHelper;
+use yii\base\Object;
 
 /**
  * Class ItemCollection
  *
  * @package app\components\eve
  */
-class ItemCollection
+class ItemCollection extends Object
 {
     /**
      * Items that is used. Simple ArrayCollection pattern.
@@ -32,6 +31,18 @@ class ItemCollection
     }
 
     /**
+     * @param Item[]|array $items
+     *
+     * @return $this
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+
+        return $this;
+    }
+
+    /**
      * @return Item[]|array
      */
     public function getItems()
@@ -39,51 +50,23 @@ class ItemCollection
         return $this->items;
     }
 
-//    public function getPrice(){
-//        $result = 0;
-//
-//        foreach ($this->items as $item){
-//
-//        }
-//    }
-
     /**
-     * @return Item[]
+     * @param bool $isBuy
+     *
+     * @return int|float
      */
-    public function getReprocess()
+    public function getPrice($isBuy = true)
     {
-        $itemFactory = new ItemFactory();
-
-        // if typeID is in - item has reprocess value
-        $sql = 'SELECT typeID, count(materialTypeID) as hasReprocess FROM invTypeMaterials ';
-        $sql .= 'WHERE typeID IN(' . implode(',', ArrayHelper::getColumn($this->items, 'typeID')) . ') GROUP BY typeID';
-        $canReprocess = \Yii::$app->db->createCommand($sql)->queryAll();
-
-        $typeQuantity = null; // reprocessable grouped
+        $result = 0;
 
         foreach ($this->items as $item) {
-            if (in_array($item->typeID, ArrayHelper::getColumn($canReprocess, 'typeID'))) { // item is reprocessable
-                if (isset($typeQuantity[$item->typeID])) {
-                    $typeQuantity[$item->typeID] += $item->quantity;
-                } else {
-                    $typeQuantity[$item->typeID] = $item->quantity;
-                }
-            } else { // has no reprocess - raw material
-                $itemFactory->addType($item->typeID, $item->quantity);
+            if ($isBuy) {
+                $result += $item->getPriceBuy();
+            } else {
+                $result += $item->getPriceSell();
             }
         }
 
-        /** @var InvTypeMaterials[] $invTypeMaterials */
-        $invTypeMaterials = InvTypeMaterials::find()
-            ->joinWith(['materialInvType'])
-            ->where(['invTypeMaterials.typeID' => array_keys($typeQuantity)])
-            ->all();
-
-        foreach ($invTypeMaterials as $invTypeMaterial) {
-            $itemFactory->addType($invTypeMaterial->materialTypeID, $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID]);
-        }
-
-        // @todo return collection
-        return $itemFactory->createCollection()->getItems();
+        return $result;
     }
 }

@@ -22,7 +22,7 @@ class FormCalculator extends Model
     private $itemCollection;
 
     /**
-     * @return void
+     *
      */
     public function init()
     {
@@ -79,9 +79,8 @@ class FormCalculator extends Model
             }
         }
 
-        foreach ($itemFactory->createCollection()->getItems() as $item) {
-            $this->itemCollection->addItem($item);
-        }
+        // redefine collection with new items
+        $this->itemCollection->setItems($itemFactory->loadItems()->getItems());
 
         return $this;
     }

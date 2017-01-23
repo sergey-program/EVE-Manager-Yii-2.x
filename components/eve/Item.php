@@ -117,7 +117,7 @@ class Item extends Object
     }
 
     /**
-     * @param float|int $quantity
+     * @param int $quantity
      *
      * @return int
      */
@@ -127,7 +127,7 @@ class Item extends Object
     }
 
     /**
-     * @param float $priceBuy
+     * @param float|int $priceBuy
      *
      * @return $this
      */
@@ -139,7 +139,7 @@ class Item extends Object
     }
 
     /**
-     * @param float|int $quantity
+     * @param int $quantity
      *
      * @return int
      */

@@ -22,6 +22,14 @@ class ItemFactory
     private $items = [];
 
     /**
+     * @return Item[]
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
      * $typeString can be typeID or typeName.
      *
      * @param string|int $typeString
@@ -61,7 +69,7 @@ class ItemFactory
     /**
      * @return $this
      */
-    public function createCollection()
+    public function loadItems()
     {
         /** @var InvTypes[] $invTypes */
         $invTypes = InvTypes::find()
@@ -73,6 +81,9 @@ class ItemFactory
 
         foreach ($invTypes as $invType) {
             foreach ($this->items as $key => $item) {
+                // fill in Item data
+
+                // by typeName
                 if ($item->getTypeName() && $item->getTypeName() == $invType->typeName) {
                     $this->items[$key]
                         ->setTypeID($invType->typeID)
@@ -81,6 +92,7 @@ class ItemFactory
                         ->setGroupID($invType->groupID);
                 }
 
+                // by typeID
                 if ($item->getTypeID() && $item->getTypeID() == $invType->typeID) {
                     $this->items[$key]
                         ->setTypeName($invType->typeName)
@@ -92,13 +104,5 @@ class ItemFactory
         }
 
         return $this;
-    }
-
-    /**
-     * @return Item[]
-     */
-    public function getItems()
-    {
-        return $this->items;
     }
 }
