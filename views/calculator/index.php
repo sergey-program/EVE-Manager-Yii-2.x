@@ -3,6 +3,7 @@
 use app\components\eve\ActionReprocess;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 /**
  * @var \app\components\ViewExtended $this
@@ -15,6 +16,8 @@ use yii\bootstrap\Html;
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
+                <div class="pull-right"><a href="<?= Url::to(['update-prices']);?>">Update prices</a></div>
+
                 <h3 class="box-title">EVE Input</h3>
             </div>
 
