@@ -21,6 +21,10 @@ abstract class AbstractItem extends Object
     public $groupID;
     /** @var int $quantity */
     public $quantity = 1;
+    /** @var float|int $priceSell */
+    public $priceSell = 0;
+    /** @var float|int $priceBuy */
+    public $priceBuy = 0;
 
     /**
      * @throws NotSupportedException
@@ -99,5 +103,49 @@ abstract class AbstractItem extends Object
         $this->quantity = $quantity;
 
         return $this;
+    }
+
+    /**
+     * @param float|int $priceSell
+     *
+     * @return $this
+     */
+    public function setPriceSell($priceSell)
+    {
+        $this->priceSell = $priceSell;
+
+        return $this;
+    }
+
+    /**
+     * @param int $quantity
+     *
+     * @return int
+     */
+    public function getPriceSell($quantity = null)
+    {
+        return $this->priceSell * (is_null($quantity) ? $this->quantity : $quantity);
+    }
+
+    /**
+     * @param float $priceBuy
+     *
+     * @return $this
+     */
+    public function setPriceBuy($priceBuy)
+    {
+        $this->priceBuy = $priceBuy;
+
+        return $this;
+    }
+
+    /**
+     * @param float|int $quantity
+     *
+     * @return int
+     */
+    public function getPriceBuy($quantity = null)
+    {
+        return $this->priceBuy * (is_null($quantity) ? $this->quantity : $quantity);
     }
 }

@@ -1,15 +1,15 @@
 <?php
 
-use app\components\eve\Item;
-use app\forms\FormCalculator;
+use app\components\eve\ItemCollection;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 
 /**
  * @var \app\components\ViewExtended $this
  * @var \app\forms\FormCalculator    $formCalculator
- * @var array                        $items
+ * @var ItemCollection               $itemCollection
  */
+
 ?>
 
 <div class="row">
@@ -32,13 +32,7 @@ use yii\bootstrap\Html;
                             <?= $form->field($formCalculator, 'percent', ['enableLabel' => false, 'enableError' => false])->textInput(['placeholder' => 'Discount percent']); ?>
                         </div>
 
-                        <div class="col-md-6">
-                            <?= $form->field($formCalculator, 'filter', ['enableLabel' => false, 'enableError' => false])->dropDownList([
-                                FormCalculator::FILTER_PI => 'Only PI (T0 and T1 reactions).'
-                            ], ['prompt' => "Don't use filter."]); ?>
-                        </div>
-
-                        <div class="col-md-12 text-center">
+                        <div class="col-md-6 text-center">
                             <?= Html::submitButton('Calculate', ['class' => 'btn btn-primary']); ?>
                         </div>
                     </div>
@@ -49,22 +43,17 @@ use yii\bootstrap\Html;
         </div>
     </div>
 
-    <div class="col-md-6">
-        <?php if (!empty($items)): ?>
-            <?php
-            /** @var Item[] $showItems */
-            $showItems = ($formCalculator->filter && isset($items['filter'])) ? $items['filter'] : $items['input'];
-            ?>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <?= count($showItems); ?> item(s).
-                        <?= $formCalculator->filter ? 'Applied filter "' . $formCalculator->filter . '".' : ''; ?>
-                    </h1>
+    <?php if ($itemCollection->getItems()): ?>
+        <div class="col-md-7">
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h1 class="box-title"><?= count($itemCollection->getItems()); ?> item(s).</h1>
                 </div>
 
-                <div class="panel-body">
+                <div class="box-body no-padding">
+                    <?php /*
                     <?php
                     $price = ['buy' => 0, 'percentBuy' => 0, 'sell' => 0, 'percentSell' => 0];
 
@@ -78,7 +67,7 @@ use yii\bootstrap\Html;
                     }
                     ?>
 
-                    <div class="maring-15">
+
                         <table class="table text-right">
                             <tr>
                                 <td title="Jita Sell Orders">JS <?= number_format($price['sell'], 2, '.', ' '); ?></td>
@@ -101,9 +90,10 @@ use yii\bootstrap\Html;
                                 <td title="Percent Buy"><?= number_format($price['buy'] - $price['percentBuy'], 2, '.', ' '); ?></td>
                             </tr>
                         </table>
-                    </div>
+*/ ?>
+                    <!-- ITEMS -->
 
-                    <table class="table table-bordered">
+                    <table class="table">
                         <tr>
                             <td>Item</td>
                             <td>Price (unit)</td>
@@ -111,8 +101,7 @@ use yii\bootstrap\Html;
                             <td>Price (total)</td>
                         </tr>
 
-                        <?php foreach ($showItems as $item): ?>
-                            <?php /** @var Item $item */ ?>
+                        <?php foreach ($itemCollection->getItems() as $item): ?>
                             <tr>
                                 <td>
                                     <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;">
@@ -122,44 +111,65 @@ use yii\bootstrap\Html;
                                         <small class="text-muted">typeID: <?= $item->typeID; ?></small>
                                     </div>
                                 </td>
-                                <td class="text-right">
-                                    <span class="text-success" title="Best sell price."><?= number_format($item->getPriceSell(), 2, '.', ' '); ?></span>
-                                    <br/>
-                                    <span class="text-danger" title="Best buy price."><?= number_format($item->getPriceBuy(), 2, '.', ' '); ?></span>
-                                </td>
 
-                                <td style="line-height: 42px;" class="text-right">
-                                    x<?= number_format($item->quantity, 0, '.', ' '); ?>
+                                <td style="line-height: 42px;" class="text-left">
+                                    <small class="text-muted">x</small> <?= number_format($item->quantity, 0, '.', ' '); ?>
                                 </td>
 
                                 <td class="text-right">
-                                    <?= number_format($item->getPriceSell($item->quantity), 2, '.', ' '); ?>
+                                    <span class="text-success" title="Best sell price."><?= number_format($item->getPriceSell(1), 2, '.', ' '); ?></span>
                                     <br/>
-                                    <?= number_format($item->getPriceBuy($item->quantity), 2, '.', ' '); ?>
+                                    <span class="text-danger" title="Best buy price."><?= number_format($item->getPriceBuy(1), 2, '.', ' '); ?></span>
+                                </td>
+
+                                <td class="text-right">
+                                    <?= number_format($item->getPriceSell(), 2, '.', ' '); ?>
+                                    <br/>
+                                    <?= number_format($item->getPriceBuy(), 2, '.', ' '); ?>
                                 </td>
                             </tr>
+                        <?php endforeach; ?>
+                    </table>
 
-                            <?php if ($item->calculateReprocess()->reprocess): ?>
-                                <tr>
-                                    <td colspan="4">
-                                        <table class="table">
-                                            <?php foreach ($item->reprocess as $repItem): ?>
-                                                <tr>
-                                                    <td><img src="https://image.eveonline.com/Type/<?= $repItem->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;"></td>
-                                                    <td><?= $repItem->typeName; ?></td>
-                                                    <td><?= $repItem->quantity; ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
 
-                                        </table>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Reprocess</h3>
+                </div>
+
+                <div class="box-body no-padding">
+                    <table class="table">
+                        <tr>
+                            <td>Item</td>
+                            <td>Quantity</td>
+                        </tr>
+
+                        <?php foreach ($itemCollection->calculateReprocess()->calculatePrices(true)->getReprocess() as $item): ?>
+                            <tr>
+                                <td>
+                                    <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;">
+                                    <div>
+                                        <?= $item->typeName; ?>
+                                        <br/>
+                                        <small class="text-muted">typeID: <?= $item->typeID; ?></small>
+                                    </div>
+                                </td>
+
+                                <td style="line-height: 42px;" class="text-left">
+                                    <small class="text-muted">x</small> <?= number_format($item->quantity, 0, '.', ' '); ?>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
                     </table>
                 </div>
             </div>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
+
 
 </div>

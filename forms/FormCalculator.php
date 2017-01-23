@@ -2,7 +2,8 @@
 
 namespace app\forms;
 
-use app\components\eve\Item;
+use app\components\eve\ItemCollection;
+use app\components\eve\ItemCreator;
 use yii\base\Model;
 
 /**
@@ -12,14 +13,21 @@ use yii\base\Model;
  */
 class FormCalculator extends Model
 {
-    const FILTER_PI = 'pi';
-
     /** @var string $input */
     public $input;
     /** @var int|float $input */
     public $percent;
-    /** @var string $input */
-    public $filter;
+
+    /** @var ItemCollection|null $itemCollection */
+    private $itemCollection;
+
+    /**
+     * @return void
+     */
+    public function init()
+    {
+        $this->itemCollection = new ItemCollection();
+    }
 
     /**
      * @return array
@@ -29,7 +37,7 @@ class FormCalculator extends Model
         return [
             ['input', 'trim'],
             ['input', 'required'],
-            [['input', 'percent', 'filter'], 'safe'],
+            [['input', 'percent'], 'safe'],
             ['percent', 'integer']
         ];
     }
@@ -40,38 +48,42 @@ class FormCalculator extends Model
     public function attributeLabels()
     {
         return [
-            'filter' => 'Filter',
-            'reprocess' => 'Only reprocessed materials'
+            'input' => 'Input'
         ];
     }
 
     ### functions
 
     /**
-     * @return array
+     * @return ItemCollection|null
+     */
+    public function getItemCollection()
+    {
+        return $this->itemCollection;
+    }
+
+    /**
+     * @return $this
      */
     public function parse()
     {
-        $items = [];
+        $itemCreator = new ItemCreator();
+
         $rows = explode("\n", $this->input);
 
         foreach ($rows as $row) {
             $columns = explode("\t", $row);
-            $quantity = preg_replace("/\s+/u", '', $columns[1]);
+            $quantity = trim(preg_replace("/\s+/u", '', $columns[1]));
 
             if (is_numeric($quantity)) {
-                $items['input'][] = new Item(['typeName' => trim($columns[0]), 'quantity' => $quantity]);
+                $itemCreator->addTypeName(trim($columns[0]), $quantity);
             }
         }
 
-        if ($this->filter == self::FILTER_PI) {
-            foreach ($items['input'] as $item) {
-                if (in_array($item->groupID, ['1033', '1042'])) { // t0 and t1 pi
-                    $items['filter'][] = $item;
-                }
-            }
+        foreach ($itemCreator->createItems()->getItems() as $item) {
+            $this->itemCollection->addItem($item);
         }
 
-        return $items;
+        return $this;
     }
 }

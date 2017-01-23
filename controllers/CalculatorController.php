@@ -18,15 +18,14 @@ class CalculatorController extends AbstractController
     public function actionIndex()
     {
         $formCalculator = new FormCalculator();
-        $items = [];
 
         if (\Yii::$app->request->isPost && $formCalculator->load($this->post())) {
-            $items = $formCalculator->parse();
+            $formCalculator->parse();
         }
 
         return $this->render('index', [
             'formCalculator' => $formCalculator,
-            'items' => $items
+            'itemCollection' => $formCalculator->getItemCollection()
         ]);
     }
 }

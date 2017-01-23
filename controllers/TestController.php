@@ -10,41 +10,16 @@ class TestController extends AbstractController
     public function actionIndex()
     {
 
-        $ma = MarketOrders::getPrice(34);
+        $ma = new MarketOrders();
 
-        $bestPrice['buy'] = null;
-        $bestPrice['sell'] = null;
+        $rows = $ma->getRows(25);
 
-        foreach ($ma as $item) {
-            // use only jita 4-4
-            if ($item['location_id'] != '60003760') {
-                continue;
-            }
+        var_dump($rows);
 
-            if ($item['is_buy_order']) {
-                // assign first any price
-                if (is_null($bestPrice['buy'])) {
-                    $bestPrice['buy'] = $item;
-                    continue;
-                }
+        echo '<pre>';
+//        print_r($rows);
+        echo '<pre>';
 
-                if ($bestPrice['buy']['price'] < $item['price']) {
-                    $bestPrice['buy'] = $item;
-                }
-            } else {
-                // assign first any price
-                if (is_null($bestPrice['sell'])) {
-                    $bestPrice['sell'] = $item;
-                    continue;
-                }
-
-                if ($bestPrice['sell']['price'] > $item['price']) {
-                    $bestPrice['sell'] = $item;
-                }
-            }
-        }
-
-        var_dump($bestPrice);
 //        echo '<pre>';
 //        print_r($ma);
 //        echo '</pre>';

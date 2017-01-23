@@ -48,6 +48,8 @@ use yii\helpers\Url;
             <li class="header">OTHER</li>
             <li><a href="<?= Url::to(['/calculator/index']); ?>"><i class="fa fa-circle-o"></i> <span>Calculator</span></a></li>
 
+            <li class="header">CONFIGURATION</li>
+            <li><a href="<?= Url::to(['']); ?>"><i class="fa fa-circle-o"></i> <span>Prices</span></a></li>
 
             <li class="header">MAIN NAVIGATION</li>
             <li class="active treeview">
