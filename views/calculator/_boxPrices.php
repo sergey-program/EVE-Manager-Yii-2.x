@@ -34,7 +34,7 @@
                     <?php $percent = $itemCollection->getPrice(1) * ($formCalculator->percent / 100); ?>
 
                     <td>-<?= $formCalculator->percent; ?>% (<?= number_format($percent, 2, '.', ' '); ?>)</td>
-                    <td><?= number_format($itemCollection->getPrice(1) + $percent, 2, '.', ' '); ?></td>
+                    <td><?= number_format($itemCollection->getPrice(1) - $percent, 2, '.', ' '); ?></td>
                 <?php endif; ?>
             </tr>
         </table>
