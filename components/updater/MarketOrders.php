@@ -49,11 +49,11 @@ class MarketOrders
                 }
 
                 if ($order['is_buy_order']) {
-                    if ($this->prices[$order['type_id']]['buy'] == 0 || $this->prices[$order['type_id']]['buy'] < $order['price']) {
+                    if ($this->prices[$order['type_id']]['buy'] === 0 || $this->prices[$order['type_id']]['buy'] < $order['price']) {
                         $this->prices[$order['type_id']]['buy'] = $order['price'];
                     }
                 } else {
-                    if ($this->prices[$order['type_id']]['sell'] == 0 || $this->prices[$order['type_id']]['sell'] > $order['price']) {
+                    if ($this->prices[$order['type_id']]['sell'] === 0 || $this->prices[$order['type_id']]['sell'] > $order['price']) {
                         $this->prices[$order['type_id']]['sell'] = $order['price'];
                     }
                 }
@@ -84,8 +84,9 @@ class MarketOrders
             $values[] = '("' . $price['type_id'] . '","' . $price['sell'] . '","' . $price['buy'] . '","' . time() . '")';
         }
 
-        \Yii::$app->db->createCommand('TRUNCATE _market_price;')->execute();
-        \Yii::$app->db->createCommand('INSERT INTO _market_price (`typeID`, `sell`, `buy`, `timeUpdate`) VALUES ' . implode(',', $values) . ' ON DUPLICATE KEY UPDATE `typeID`=VALUES(typeID);')->execute();
+        $sql = 'INSERT INTO _market_price (`typeID`, `sell`, `buy`, `timeUpdate`) VALUES ' . implode(',', $values);
+
+        \Yii::$app->db->createCommand('TRUNCATE _market_price;' . $sql)->execute();
 
         return true;
     }

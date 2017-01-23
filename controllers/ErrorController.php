@@ -18,6 +18,14 @@ class ErrorController extends AbstractController
     private $defaultMessage;
 
     /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [];
+    }
+
+    /**
      *
      */
     public function init()
@@ -35,7 +43,7 @@ class ErrorController extends AbstractController
      */
     public function actionIndex()
     {
-        $this->getView()->setTitle('Error');
+        $this->getView()->setPageTitle('Error');
 
         if (!YII_ENV_PROD) {
             $exception = \Yii::$app->errorHandler->exception;

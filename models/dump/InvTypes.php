@@ -3,6 +3,7 @@
 namespace app\models\dump;
 
 use app\models\extend\AbstractActiveRecord;
+use app\models\MarketPrice;
 
 /**
  * Class InvTypes
@@ -24,6 +25,7 @@ use app\models\extend\AbstractActiveRecord;
  * @property                    $chanceOfDuplicating
  *
  * @property InvTypeMaterials[] $invTypeMaterials
+ * @property MarketPrice        $marketPrice
  */
 class InvTypes extends AbstractActiveRecord
 {
@@ -59,6 +61,14 @@ class InvTypes extends AbstractActiveRecord
     public function getInvTypeMaterials()
     {
         return $this->hasMany(InvTypeMaterials::className(), ['typeID' => 'typeID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMarketPrice()
+    {
+        return $this->hasOne(MarketPrice::className(), ['typeID' => 'typeID']);
     }
 
     ### functions

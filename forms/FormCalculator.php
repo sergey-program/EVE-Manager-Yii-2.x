@@ -3,7 +3,7 @@
 namespace app\forms;
 
 use app\components\eve\ItemCollection;
-use app\components\eve\ItemCreator;
+use app\components\eve\ItemFactory;
 use yii\base\Model;
 
 /**
@@ -67,8 +67,7 @@ class FormCalculator extends Model
      */
     public function parse()
     {
-        $itemCreator = new ItemCreator();
-
+        $itemFactory = new ItemFactory();
         $rows = explode("\n", $this->input);
 
         foreach ($rows as $row) {
@@ -76,11 +75,11 @@ class FormCalculator extends Model
             $quantity = trim(preg_replace("/\s+/u", '', $columns[1]));
 
             if (is_numeric($quantity)) {
-                $itemCreator->addTypeName(trim($columns[0]), $quantity);
+                $itemFactory->addType(trim($columns[0]), $quantity);
             }
         }
 
-        foreach ($itemCreator->createItems()->getItems() as $item) {
+        foreach ($itemFactory->createCollection()->getItems() as $item) {
             $this->itemCollection->addItem($item);
         }
 

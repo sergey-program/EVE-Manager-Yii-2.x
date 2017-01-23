@@ -26,6 +26,7 @@ class AuthController extends AbstractController
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'actions' => ['sign-in', 'sign-in-callback'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['sign-out'], 'roles' => ['@']]
                 ]
             ]
         ];

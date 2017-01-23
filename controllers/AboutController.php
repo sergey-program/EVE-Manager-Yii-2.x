@@ -16,7 +16,7 @@ class AboutController extends AbstractController
      */
     public function actionIndex()
     {
-        $this->getView()->setTitle('About');
+        $this->getView()->setPageTitle('About');
 
         return $this->render('index');
     }

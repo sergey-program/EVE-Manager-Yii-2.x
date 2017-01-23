@@ -96,9 +96,9 @@ use yii\bootstrap\Html;
                     <table class="table">
                         <tr>
                             <td>Item</td>
-                            <td>Price (unit)</td>
+                            <td>Unit</td>
                             <td>Quantity</td>
-                            <td>Price (total)</td>
+                            <td>Total</td>
                         </tr>
 
                         <?php foreach ($itemCollection->getItems() as $item): ?>
@@ -149,7 +149,7 @@ use yii\bootstrap\Html;
                             <td>Quantity</td>
                         </tr>
 
-                        <?php foreach ($itemCollection->calculateReprocess()->calculatePrices(true)->getReprocess() as $item): ?>
+                        <?php foreach ($itemCollection->getReprocess() as $item): ?>
                             <tr>
                                 <td>
                                     <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail pull-left" style="margin-right: 10px;">
@@ -162,6 +162,12 @@ use yii\bootstrap\Html;
 
                                 <td style="line-height: 42px;" class="text-left">
                                     <small class="text-muted">x</small> <?= number_format($item->quantity, 0, '.', ' '); ?>
+                                </td>
+
+                                <td class="text-right">
+                                    <span class="text-success" title="Best sell price."><?= number_format($item->getPriceSell(1), 2, '.', ' '); ?></span>
+                                    <br/>
+                                    <span class="text-danger" title="Best buy price."><?= number_format($item->getPriceBuy(1), 2, '.', ' '); ?></span>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
