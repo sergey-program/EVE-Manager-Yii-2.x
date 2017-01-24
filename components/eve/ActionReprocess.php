@@ -55,7 +55,7 @@ class ActionReprocess
         foreach ($invTypeMaterials as $invTypeMaterial) {
             $total = $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID];
 //            $total = floor($total * ($percent / 100));
-            $total = round($total * ($percent / 100), 0, PHP_ROUND_HALF_EVEN);
+            $total = round($total * ($percent / 100), 0, PHP_ROUND_HALF_DOWN);
 
             $itemFactory->addType($invTypeMaterial->materialTypeID, $total);
         }
