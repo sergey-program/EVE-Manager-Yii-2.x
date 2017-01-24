@@ -61,7 +61,7 @@ class ActionReprocess
 //            var_dump($quantityTotal);
 //            var_dump($quantityTotal - $quantityNotRecoverable);
 
-            $itemFactory->addType($invTypeMaterial->materialTypeID, ceil($quantityTotal));
+            $itemFactory->addType($invTypeMaterial->materialTypeID, floor($quantityTotal));
         }
 
         return new ItemCollection(['items' => $itemFactory->loadItems()->getItems()]);
