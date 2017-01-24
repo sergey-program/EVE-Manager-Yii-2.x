@@ -21,7 +21,7 @@ class ActionReprocess
     public static function run(ItemCollection $itemCollection, $percent = 100)
     {
         $percent = (!$percent) ? $percent = 50 : $percent;
-        $percent = ($percent / 100);
+
         $itemFactory = new ItemFactory();
         $items = $itemCollection->getItems();
 
@@ -51,10 +51,16 @@ class ActionReprocess
             ->where(['invTypeMaterials.typeID' => array_keys($typeQuantity)])
             ->all();
 
+
         foreach ($invTypeMaterials as $invTypeMaterial) {
+            $total = $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID];
+
+            $quantityTotal = $total * ($percent / 100);
+            $quantityNotRecoverable = $total * ((100 - $percent) / 100);
+
             $itemFactory->addType(
                 $invTypeMaterial->materialTypeID,
-                round($invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID] * $percent)
+                round($quantityTotal - $quantityNotRecoverable)
             );
         }
 
