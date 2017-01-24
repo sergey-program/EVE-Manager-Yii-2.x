@@ -69,4 +69,18 @@ class ItemCollection extends Object
 
         return $result;
     }
+
+    /**
+     * @return float|int
+     */
+    public function getVolume()
+    {
+        $result = 0;
+
+        foreach ($this->items as $item) {
+            $result += $item->getVolume();
+        }
+
+        return $result;
+    }
 }

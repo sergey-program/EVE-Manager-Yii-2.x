@@ -89,7 +89,8 @@ class ItemFactory
                         ->setTypeID($invType->typeID)
                         ->setPriceSell($invType->marketPrice ? $invType->marketPrice->sell : 0)
                         ->setPriceBuy($invType->marketPrice ? $invType->marketPrice->buy : 0)
-                        ->setGroupID($invType->groupID);
+                        ->setGroupID($invType->groupID)
+                        ->setVolume($invType->volume);
                 }
 
                 // by typeID
@@ -98,7 +99,8 @@ class ItemFactory
                         ->setTypeName($invType->typeName)
                         ->setPriceSell($invType->marketPrice ? $invType->marketPrice->sell : 0)
                         ->setPriceBuy($invType->marketPrice ? $invType->marketPrice->buy : 0)
-                        ->setGroupID($invType->groupID);
+                        ->setGroupID($invType->groupID)
+                        ->setVolume($invType->volume);
                 }
             }
         }

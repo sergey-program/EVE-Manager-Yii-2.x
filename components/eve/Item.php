@@ -15,6 +15,8 @@ class Item extends Object
     public $typeID;
     /** @var string $typeName */
     public $typeName;
+    /** @var float|int $volume */
+    public $volume;
     /** @var int $groupID */
     public $groupID;
     /** @var int $quantity */
@@ -62,6 +64,28 @@ class Item extends Object
     public function getTypeName()
     {
         return $this->typeName;
+    }
+
+    /**
+     * @param float|int $volume
+     *
+     * @return $this
+     */
+    public function setVolume($volume)
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }
+
+    /**
+     * @param int $quantity
+     *
+     * @return float|int
+     */
+    public function getVolume($quantity = null)
+    {
+        return $this->volume * (is_numeric($quantity) ? $quantity : $this->quantity);
     }
 
     /**

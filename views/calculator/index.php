@@ -9,7 +9,6 @@ use yii\helpers\Url;
  * @var \app\components\ViewExtended $this
  * @var \app\forms\FormCalculator    $formCalculator
  */
-
 ?>
 
 <div class="row">
@@ -27,6 +26,7 @@ use yii\helpers\Url;
                 <div class="row">
                     <div class="col-md-6">
                         <?= $form->field($formCalculator, 'input', ['enableLabel' => false, 'enableError' => false])->textarea(['rows' => 3]); ?>
+                        <p class="text-center text-sm text-muted">First column is name, second is quantity, all other columns does not matter (can be any).</p>
                     </div>
 
                     <div class="col-md-6">

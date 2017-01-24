@@ -8,6 +8,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
+        <div class="pull-right"><?= number_format($itemCollection->getVolume(), 2, '.', ' '); ?> m3</div>
         <h3 class="box-title">Items:</h3>
     </div>
 
