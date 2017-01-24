@@ -55,10 +55,10 @@ class ActionReprocess
         foreach ($invTypeMaterials as $invTypeMaterial) {
             $total = $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID];
 
-            $quantityTotal = $total * ($percent / 100);
-            $quantityNotRecoverable = $quantityTotal * ((100 - $percent) / 100);
+            $quantityTotal = $total * ($percent / 100); // green + red
+            $quantityNotRecoverable = $quantityTotal * ((100 - $percent) / 100); // red
 
-            $itemFactory->addType($invTypeMaterial->materialTypeID, round($total - $quantityNotRecoverable));
+            $itemFactory->addType($invTypeMaterial->materialTypeID, round($quantityTotal - $quantityNotRecoverable));
         }
 
         return new ItemCollection(['items' => $itemFactory->loadItems()->getItems()]);
