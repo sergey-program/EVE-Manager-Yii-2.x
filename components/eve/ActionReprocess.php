@@ -41,7 +41,7 @@ class ActionReprocess
                     $typeQuantity[$item->typeID] = $item->quantity;
                 }
             } else { // has no reprocess - raw material
-                $itemFactory->addType($item->typeID, round($item->quantity * $percent));
+                $itemFactory->addType($item->typeID, $item->quantity);
             }
         }
 
