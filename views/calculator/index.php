@@ -69,7 +69,7 @@ use yii\helpers\Url;
             ]); ?>
 
             <?= $this->render('_boxItems', [
-                'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection())
+                'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection(), $formCalculator->percentReprocess)
             ]); ?>
         </div>
     <?php endif; ?>
