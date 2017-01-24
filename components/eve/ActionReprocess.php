@@ -56,9 +56,9 @@ class ActionReprocess
             $total = $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID];
 
             $quantityTotal = $total * ($percent / 100);
-//            $quantityNotRecoverable = $quantityTotal * ((100 - $percent) / 100);
+            $quantityNotRecoverable = $quantityTotal * ((100 - $percent) / 100);
 
-            $itemFactory->addType($invTypeMaterial->materialTypeID, round($quantityTotal));
+            $itemFactory->addType($invTypeMaterial->materialTypeID, round($total - $quantityNotRecoverable));
         }
 
         return new ItemCollection(['items' => $itemFactory->loadItems()->getItems()]);
