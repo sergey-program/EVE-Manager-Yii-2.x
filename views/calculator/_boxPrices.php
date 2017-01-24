@@ -18,10 +18,10 @@
                 <td>Sell</td>
                 <td><?= number_format($itemCollection->getPrice(0), 2, '.', ' '); ?></td>
 
-                <?php if ($formCalculator->percent): ?>
-                    <?php $percent = $itemCollection->getPrice(0) * ($formCalculator->percent / 100); ?>
+                <?php if ($formCalculator->percentPrice): ?>
+                    <?php $percent = $itemCollection->getPrice(0) * ($formCalculator->percentPrice/ 100); ?>
 
-                    <td>+<?= $formCalculator->percent; ?>% (<?= number_format($percent, 2, '.', ' '); ?>)</td>
+                    <td>+<?= $formCalculator->percentPrice; ?>% (<?= number_format($percent, 2, '.', ' '); ?>)</td>
                     <td><?= number_format($itemCollection->getPrice(0) + $percent, 2, '.', ' '); ?></td>
                 <?php endif; ?>
             </tr>
@@ -30,10 +30,10 @@
                 <td>Buy</td>
                 <td><?= number_format($itemCollection->getPrice(1), 2, '.', ' '); ?></td>
 
-                <?php if ($formCalculator->percent): ?>
-                    <?php $percent = $itemCollection->getPrice(1) * ($formCalculator->percent / 100); ?>
+                <?php if ($formCalculator->percentPrice): ?>
+                    <?php $percent = $itemCollection->getPrice(1) * ($formCalculator->percentPrice / 100); ?>
 
-                    <td>-<?= $formCalculator->percent; ?>% (<?= number_format($percent, 2, '.', ' '); ?>)</td>
+                    <td>-<?= $formCalculator->percentPrice; ?>% (<?= number_format($percent, 2, '.', ' '); ?>)</td>
                     <td><?= number_format($itemCollection->getPrice(1) - $percent, 2, '.', ' '); ?></td>
                 <?php endif; ?>
             </tr>

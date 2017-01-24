@@ -16,9 +16,9 @@ use yii\helpers\Url;
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <div class="pull-right"><a href="<?= Url::to(['update-prices']);?>">Update prices</a></div>
+                <div class="pull-right"><a href="<?= Url::to(['update-prices']); ?>">Update prices</a></div>
 
-                <h3 class="box-title">EVE Input</h3>
+                <h3 class="box-title">Input:</h3>
             </div>
 
             <?php $form = ActiveForm::begin(); ?>
@@ -31,7 +31,12 @@ use yii\helpers\Url;
 
                     <div class="col-md-6">
                         <div class="col-md-6">
-                            <?= $form->field($formCalculator, 'percent', ['enableLabel' => false, 'enableError' => false])->textInput(['placeholder' => 'Discount percent']); ?>
+                            <?= $form->field($formCalculator, 'percentPrice', ['enableLabel' => false, 'enableError' => false])->textInput(['placeholder' => 'Discount percent']); ?>
+
+                        </div>
+
+                        <div class="col-md-6 text-center">
+                            <?= $form->field($formCalculator, 'percentReprocess', ['enableLabel' => false, 'enableError' => false])->textInput(['placeholder' => 'Reprocess percent']); ?>
                         </div>
 
                         <div class="col-md-6 text-center">
@@ -59,7 +64,7 @@ use yii\helpers\Url;
 
         <div class="col-md-6">
             <?= $this->render('_boxPrices', [
-                'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection()),
+                'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection(), $formCalculator->percentReprocess),
                 'formCalculator' => $formCalculator
             ]); ?>
 

@@ -18,6 +18,12 @@ class CalculatorController extends AbstractController
      */
     public function actionIndex()
     {
+        $this
+            ->getView()
+            ->setPageTitle('Loot calculator')
+            ->addBread('Other')
+            ->addBread('Calculator');
+
         $formCalculator = new FormCalculator();
 
         if (\Yii::$app->request->isPost && $formCalculator->load($this->post())) {

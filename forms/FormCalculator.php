@@ -15,14 +15,16 @@ class FormCalculator extends Model
 {
     /** @var string $input */
     public $input;
-    /** @var int|float $input */
-    public $percent;
+    /** @var int|float $pricePercent */
+    public $percentPrice;
+    /** @var  int|float $reprocessPercent */
+    public $percentReprocess;
 
     /** @var ItemCollection|null $itemCollection */
     private $itemCollection;
 
     /**
-     *
+     * @return void
      */
     public function init()
     {
@@ -37,8 +39,7 @@ class FormCalculator extends Model
         return [
             ['input', 'trim'],
             ['input', 'required'],
-            [['input', 'percent'], 'safe'],
-            ['percent', 'integer']
+            [['input', 'percentPrice', 'percentReprocess'], 'safe']
         ];
     }
 

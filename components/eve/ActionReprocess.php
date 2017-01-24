@@ -20,6 +20,7 @@ class ActionReprocess
      */
     public static function run(ItemCollection $itemCollection, $percent = 100)
     {
+        $percent = (!$percent) ? $percent = 50 : $percent;
         $percent = ($percent / 100);
         $itemFactory = new ItemFactory();
         $items = $itemCollection->getItems();
