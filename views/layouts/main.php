@@ -324,9 +324,9 @@ AppAsset::register($this);
 <!-- AdminLTE App -->
 <script src="/_theme/dist/js/app.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="/_theme/dist/js/pages/dashboard.js"></script>
+<?php //<script src="/_theme/dist/js/pages/dashboard.js"></script> ?>
 <!-- AdminLTE for demo purposes -->
-<script src="/_theme/dist/js/demo.js"></script>
+<?php //<script src="/_theme/dist/js/demo.js"></script> ?>
 
 <?php $this->endBody() ?>
 </body>

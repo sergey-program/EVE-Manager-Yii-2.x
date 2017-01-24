@@ -37,14 +37,22 @@ use yii\helpers\Url;
         <ul class="sidebar-menu">
             <li class="header">CHARACTER</li>
 
-            <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Wallet Journal</a></li>
-            <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Wallet Transactions</a></li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i>
+                    <span>Wallet</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+
+                <ul class="treeview-menu">
+                    <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
+                    <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> <span>Transactions</span></a></li>
+                </ul>
+            </li>
 
             <li class="header">CORPORATION</li>
             <?php if (Corporation::checkCanInstall()): ?>
-                <li>
-                    <a href="<?= Url::to(['/corporation/install/index']); ?>"><i class="fa fa-circle-o"></i> Install</a>
-                </li>
+                <li><a href="<?= Url::to(['/corporation/install/index']); ?>"><i class="fa fa-circle-o"></i> <span>Install</span></a></li>
             <?php else: ?>
                 <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Member Tracking</a></li>
                 <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Journal</a></li>
@@ -57,6 +65,7 @@ use yii\helpers\Url;
             <li class="header">CONFIGURATION</li>
             <li><a href="<?= Url::to(['']); ?>"><i class="fa fa-circle-o"></i> <span>Prices</span></a></li>
 
+            <?php /*
             <li class="header">MAIN NAVIGATION</li>
             <li class="active treeview">
                 <a href="#">
@@ -230,6 +239,7 @@ use yii\helpers\Url;
             <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
             <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
+            */ ?>
         </ul>
     </section>
     <!-- /.sidebar -->
