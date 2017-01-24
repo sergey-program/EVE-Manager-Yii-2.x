@@ -1,10 +1,11 @@
 <?php
 
+use app\models\Corporation;
+use yii\helpers\Url;
+
 /**
  * @var \app\components\ViewExtended $this
  */
-use yii\helpers\Url;
-
 ?>
 
 <!-- Left side column. contains the logo and sidebar -->
@@ -40,10 +41,15 @@ use yii\helpers\Url;
             <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Wallet Transactions</a></li>
 
             <li class="header">CORPORATION</li>
-
-            <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Member Tracking</a></li>
-            <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Journal</a></li>
-            <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Transactions</a></li>
+            <?php if (Corporation::checkCanInstall()): ?>
+                <li>
+                    <a href="<?= Url::to(['/corporation/install/index']); ?>"><i class="fa fa-circle-o"></i> Install</a>
+                </li>
+            <?php else: ?>
+                <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Member Tracking</a></li>
+                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Journal</a></li>
+                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Transactions</a></li>
+            <?php endif; ?>
 
             <li class="header">OTHER</li>
             <li><a href="<?= Url::to(['/calculator/index']); ?>"><i class="fa fa-circle-o"></i> <span>Calculator</span></a></li>

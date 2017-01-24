@@ -75,8 +75,10 @@ class FormCalculator extends Model
             $columns = explode("\t", $row);
             $quantity = trim(preg_replace("/\s+/u", '', $columns[1]));
 
+            $typeName = rtrim('*', trim($columns[0]));
+
             if (is_numeric($quantity)) {
-                $itemFactory->addType(trim($columns[0]), $quantity);
+                $itemFactory->addType($typeName, $quantity);
             }
         }
 

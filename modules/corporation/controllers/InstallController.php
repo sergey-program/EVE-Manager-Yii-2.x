@@ -21,6 +21,13 @@ class InstallController extends AbstractCorporationController
      */
     public function actionIndex()
     {
+        $this
+            ->getView()
+            ->setPageTitle('Install corporation')
+            ->setPageDescription('Assign this site with certain corporation.')
+            ->addBread('Corporation')
+            ->addBread('Install');
+
         Corporation::checkCanInstall();
 
         return $this->render('index');
