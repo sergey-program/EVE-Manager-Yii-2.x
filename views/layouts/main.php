@@ -2,11 +2,11 @@
 
 use app\assets\AppAsset;
 use app\components\ViewExtended;
+use yii\bootstrap\BootstrapAsset;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this);
-
 /**
  * @var app\components\ViewExtended $this
  * @var string                      $content
@@ -299,7 +299,7 @@ AppAsset::register($this);
     $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
-<!--<script src="bootstrap/js/bootstrap.min.js"></script>-->
+<script src="/_theme/bootstrap/js/bootstrap.min.js"></script>
 <!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="/_theme/plugins/morris/morris.min.js"></script>
@@ -324,9 +324,9 @@ AppAsset::register($this);
 <!-- AdminLTE App -->
 <script src="/_theme/dist/js/app.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<?php //<script src="/_theme/dist/js/pages/dashboard.js"></script> ?>
+<script src="/_theme/dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
-<?php //<script src="/_theme/dist/js/demo.js"></script> ?>
+<script src="/_theme/dist/js/demo.js"></script>
 
 <?php $this->endBody() ?>
 </body>

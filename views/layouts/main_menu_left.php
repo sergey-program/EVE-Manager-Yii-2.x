@@ -39,7 +39,7 @@ use yii\helpers\Url;
 
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-dashboard"></i>
+                    <i class="fa fa-circle-o"></i>
                     <span>Wallet</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
@@ -51,12 +51,27 @@ use yii\helpers\Url;
             </li>
 
             <li class="header">CORPORATION</li>
-            <?php if (Corporation::checkCanInstall()): ?>
+            <?php if (Corporation::checkCanInstall(false)): ?>
                 <li><a href="<?= Url::to(['/corporation/install/index']); ?>"><i class="fa fa-circle-o"></i> <span>Install</span></a></li>
             <?php else: ?>
-                <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Member Tracking</a></li>
-                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Journal</a></li>
-                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Wallet Transactions</a></li>
+                <li>
+                    <a href="<?= Url::to(['/corporation/member-tracking/index']); ?>">
+                        <i class="fa fa-circle-o"></i> <span>Member Tracking</span>
+                    </a>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-circle-o"></i>
+                        <span>Wallet</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+
+                    <ul class="treeview-menu">
+                        <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> <span>Journal</span></a></li>
+                        <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> <span>Transactions</span></a></li>
+                    </ul>
+                </li>
             <?php endif; ?>
 
             <li class="header">OTHER</li>

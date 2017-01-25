@@ -10,17 +10,17 @@ use yii\helpers\Url;
  */
 ?>
 
-<div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1 class="panel-title">members</h1>
+<div class="col-md-6">
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Members:</h3>
         </div>
 
-        <div class="panel-body">
+        <div class="box-body">
             <?php if ($members): ?>
                 <ul class="list-group">
                     <?php foreach ($members as $member): ?>
-                        <?php $hasApi = User::find()->joinWith('token')->where(['AND', ['is not', 'em2_user_token.accessToken', null], ['em2_user.characterID' => $member->characterID]])->count(); ?>
+                        <?php $hasApi = User::find()->joinWith('token')->where(['AND', ['is not', '_user_token.accessToken', null], ['_user.characterID' => $member->characterID]])->count(); ?>
 
                         <li class="list-group-item <?= $hasApi ? 'list-group-item-success' : 'list-group-item-warning'; ?>">
                             <img src="https://image.eveonline.com/Character/<?= $member['characterID']; ?>_32.jpg" class="img-thumbnail">
@@ -33,9 +33,12 @@ use yii\helpers\Url;
             <?php endif; ?>
         </div>
 
-        <div class="panel-footer text-center">
+        <div class="box-footer text-center">
             <a href="<?= Url::to(['update']); ?>" class="btn btn-primary">Update list</a>
             <a href="<?= Url::to(['delete-all']); ?>" class="btn btn-danger">Delete all</a>
         </div>
     </div>
+</div>
+
+<div class="col-md-6">
 </div>

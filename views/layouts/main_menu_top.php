@@ -1,5 +1,7 @@
 <?php
 
+use yii\helpers\Url;
+
 /**
  * @var \app\components\ViewExtended $this
  */
@@ -14,28 +16,6 @@
         <span class="logo-lg"><b>Admin</b>LTE</span>
     </a>
 
-    <?php
-    /*
-<div class="wrap">
-<?php NavBar::begin(['brandLabel' => \Yii::$app->name, 'brandUrl' => \Yii::$app->homeUrl, 'options' => ['class' => 'navbar-inverse navbar-fixed-top']]); ?>
-
-<?= Nav::widget([
-    'options' => ['class' => 'navbar-nav navbar-right'],
-    'items' => [
-        ['label' => 'Install Corporation', 'url' => ['/corporation/install/index'], 'visible' => Corporation::checkCanInstall(false)],
-        ['label' => 'Members', 'url' => ['/corporation/members/index'], 'visible' => !Corporation::checkCanInstall(false)],
-        ['label' => 'Calculator', 'url' => ['/calculator/index']],
-        \Yii::$app->user->isGuest
-            ? ['label' => 'Sign In', 'url' => Url::to(['/auth/sign-in'])]
-            : ['label' => 'Sign Out (' . \Yii::$app->user->characterName . ')', 'url' => ['/auth/sign-out']],
-
-    ],
-]);
-?>
-
-<?php NavBar::end(); ?>
-</div>*/
-    ?>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
@@ -238,6 +218,7 @@
                         </li>
                     </ul>
                 </li>
+                <?php /*
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -274,10 +255,49 @@
                         </li>
                     </ul>
                 </li>
+                */ ?>
                 <!-- Control Sidebar Toggle Button -->
                 <li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>
+
+
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="https://image.eveonline.com/Character/<?= \Yii::$app->user->identity->characterID; ?>_128.jpg" class="user-image" alt="User Image">
+                        <span class="hidden-xs"><?= \Yii::$app->user->identity->characterName; ?></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="https://image.eveonline.com/Character/<?= \Yii::$app->user->identity->characterID; ?>_128.jpg" class="img-circle" alt="User Image">
+
+                            <p>
+                                <?= \Yii::$app->user->identity->characterName; ?>
+                                <small>Member since Nov. 2012</small>
+                            </p>
+                        </li>
+
+                        <li class="user-body">
+                            <div class="row">
+                                <div class="col-xs-4 text-center"><a href="#">Followers</a></div>
+                                <div class="col-xs-4 text-center"><a href="#">Sales</a></div>
+                                <div class="col-xs-4 text-center"><a href="#">Friends</a></div>
+                            </div>
+                        </li>
+
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                            </div>
+
+                            <div class="pull-right">
+                                <a href="<?= Url::to(['/auth/sign-out']); ?>" class="btn btn-default btn-flat">Sign Out <i class="fa fa-sign-out" style="margin-left: 7px;"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
     </nav>

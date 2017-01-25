@@ -6,7 +6,7 @@ use app\models\Corporation;
 use app\models\CorporationMember;
 use app\modules\corporation\controllers\extend\AbstractCorporationController;
 
-class MembersController extends AbstractCorporationController
+class MemberTrackingController extends AbstractCorporationController
 {
     public function actionIndex()
     {
@@ -17,9 +17,7 @@ class MembersController extends AbstractCorporationController
     {
         /** @var Corporation $corporation */
         $corporation = Corporation::find()->one();
-        $token = $corporation->token;
-
-        $token->refreshAccessToken(1);
+        $token = $corporation->token->refreshAccessToken();
 
         $curl = curl_init();
 
@@ -36,6 +34,7 @@ class MembersController extends AbstractCorporationController
         $data = json_decode(json_encode($xml), true);
         $characterIDs = null;
 
+        // @todo refactor updater, first remove all that not IN array, then update rest
         if (isset($data['result']['rowset']['row'])) {
             foreach ($data['result']['rowset']['row'] as $row) {
                 $rowChar = $row['@attributes'];
