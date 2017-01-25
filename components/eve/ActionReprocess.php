@@ -45,19 +45,21 @@ class ActionReprocess
             }
         }
 
-        /** @var InvTypeMaterials[] $invTypeMaterials */
-        $invTypeMaterials = InvTypeMaterials::find()
-            ->joinWith(['materialInvType'])
-            ->where(['invTypeMaterials.typeID' => array_keys($typeQuantity)])
-            ->all();
+        // if in input not reprocessable items
+        if ($typeQuantity) {
+            /** @var InvTypeMaterials[] $invTypeMaterials */
+            $invTypeMaterials = InvTypeMaterials::find()
+                ->joinWith(['materialInvType'])
+                ->where(['invTypeMaterials.typeID' => array_keys($typeQuantity)])
+                ->all();
 
 
-        foreach ($invTypeMaterials as $invTypeMaterial) {
-            $total = $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID];
-            $total = floor($total * ($percent / 100));
-//            $total = round($total * ($percent / 100), 0, PHP_ROUND_HALF_DOWN);
+            foreach ($invTypeMaterials as $invTypeMaterial) {
+                $total = $invTypeMaterial->quantity * $typeQuantity[$invTypeMaterial->typeID];
+                $total = floor($total * ($percent / 100));
 
-            $itemFactory->addType($invTypeMaterial->materialTypeID, $total);
+                $itemFactory->addType($invTypeMaterial->materialTypeID, $total);
+            }
         }
 
         return new ItemCollection(['items' => $itemFactory->loadItems()->getItems()]);

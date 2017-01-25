@@ -40,6 +40,8 @@ class EveSSO
         $clientID = \Yii::$app->params['application']['clientID'];
         $url = 'https://login.eveonline.com/oauth/authorize/?client_id=' . $clientID . '&response_type=code&state=uniquestate123';
 
+        $callbackUrl = \Yii::$app->params['application']['callbackUrl'];
+
         if ($action == self::ACTION_SI) {
             $scopes = [
                 'characterAssetsRead',
@@ -55,7 +57,6 @@ class EveSSO
                 'esi-wallet.read_character_wallet.v1'
             ];
 
-            $callbackUrl = \Yii::$app->params['application']['callbackUrl'];
             $url .= '&redirect_uri=' . $callbackUrl . '?' . self::VN . '=' . self::ACTION_SI;
             $url .= '&scope=' . implode('%20', $scopes);
 
@@ -72,7 +73,7 @@ class EveSSO
                 'corporationWalletRead'
             ];
 
-            $url .= '&redirect_uri=http://eve-manager/callback-url?' . self::VN . '=' . self::ACTION_IC;
+            $url .= '&redirect_uri=' . $callbackUrl . '?' . self::VN . '=' . self::ACTION_IC;
             $url .= '&scope=' . implode('%20', $scopes);
 
             return $url;
