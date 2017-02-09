@@ -25,7 +25,7 @@ class AuthController extends AbstractController
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    ['allow' => true, 'actions' => ['sign-in', 'sign-in-callback'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['sign-in', 'sign-in-callback'], 'roles' => ['?', '@']],
                     ['allow' => true, 'actions' => ['sign-out'], 'roles' => ['@']]
                 ]
             ]
@@ -90,6 +90,11 @@ class AuthController extends AbstractController
         }
 
         $userToken->updateAccessTokenBy($dataToken);
+
+        if (!\Yii::$app->user->isGuest) {
+            $userIdentity->altGroup = \Yii::$app->user->identity->altGroup;
+            $userIdentity->save();
+        }
 
         if (\Yii::$app->user->login($userIdentity, 3600 * 24 * 30)) {
             return $this->goHome();

@@ -86,7 +86,8 @@ class MarketOrders
 
         $sql = 'INSERT INTO _market_price (`typeID`, `sell`, `buy`, `timeUpdate`) VALUES ' . implode(',', $values);
 
-        \Yii::$app->db->createCommand('TRUNCATE _market_price;' . $sql)->execute();
+        \Yii::$app->db->createCommand('TRUNCATE _market_price;')->execute();
+        \Yii::$app->db->createCommand($sql)->execute();
 
         return true;
     }

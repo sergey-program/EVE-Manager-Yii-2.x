@@ -9,13 +9,14 @@ use app\models\extend\AbstractActiveRecord;
  *
  * @package app\models
  *
- * @property int       $id
- * @property string    $characterName
- * @property string    $characterID
- * @property string    $authKey
- * @property int       $timeCreate
+ * @property int         $id
+ * @property string      $characterName
+ * @property string      $characterID
+ * @property string      $authKey
+ * @property int         $timeCreate
+ * @property string|null $altGroup
  *
- * @property UserToken $token
+ * @property UserToken   $token
  */
 class User extends AbstractActiveRecord
 {
@@ -34,8 +35,9 @@ class User extends AbstractActiveRecord
     {
         return [
             ['authKey', 'default', 'value' => md5(time() + mt_rand(1, 1000))],
-            ['authKey', 'required'],
+            ['altGroup', 'default', 'value' => md5(time() . mt_rand(0, 1000))],
             ['timeCreate', 'default', 'value' => time()],
+            [['authKey', 'altGroup'], 'required'],
             [['characterName', 'characterID', 'timeCreate'], 'safe']
         ];
     }
@@ -50,7 +52,8 @@ class User extends AbstractActiveRecord
             'characterName' => 'Character name',
             'characterID' => 'Character ID',
             'authKey' => 'Auth. key',
-            'timeCreate' => 'Time create'
+            'timeCreate' => 'Time create',
+            'altGroup' => 'Character grouping'
         ];
     }
 
