@@ -27,7 +27,7 @@ class MarketOrders
     {
         $esi = new EsiMarketOrders();
 
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 350; $i++) {
             $orders = $esi->getRows($i)->getOrders();
 
             if (isset($orders['error'])) {
@@ -49,11 +49,11 @@ class MarketOrders
                 }
 
                 if ($order['is_buy_order']) {
-                    if ($this->prices[$order['type_id']]['buy'] === 0 || $this->prices[$order['type_id']]['buy'] < $order['price']) {
+                    if ($this->prices[$order['type_id']]['buy'] === 0 || ($this->prices[$order['type_id']]['buy'] < $order['price'])) {
                         $this->prices[$order['type_id']]['buy'] = $order['price'];
                     }
                 } else {
-                    if ($this->prices[$order['type_id']]['sell'] === 0 || $this->prices[$order['type_id']]['sell'] > $order['price']) {
+                    if ($this->prices[$order['type_id']]['sell'] === 0 || ($this->prices[$order['type_id']]['sell'] > $order['price'])) {
                         $this->prices[$order['type_id']]['sell'] = $order['price'];
                     }
                 }
