@@ -22,7 +22,9 @@ use app\models\MarketPrice;
  * @property                    $basePrice
  * @property                    $published
  * @property                    $marketGroupID
- * @property                    $chanceOfDuplicating
+ * @property                    $iconID
+ * @property                    $soundID
+ * @property                    $graphicID
  *
  * @property InvTypeMaterials[] $invTypeMaterials
  * @property MarketPrice        $marketPrice
@@ -60,7 +62,7 @@ class InvTypes extends AbstractActiveRecord
      */
     public function getInvTypeMaterials()
     {
-        return $this->hasMany(InvTypeMaterials::className(), ['typeID' => 'typeID']);
+        return $this->hasMany(InvTypeMaterials::class, ['typeID' => 'typeID']);
     }
 
     /**
@@ -68,7 +70,7 @@ class InvTypes extends AbstractActiveRecord
      */
     public function getMarketPrice()
     {
-        return $this->hasOne(MarketPrice::className(), ['typeID' => 'typeID']);
+        return $this->hasOne(MarketPrice::class, ['typeID' => 'typeID']);
     }
 
     ### functions
