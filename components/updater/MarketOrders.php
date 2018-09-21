@@ -3,6 +3,7 @@
 namespace app\components\updater;
 
 use app\components\api\EsiMarketOrders;
+use app\models\MarketPrice;
 use yii\base\Exception;
 
 /**
@@ -12,23 +13,44 @@ use yii\base\Exception;
  */
 class MarketOrders
 {
-    /**
-     * @var array $prices
-     */
+    /** @var EsiMarketOrders|null $esiMarketOrders */
+    private $esiMarketOrders;
+    /** @var array $prices */
     public $prices = [];
+
+    /**
+     * @param EsiMarketOrders $esiMarketOrders
+     *
+     * @return $this
+     */
+    public function setEsiMarketOrders(EsiMarketOrders $esiMarketOrders)
+    {
+        $this->esiMarketOrders = $esiMarketOrders;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrices()
+    {
+        return $this->prices;
+    }
 
     /**
      * Get api data (orders).
      *
+     * @param int $pages
+     *
      * @return $this
+     *
      * @throws Exception
      */
-    public function getOrders()
+    public function getOrders($pages = 350)
     {
-        $esi = new EsiMarketOrders();
-
-        for ($i = 1; $i <= 350; $i++) {
-            $orders = $esi->getRows($i)->getOrders();
+        for ($i = 1; $i <= $pages; $i++) {
+            $orders = $this->esiMarketOrders->getRows($i)->getOrders();
 
             if (isset($orders['error'])) {
                 throw new Exception($orders['error']);
@@ -59,7 +81,7 @@ class MarketOrders
                 }
             }
 
-            if (count($orders) < 10000) {
+            if (count($orders) < $this->esiMarketOrders->getMaxItems()) {
                 break;
             }
         }
@@ -68,26 +90,36 @@ class MarketOrders
     }
 
     /**
-     * You need call $this->getOrders() first to update db.
+     * @param array|null $prices
      *
      * @return bool
+     *
+     * @throws \Exception
      */
-    public function updateDB()
+    public function updateDB($prices = null)
     {
-        if (empty($this->prices)) {
+        $prices = is_null($prices) ? $this->prices : $prices;
+
+        if (empty($prices)) {
             return false;
         }
 
-        $values = [];
+        foreach ($prices as $price) {
+            /** @var MarketPrice|null $model */
+            $model = MarketPrice::findOne(['typeID' => $price['type_id']]);
 
-        foreach ($this->prices as $price) {
-            $values[] = '("' . $price['type_id'] . '","' . $price['sell'] . '","' . $price['buy'] . '","' . time() . '")';
+            if (!$model) {
+                $model = new MarketPrice(['typeID' => $price['type_id']]);
+            }
+
+            $model->sell = $price['sell'];
+            $model->buy = $price['buy'];
+            $model->timeUpdate = time();
+
+            if (!$model->save()) {
+                return false;
+            }
         }
-
-        $sql = 'INSERT INTO _market_price (`typeID`, `sell`, `buy`, `timeUpdate`) VALUES ' . implode(',', $values);
-
-        \Yii::$app->db->createCommand('TRUNCATE _market_price;')->execute();
-        \Yii::$app->db->createCommand($sql)->execute();
 
         return true;
     }
