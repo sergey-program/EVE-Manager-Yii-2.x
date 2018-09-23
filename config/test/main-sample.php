@@ -15,7 +15,7 @@ $config = [
             'class' => 'app\components\UserExtended',
             'identityClass' => 'app\components\UserIdentity',
             'enableAutoLogin' => true,
-            'loginUrl' => ['auth/login']
+            'loginUrl' => ['auth/sign-in']
         ],
         'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'urlManager' => [

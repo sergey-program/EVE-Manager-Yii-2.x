@@ -28,9 +28,9 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * Redefine return class for autocomplete (IDE).
+     * Redefine return class for auto-complete (IDE).
      *
-     * @return \app\components\ViewExtended
+     * @return \app\components\ViewExtended|\yii\base\View|\yii\web\View
      */
     public function getView()
     {

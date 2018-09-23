@@ -3,23 +3,25 @@
 namespace app\models\dump;
 
 use app\models\extend\AbstractActiveRecord;
+use app\models\MarketUpdateGroup;
 
 /**
  * Class InvGroups
  *
  * @package app\models\dump
  *
- * @property int        $groupID
- * @property int        $categoryID
- * @property int        $groupName
- * @property int        $iconID
- * @property bool|int   $useBasePrice
- * @property bool|int   $anchored
- * @property bool|int   $anchorable
- * @property bool|int   $fittableNonSingleton
- * @property bool|int   $published
+ * @property int               $groupID
+ * @property int               $categoryID
+ * @property int               $groupName
+ * @property int               $iconID
+ * @property bool|int          $useBasePrice
+ * @property bool|int          $anchored
+ * @property bool|int          $anchorable
+ * @property bool|int          $fittableNonSingleton
+ * @property bool|int          $published
  *
- * @property InvTypes[] $invTypes
+ * @property InvTypes[]        $invTypes
+ * @property MarketUpdateGroup $marketUpdateGroup
  */
 class InvGroups extends AbstractActiveRecord
 {
@@ -55,6 +57,14 @@ class InvGroups extends AbstractActiveRecord
     public function getInvTypes()
     {
         return $this->hasMany(InvTypes::class, ['groupID' => 'groupID'])->andWhere(['published' => true]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMarketUpdateGroup()
+    {
+        return $this->hasOne(MarketUpdateGroup::class, ['groupID' => 'groupID']);
     }
 
     ### functions
