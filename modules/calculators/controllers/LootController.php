@@ -1,17 +1,16 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\calculators\controllers;
 
 use app\components\updater\MarketOrders;
-use app\controllers\extend\AbstractController;
 use app\forms\FormCalculator;
 
 /**
- * Class CalculatorController
+ * Class LootController
  *
- * @package app\controllers
+ * @package app\modules\calculators\controllers
  */
-class CalculatorController extends AbstractController
+class LootController extends AbstractCalculatorsController
 {
     /**
      * @return string

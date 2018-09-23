@@ -9,6 +9,7 @@ use yii\helpers\Url;
  * @var \app\components\ViewExtended $this
  * @var \app\forms\FormCalculator    $formCalculator
  */
+
 ?>
 
 <div class="row">

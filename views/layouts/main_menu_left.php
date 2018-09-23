@@ -73,15 +73,13 @@ use yii\helpers\Url;
                     </ul>
                 </li>
             <?php endif; ?>
-
-            <li class="header">OTHER</li>
-            <li><a href="<?= Url::to(['/calculator/index']); ?>"><i class="fa fa-circle-o"></i> <span>Calculator</span></a></li>
-
+<?php /*
             <li class="header">CONFIGURATION</li>
-            <li><a href="<?= Url::to(['']); ?>"><i class="fa fa-circle-o"></i> <span>Prices</span></a></li>
+            <li><a href="<?= Url::to(['']); ?>"><i class="fa fa-circle-o"></i> <span>Prices</span></a></li>*/ ?>
             <li class="header">MARKET UPDATER</li>
             <li><a href="<?= Url::to(['/market-updater/index/index']); ?>"><i class="fa fa-circle-o"></i> <span>Group Updater</span></a></li>
             <li class="header">CALCULATORS</li>
+            <li><a href="<?= Url::to(['/calculators/loot/index']); ?>"><i class="fa fa-circle-o"></i> <span>Loot as minerals</span></a></li>
             <li><a href="<?= Url::to(['/calculators/compressed-ore/index']); ?>"><i class="fa fa-circle-o"></i> <span>Compressed Ore</span></a></li>
             <li><a href="<?= Url::to(['/calculators/compressed-ice/index']); ?>"><i class="fa fa-circle-o"></i> <span>Compressed Ice</span></a></li>
 

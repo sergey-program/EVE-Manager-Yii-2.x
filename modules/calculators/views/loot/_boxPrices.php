@@ -19,7 +19,7 @@
                 <td><?= number_format($itemCollection->getPrice(0), 2, '.', ' '); ?></td>
 
                 <?php if ($formCalculator->percentPrice): ?>
-                    <?php $percent = $itemCollection->getPrice(0) * ($formCalculator->percentPrice/ 100); ?>
+                    <?php $percent = $itemCollection->getPrice(0) * ($formCalculator->percentPrice / 100); ?>
 
                     <td>+<?= $formCalculator->percentPrice; ?>% (<?= number_format($percent, 2, '.', ' '); ?>)</td>
                     <td><?= number_format($itemCollection->getPrice(0) + $percent, 2, '.', ' '); ?></td>
