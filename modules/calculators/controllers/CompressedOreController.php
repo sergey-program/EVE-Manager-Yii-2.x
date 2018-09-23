@@ -15,9 +15,9 @@ class CompressedOreController extends AbstractCalculatorsController
     {
         $this
             ->getView()
-            ->addBread('Market updater')
-            ->setPageTitle('Market updater')
-            ->setPageDescription('Market updater');
+            ->addBread('Calculators')
+            ->setPageTitle('Compressed Ore')
+            ->setPageDescription('Calculate compressed ore prices.');
 
         $groups = InvGroups::findAll(['groupID' => [462, 460, 450, 458]]);
 

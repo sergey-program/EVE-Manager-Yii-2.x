@@ -8,8 +8,6 @@
 
 ?>
 
-<p class="alert alert-info text-center">Someday here will be some kind of dashboard.</p>
-
 <div class="row">
     <?php foreach ($groups as $group): ?>
 

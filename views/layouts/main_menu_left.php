@@ -79,6 +79,9 @@ use yii\helpers\Url;
 
             <li class="header">CONFIGURATION</li>
             <li><a href="<?= Url::to(['']); ?>"><i class="fa fa-circle-o"></i> <span>Prices</span></a></li>
+            <li><a href="<?= Url::to(['/market-updater/index/index']); ?>"><i class="fa fa-circle-o"></i> <span>Base Market Updater</span></a></li>
+            <li class="header">CALCULATIONS</li>
+            <li><a href="<?= Url::to(['/calculators/compressed-ore/index']); ?>"><i class="fa fa-circle-o"></i> <span>Compressed Ore</span></a></li>
 
             <?php /*
             <li class="header">MAIN NAVIGATION</li>
