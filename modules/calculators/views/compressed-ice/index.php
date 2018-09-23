@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="box-body">
-                    <?php foreach ($group->getInvTypes()->andWhere(['portionSize' => 1])->andWhere('marketGroupID IS NOT NULL')->all() as $invType): ?>
+                    <?php foreach ($group->getInvTypes()->andWhere(['volume' => 100])->andWhere('marketGroupID IS NOT NULL')->all() as $invType): ?>
                         <div class="panel box box-primary">
                             <div class="box-header with-border">
                                 <div class="row">
@@ -89,7 +89,7 @@
                                     <table class="table table-condensed table-hover table-bordered" style="margin-top:20px;">
                                         <tr>
                                             <td></td>
-                                            <td class="text-center">Минералов на сумму</td>
+                                            <td class="text-center">Предметов на сумму</td>
                                             <td class="text-center">Мы купили за</td>
                                             <td class="text-center">Профит</td>
                                         </tr>
