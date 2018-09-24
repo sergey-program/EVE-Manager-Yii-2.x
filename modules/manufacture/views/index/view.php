@@ -13,7 +13,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <div class="pull-right">
-                    <img src="https://image.eveonline.com/Type/<?= $mItem->getBlueprint()->invType->typeID; ?>_32.png"
+                    <img src="https://image.eveonline.com/Type/<?= $mItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
                          title="<?= $mItem->getBlueprint()->getInvType()->typeName; ?>"
                          class="img-thumbnail"
                          style="margin-left: 10px; margin-right: 10px;">
@@ -32,5 +32,25 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Blueprints settings</h3>
+            </div>
+
+            <div class="box-body">
+                <?php foreach ($mItem->getBlueprint()->getItems() as $cItem): ?>
+                    <?= $this->render('_rowBpo', ['cItem' => $cItem, 'p' => 20]); ?>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Apply</button>
+
+            </div>
+        </div>
+    </div>
+
 
 </div>

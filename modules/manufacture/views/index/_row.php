@@ -20,10 +20,10 @@
 
     <div class="col-md-4 text-right">
         <?php if ($cItem->hasBlueprint()): ?>
-            <img src="https://image.eveonline.com/Type/<?= $cItem->getBlueprint()->invType->typeID; ?>_32.png"
+            <img src="https://image.eveonline.com/Type/<?= $cItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
                  class="img-thumbnail"
                  style="margin-left: 10px; margin-right: 10px;"
-                 title="<?= $cItem->getBlueprint()->invType->typeName; ?>"
+                 title="<?= $cItem->getBlueprint()->getInvType()->typeName; ?>"
                  onclick="$('#<?= $cItem->getInvType()->typeID; ?>').toggle();">
         <?php endif; ?>
 
