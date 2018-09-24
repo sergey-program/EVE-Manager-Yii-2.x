@@ -10,24 +10,25 @@ use app\models\MarketPrice;
  *
  * @package app\models\dump
  *
- * @property                    $typeID
- * @property                    $groupID
- * @property                    $typeName
- * @property                    $description
- * @property                    $mass
- * @property                    $volume
- * @property                    $capacity
- * @property                    $portionSize
- * @property                    $raceID
- * @property                    $basePrice
- * @property                    $published
- * @property                    $marketGroupID
- * @property                    $iconID
- * @property                    $soundID
- * @property                    $graphicID
+ * @property                             $typeID
+ * @property                             $groupID
+ * @property                             $typeName
+ * @property                             $description
+ * @property                             $mass
+ * @property                             $volume
+ * @property                             $capacity
+ * @property                             $portionSize
+ * @property                             $raceID
+ * @property                             $basePrice
+ * @property                             $published
+ * @property                             $marketGroupID
+ * @property                             $iconID
+ * @property                             $soundID
+ * @property                             $graphicID
  *
- * @property InvTypeMaterials[] $invTypeMaterials
- * @property MarketPrice        $marketPrice
+ * @property InvTypeMaterials[]          $invTypeMaterials
+ * @property MarketPrice                 $marketPrice
+ * @property IndustryActivityMaterials[] $industryActivityMaterials
  */
 class InvTypes extends AbstractActiveRecord
 {
@@ -72,6 +73,17 @@ class InvTypes extends AbstractActiveRecord
     {
         return $this->hasOne(MarketPrice::class, ['typeID' => 'typeID']);
     }
+
+    public function getIndustryActivityMaterials()
+    {
+        return $this->hasMany(IndustryActivityMaterials::class, ['typeID' => 'typeID']);
+    }
+
+    public function getIndustryActivityMaterialsIn()
+    {
+        return $this->hasMany(IndustryActivityMaterials::class, ['materialTypeID' => 'typeID']);
+    }
+
 
     ### functions
 }

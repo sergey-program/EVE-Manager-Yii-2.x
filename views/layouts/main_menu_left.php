@@ -83,9 +83,7 @@ use yii\helpers\Url;
             <li><a href="<?= Url::to(['/calculators/compressed-ore/index']); ?>"><i class="fa fa-circle-o"></i> <span>Compressed Ore</span></a></li>
             <li><a href="<?= Url::to(['/calculators/compressed-ice/index']); ?>"><i class="fa fa-circle-o"></i> <span>Compressed Ice</span></a></li>
             <li class="header">MANUFACTURES</li>
-            <li><a href="<?= Url::to(['/manufacture/dreadnought/index']); ?>"><i class="fa fa-circle-o"></i> <span>Dreads</span></a></li>
-            <li><a href="<?= Url::to(['/manufacture/carrier/index']); ?>"><i class="fa fa-circle-o"></i> <span>Carriers</span></a></li>
-            <li><a href="<?= Url::to(['/manufacture/force-auxiliary/index']); ?>"><i class="fa fa-circle-o"></i> <span>Force Auxiliary</span></a></li>
+            <li><a href="<?= Url::to(['/manufacture/index/index']); ?>"><i class="fa fa-circle-o"></i> <span>Search item</span></a></li>
 
             <?php /*
             <li class="header">MAIN NAVIGATION</li>
