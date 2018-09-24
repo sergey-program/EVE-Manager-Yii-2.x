@@ -59,20 +59,30 @@
                 </div>
 
                 <div class="box-body">
-                    <?php $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem); ?>
+                    <?php
+                    $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem);
+                    $mTotal->loadPrices();
+                    ?>
 
-                    <?php foreach ($mTotal->getItems() as $typeID => $quantity): ?>
+                    <?php $totalPrice = 0; ?>
+                    <?php foreach ($mTotal->getItems() as $typeID => $item): ?>
+
                         <div class="row" style="margin-bottom: 10px;">
                             <div class="col-md-12">
                                 <img src="https://image.eveonline.com/Type/<?= $typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
-                                <?= number_format($quantity, 0, '.', ' '); ?>
+                                <?= number_format($item['quantity'], 0, '.', ' '); ?>
+                                *
+                                <?= number_format($item['price']->buy, 0, '.', ' '); ?>
+                                =
+                                <?= number_format($item['quantity'] * $item['price']->buy, 2, '.', ' '); ?>
                             </div>
                         </div>
+                        <?php $totalPrice += $item['quantity'] * $item['price']->buy; ?>
                     <?php endforeach; ?>
 
                     <div class="row">
                         <div class="col-md-12">
-                            <p>Total: xxx isk</p>
+                            <p>Total: <?= number_format($totalPrice, 2, '.', ' '); ?> isk</p>
                         </div>
                     </div>
 

@@ -2,6 +2,8 @@
 
 namespace app\modules\manufacture\components;
 
+use app\models\MarketPrice;
+
 /**
  * Class MTotal
  *
@@ -34,8 +36,8 @@ class MTotal
      */
     public function mergeTotal(MTotal $mTotal)
     {
-        foreach ($mTotal->getItems() as $typeID => $quantity) {
-            $this->addItem($typeID, $quantity);
+        foreach ($mTotal->getItems() as $typeID => $item) {
+            $this->addItem($typeID, $item['quantity']);
         }
     }
 
@@ -48,9 +50,9 @@ class MTotal
     public function addItem($typeID, $quantity = 1)
     {
         if (isset($this->items[$typeID])) {
-            $this->items[$typeID] += $quantity;
+            $this->items[$typeID]['quantity'] += $quantity;
         } else {
-            $this->items[$typeID] = $quantity;
+            $this->items[$typeID]['quantity'] = $quantity;
         }
 
         return $this;
@@ -62,5 +64,18 @@ class MTotal
     public function getItems()
     {
         return $this->items;
+    }
+
+    public function loadPrices()
+    {
+        $typeIDs = array_keys($this->getItems());
+
+        $prices = MarketPrice::find()->where(['typeID' => $typeIDs])->cache(60)->all();
+
+        foreach ($prices as $price) {
+            $this->items[$price->typeID]['price'] = $price;
+        }
+
+        return $this;
     }
 }
