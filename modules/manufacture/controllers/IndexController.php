@@ -33,6 +33,11 @@ class IndexController extends AbstractManufactureController
     public function actionView($typeID)
     {
         $mItem = MManager::createItem($typeID);
+        $mItem->getBlueprint()->setME(10);
+
+        foreach ($mItem->getBlueprint()->getItems() as $item){
+            $item->getBlueprint()->setME(10);
+        }
 
         return $this->render('view', ['mItem' => $mItem]);
     }

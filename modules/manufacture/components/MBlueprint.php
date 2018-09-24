@@ -41,11 +41,16 @@ class MBlueprint
      */
     private function loadComponents()
     {
-        $iam = $this->invType->getIndustryActivityMaterials()->andWhere(['activityID' => '1'])->all();
+        $this->items = [];
+        $iam = $this->invType->getIndustryActivityMaterials()->andWhere(['activityID' => '1'])->cache(60*60*24)->all();
 
         if (!empty($iam)) {
             foreach ($iam as $invTypeMaterial) {
-                $this->mItems[] = MManager::createItem($invTypeMaterial->materialTypeID, $invTypeMaterial->quantity);
+                $quantity = ($this->me > 0)
+                    ? ceil($invTypeMaterial->quantity - ($invTypeMaterial->quantity * ($this->me / 100)))
+                    : $invTypeMaterial->quantity;
+
+                $this->mItems[$invTypeMaterial->materialTypeID] = MManager::createItem($invTypeMaterial->materialTypeID, $quantity);
             }
         }
 
@@ -60,6 +65,7 @@ class MBlueprint
     public function setME($me)
     {
         $this->me = $me;
+        $this->loadComponents();
 
         return $this;
     }

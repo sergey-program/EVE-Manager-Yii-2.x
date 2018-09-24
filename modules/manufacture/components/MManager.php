@@ -20,7 +20,9 @@ class MManager
      */
     public static function createItem($invType, $quantity = 1)
     {
-        $invType = is_numeric($invType) ? InvTypes::findOne(['typeID' => $invType]) : $invType;
+        if (is_numeric($invType)) {
+            $invType = InvTypes::find()->where(['typeID' => $invType])->cache(60 * 60 * 24)->one();
+        }
 
         return new MItem($invType, $quantity);
     }
@@ -33,7 +35,7 @@ class MManager
     public static function createBlueprint($invType)
     {
         $invTypeID = is_numeric($invType) ? $invType : $invType->typeID;
-        $iap = IndustryActivityProducts::find()->where(['and', ['activityID' => '1'], ['productTypeID' => $invTypeID]])->one();
+        $iap = IndustryActivityProducts::find()->where(['and', ['activityID' => '1'], ['productTypeID' => $invTypeID]])->cache(60 * 60 * 24)->one();
 
         if (!empty($iap)) {
             return new MBlueprint(InvTypes::findOne(['typeID' => $iap->typeID])); // bpo
