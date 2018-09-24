@@ -7,27 +7,29 @@
 
 ?>
 
-
 <?php if ($cItem->hasBlueprint()): ?>
     <div class="row" style="margin-bottom: 10px; margin-left: <?= $p; ?>px">
-        <div class="col-md-12">
 
+        <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12">
-                    <img src="https://image.eveonline.com/Type/<?= $cItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
-                         title="<?= $cItem->getBlueprint()->getInvType()->typeName; ?>"
-                         class="img-thumbnail"
-                         style="margin-left: 10px; margin-right: 10px;">
+                <div class="col-md-6">
+                    <?php $imageUrl = 'https://image.eveonline.com/Type/' . $cItem->getBlueprint()->getInvType()->typeID . '_32.png'; ?>
+                    <img src="<?= $imageUrl; ?>" title="<?= $cItem->getBlueprint()->getInvType()->typeName; ?>" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
 
                     ME: <?= $cItem->getBlueprint()->getMe(); ?>
                     TE: <?= $cItem->getBlueprint()->getTe(); ?>
+                </div>
 
-                    <input name="me_<?= $cItem->getBlueprint()->getInvType()->typeID; ?>">
-                    <input name="te_<?= $cItem->getBlueprint()->getInvType()->typeID; ?>">
+                <div class="col-md-3">
+                    <input class="form-control" name="me_<?= $cItem->getBlueprint()->getInvType()->typeID; ?>" placeholder="ME">
+                </div>
+
+                <div class="col-md-3">
+                    <input class="form-control" name="te_<?= $cItem->getBlueprint()->getInvType()->typeID; ?>" placeholder="TE">
                 </div>
             </div>
-
         </div>
+
     </div>
 
     <?php foreach ($cItem->getBlueprint()->getItems() as $item): ?>

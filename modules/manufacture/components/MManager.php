@@ -42,6 +42,11 @@ class MManager
         return null;
     }
 
+    public static function calculateTotal(MItem $mItem, $quantity = 1)
+    {
+        return new MTotal($mItem, $quantity);
+    }
+
 //    /**
 //     * @param MItem $mItem
 //     * @param int   $typeID
