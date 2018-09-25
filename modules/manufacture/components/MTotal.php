@@ -2,8 +2,6 @@
 
 namespace app\modules\manufacture\components;
 
-use app\models\MarketPrice;
-
 /**
  * Class MTotal
  *
@@ -11,8 +9,8 @@ use app\models\MarketPrice;
  */
 class MTotal
 {
-    /** @var array $items */
-    private $items = [];
+    /** @var array|MItem $mItems */
+    private $mItems = [];
 
     /**
      * MTotal constructor.
@@ -36,8 +34,8 @@ class MTotal
      */
     public function mergeTotal(MTotal $mTotal)
     {
-        foreach ($mTotal->getItems() as $typeID => $item) {
-            $this->addItem($typeID, $item['quantity']);
+        foreach ($mTotal->getItems() as $typeID => $mItem) {
+            $this->addItem($typeID, $mItem->getQuantity());
         }
     }
 
@@ -49,33 +47,48 @@ class MTotal
      */
     public function addItem($typeID, $quantity = 1)
     {
-        if (isset($this->items[$typeID])) {
-            $this->items[$typeID]['quantity'] += $quantity;
+        if (isset($this->mItems[$typeID])) {
+            $this->mItems[$typeID]->addQuantity($quantity);
         } else {
-            $this->items[$typeID]['quantity'] = $quantity;
+            $this->mItems[$typeID] = MManager::createItem($typeID, $quantity);
         }
 
         return $this;
     }
 
     /**
-     * @return array
+     * @return array|MItem[]
      */
     public function getItems()
     {
-        return $this->items;
+        return $this->mItems;
     }
 
-    public function loadPrices()
+    /**
+     * @return float|int
+     */
+    public function getPriceSellTotal()
     {
-        $typeIDs = array_keys($this->getItems());
+        $result = 0;
 
-        $prices = MarketPrice::find()->where(['typeID' => $typeIDs])->cache(60)->all();
-
-        foreach ($prices as $price) {
-            $this->items[$price->typeID]['price'] = $price;
+        foreach ($this->getItems() as $mItem) {
+            $result += $mItem->getPriceSellTotal();
         }
 
-        return $this;
+        return $result;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getPriceBuyTotal()
+    {
+        $result = 0;
+
+        foreach ($this->getItems() as $mItem) {
+            $result += $mItem->getPriceBuyTotal();
+        }
+
+        return $result;
     }
 }

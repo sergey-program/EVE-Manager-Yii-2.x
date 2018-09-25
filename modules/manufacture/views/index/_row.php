@@ -21,7 +21,7 @@
     <div class="col-md-4 text-right">
         <?php if ($cItem->hasBlueprint()): ?>
             <img src="https://image.eveonline.com/Type/<?= $cItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
-                 class="img-thumbnail"
+                 class="img-thumbnail img-thumbnail-hand"
                  style="margin-left: 10px; margin-right: 10px;"
                  title="<?= $cItem->getBlueprint()->getInvType()->typeName; ?>"
                  onclick="$('#<?= $cItem->getInvType()->typeID; ?>').toggle();">
