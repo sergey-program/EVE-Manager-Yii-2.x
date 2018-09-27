@@ -21,11 +21,12 @@
                 </div>
 
                 <div class="col-md-3">
-                    <input class="form-control" name="me_<?= $cItem->getBlueprint()->getInvType()->typeID; ?>" placeholder="ME">
+                    <input class="form-control" type="number" style="width: 55px;" min="0" max="10" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[me]" placeholder="ME">
+                    <input class="form-control" type="number" style="width: 55px;" min="0" max="20" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[te]" placeholder="TE">
                 </div>
 
                 <div class="col-md-3">
-                    <input class="form-control" name="te_<?= $cItem->getBlueprint()->getInvType()->typeID; ?>" placeholder="TE">
+
                 </div>
             </div>
         </div>

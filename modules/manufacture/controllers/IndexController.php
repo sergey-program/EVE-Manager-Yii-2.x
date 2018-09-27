@@ -33,13 +33,33 @@ class IndexController extends AbstractManufactureController
     public function actionView($typeID)
     {
         $mItem = MManager::createItem($typeID);
-        $mItem->getBlueprint()->setME(10);
 
-        foreach ($mItem->getBlueprint()->getItems() as $item) {
-            if ($item->hasBlueprint()) {
-                $item->getBlueprint()->setME(10);
+        if (\Yii::$app->request->isPost) {
+//            echo '<pre>';
+//            print_r(\Yii::$app->request->post());
+
+            foreach (\Yii::$app->request->post() as $key => $data) {
+                if (is_numeric($key)) {
+                    if ($data['te']) {
+                        MManager::setTE($mItem, $key, $data['te']);
+                    }
+
+                    if ($data['me']) {
+                        MManager::setME($mItem, $key, $data['me']);
+                    }
+                }
             }
+
+//            echo '</pre>';
         }
+
+
+//        $mItem->getBlueprint()->setME(10);
+//        foreach ($mItem->getBlueprint()->getItems() as $item) {
+//            if ($item->hasBlueprint()) {
+//                $item->getBlueprint()->setME(10);
+//            }
+//        }
 
         return $this->render('view', ['mItem' => $mItem]);
     }

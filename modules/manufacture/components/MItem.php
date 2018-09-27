@@ -10,12 +10,8 @@ use app\models\MarketPrice;
  *
  * @package app\modules\manufacture\components
  */
-class MItem
+class MItem extends AbstractItem
 {
-    /** @var InvTypes| $invType */
-    private $invType;
-    /** @var int $quantity */
-    private $quantity;
     /** @var MBlueprint|null $mBlueprint */
     private $mBlueprint;
     /** @var MarketPrice|null $marketPrice */
@@ -29,9 +25,9 @@ class MItem
      */
     public function __construct(InvTypes $invType, $quantity = 1)
     {
-        $this->invType = $invType;
-        $this->quantity = $quantity;
-        $this->mBlueprint = MManager::createBlueprint($this->invType);
+        $this->setInvType($invType);
+        $this->setQuantity($quantity);
+        $this->mBlueprint = MManager::createBlueprint($this->getInvType());
     }
 
     /**
@@ -51,40 +47,12 @@ class MItem
     }
 
     /**
-     * @return InvTypes
-     */
-    public function getInvType()
-    {
-        return $this->invType;
-    }
-
-    /**
-     * @return int
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    /**
-     * @param int $quantity
-     *
-     * @return $this
-     */
-    public function addQuantity($quantity)
-    {
-        $this->quantity += $quantity;
-
-        return $this;
-    }
-
-    /**
      * @return MarketPrice|array|bool|null|\yii\db\ActiveRecord
      */
     public function getMarketPrice()
     {
         if ($this->marketPrice === false) {
-            $this->marketPrice = MarketPrice::find()->where(['typeID' => $this->invType->typeID])->cache(60 * 2)->one();
+            $this->marketPrice = MarketPrice::find()->where(['typeID' => $this->getInvType()->typeID])->cache(60 * 2)->one();
         }
 
         return $this->marketPrice;

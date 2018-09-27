@@ -86,7 +86,8 @@
     </div>
 
     <div class="col-md-6 col-lg-4">
-        <form class="form">
+        <?= \yii\helpers\Html::beginForm('','post', ['class' => 'form form-inline']);?>
+
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Blueprints settings</h3>
@@ -100,7 +101,7 @@
                     <button type="submit" class="btn btn-primary">Применить</button>
                 </div>
             </div>
-        </form>
+        <?= \yii\helpers\Html::endForm(); ?>
     </div>
 
 </div>

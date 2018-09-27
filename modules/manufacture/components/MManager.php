@@ -44,48 +44,50 @@ class MManager
         return null;
     }
 
+    /**
+     * @param MItem $mItem
+     * @param int   $quantity
+     *
+     * @return MTotal
+     */
     public static function calculateTotal(MItem $mItem, $quantity = 1)
     {
         return new MTotal($mItem, $quantity);
     }
 
-//    /**
-//     * @param MItem $mItem
-//     * @param int   $typeID
-//     * @param int   $me
-//     */
-//    public static function setME(MItem $mItem, $typeID, $me)
-//    {
-//        if ($mItem->isTypeID($typeID)) {
-//            $mItem->setME($me);
-//        }
-//
-//        if ($mItem->hasComponents()) {
-//            foreach ($mItem->getComponents() as $cItem) {
-//                if ($cItem->isTypeID($typeID)) {
-//                    $cItem->setME($me);
-//                }
-//            }
-//        }
-//    }
-//
-//    /**
-//     * @param MItem $mItem
-//     * @param int   $typeID
-//     * @param int   $te
-//     */
-//    public static function setTE(MItem $mItem, $typeID, $te)
-//    {
-//        if ($mItem->isTypeID($typeID)) {
-//            $mItem->setME($te);
-//        }
-//
-//        if ($mItem->hasComponents()) {
-//            foreach ($mItem->getComponents() as $cItem) {
-//                if ($cItem->isTypeID($typeID)) {
-//                    $cItem->setTE($te);
-//                }
-//            }
-//        }
-//    }
+    /**
+     * @param MItem $mItem
+     * @param int   $typeID
+     * @param int   $me
+     */
+    public static function setME(MItem $mItem, $typeID, $me)
+    {
+        if ($mItem->hasBlueprint()) {
+            if ($mItem->getBlueprint()->isTypeID($typeID)) {
+                $mItem->getBlueprint()->setME($me);
+            }
+
+            foreach ($mItem->getBlueprint()->getItems() as $cItem) {
+                self::setME($cItem, $typeID, $me);
+            }
+        }
+    }
+
+    /**
+     * @param MItem $mItem
+     * @param int   $typeID
+     * @param int   $te
+     */
+    public static function setTE(MItem $mItem, $typeID, $te)
+    {
+        if ($mItem->hasBlueprint()) {
+            if ($mItem->getBlueprint()->isTypeID($typeID)) {
+                $mItem->getBlueprint()->setTE($te);
+            }
+
+            foreach ($mItem->getBlueprint()->getItems() as $cItem) {
+                self::setTE($cItem, $typeID, $te);
+            }
+        }
+    }
 }

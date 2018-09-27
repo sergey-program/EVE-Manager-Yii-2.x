@@ -2,6 +2,7 @@
 
 namespace app\modules\manufacture\components;
 
+use app\models\dump\IndustryActivityMaterials;
 use app\models\dump\InvTypes;
 
 /**
@@ -9,12 +10,8 @@ use app\models\dump\InvTypes;
  *
  * @package app\modules\manufacture\components
  */
-class MBlueprint
+class MBlueprint extends AbstractItem
 {
-    /** @var InvTypes $invType */
-    private $invType;
-    /** @var int $quantity */
-    private $quantity;
     /** @var int $me */
     private $me = 0;
     /** @var int $te */
@@ -41,13 +38,14 @@ class MBlueprint
      */
     private function loadComponents()
     {
-        $this->items = [];
-        $iam = $this->invType->getIndustryActivityMaterials()->andWhere(['activityID' => '1'])->cache(60*60*24)->all();
+        $this->mItems = [];
+        /** @var IndustryActivityMaterials[] $iam */
+        $iam = $this->getInvType()->getIndustryActivityMaterials()->andWhere(['activityID' => '1'])->cache(60 * 60 * 24)->all();
 
         if (!empty($iam)) {
             foreach ($iam as $invTypeMaterial) {
-                $quantity = ($this->me > 0)
-                    ? ceil($invTypeMaterial->quantity - ($invTypeMaterial->quantity * ($this->me / 100)))
+                $quantity = ($this->getME() > 0)
+                    ? ceil($invTypeMaterial->quantity - ($invTypeMaterial->quantity * ($this->getME() / 100)))
                     : $invTypeMaterial->quantity;
 
                 $this->mItems[$invTypeMaterial->materialTypeID] = MManager::createItem($invTypeMaterial->materialTypeID, $quantity);
@@ -104,23 +102,5 @@ class MBlueprint
     public function getItems()
     {
         return $this->mItems;
-    }
-
-    /**
-     * @param int $typeID
-     *
-     * @return bool
-     */
-    public function isTypeID($typeID)
-    {
-        return ($this->invType->typeID == $typeID);
-    }
-
-    /**
-     * @return InvTypes
-     */
-    public function getInvType()
-    {
-        return $this->invType;
     }
 }
