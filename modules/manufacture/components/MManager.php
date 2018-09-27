@@ -2,6 +2,7 @@
 
 namespace app\modules\manufacture\components;
 
+use app\models\BlueprintSettings;
 use app\models\dump\IndustryActivityProducts;
 use app\models\dump\InvTypes;
 
@@ -38,14 +39,58 @@ class MManager
         $iap = IndustryActivityProducts::find()->where(['and', ['activityID' => '1'], ['productTypeID' => $invTypeID]])->cache(60 * 60 * 24)->one();
 
         if (!empty($iap)) {
-            return new MBlueprint(InvTypes::findOne(['typeID' => $iap->typeID])); // bpo
+            return new MBlueprint(InvTypes::find()->where(['typeID' => $iap->typeID])->cache(60 * 2)->one()); // bpo
         }
 
         return null;
     }
 
     /**
-     * @param MItem $mItem
+     * Collect all blueprints that item uses for manufacture.
+     *
+     * @param MItem $mItem // not bpo
+     * @param bool  $asTypeID
+     *
+     * @return array
+     */
+    public static function getAllBlueprints(MItem $mItem, $asTypeID = true)
+    {
+        $result = [];
+
+        if ($mItem->hasBlueprint()) {
+            $invTypeID = $mItem->getBlueprint()->getInvType()->typeID;
+            $result[$invTypeID] = $asTypeID ? $invTypeID : $mItem->getBlueprint();
+
+            foreach ($mItem->getBlueprint()->getItems() as $cItem) {
+                $result = array_merge($result, self::getAllBlueprints($cItem));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load user's blueprint settings and apply them.
+     *
+     * @param MItem $mItem // not bpo
+     */
+    public static function applyBlueprintSettings(MItem $mItem)
+    {
+        $typeIDs = self::getAllBlueprints($mItem);
+        // @todo select all blueprints before use them in foreach loop
+
+        foreach ($typeIDs as $typeID) {
+            $blueprintSettings = BlueprintSettings::findOne(['typeID' => $typeID, 'userID' => \Yii::$app->user->id]);
+
+            if ($blueprintSettings) {
+                self::setME($mItem, $blueprintSettings->typeID, $blueprintSettings->me ? $blueprintSettings->me : 0);
+                self::setTE($mItem, $blueprintSettings->typeID, $blueprintSettings->te ? $blueprintSettings->te : 0);
+            }
+        }
+    }
+
+    /**
+     * @param MItem $mItem // not bpo
      * @param int   $quantity
      *
      * @return MTotal
@@ -56,7 +101,7 @@ class MManager
     }
 
     /**
-     * @param MItem $mItem
+     * @param MItem $mItem // not bpo
      * @param int   $typeID
      * @param int   $me
      */
@@ -74,7 +119,7 @@ class MManager
     }
 
     /**
-     * @param MItem $mItem
+     * @param MItem $mItem // not bpo
      * @param int   $typeID
      * @param int   $te
      */

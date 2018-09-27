@@ -15,7 +15,7 @@ class MTotal
     /**
      * MTotal constructor.
      *
-     * @param MItem $mItem
+     * @param MItem $mItem // not bpo
      * @param int   $quantity
      */
     public function __construct(MItem $mItem, $quantity = 1)

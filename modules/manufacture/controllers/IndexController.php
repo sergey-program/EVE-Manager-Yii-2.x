@@ -2,11 +2,20 @@
 
 namespace app\modules\manufacture\controllers;
 
+use app\models\BlueprintSettings;
 use app\models\dump\InvTypes;
 use app\modules\manufacture\components\MManager;
 
+/**
+ * Class IndexController
+ *
+ * @package app\modules\manufacture\controllers
+ */
 class IndexController extends AbstractManufactureController
 {
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         $invTypes = [];
@@ -30,37 +39,62 @@ class IndexController extends AbstractManufactureController
         return $this->render('index', ['invTypes' => $invTypes]);
     }
 
+    /**
+     * @param int $typeID
+     *
+     * @return string
+     */
     public function actionView($typeID)
     {
         $mItem = MManager::createItem($typeID);
 
         if (\Yii::$app->request->isPost) {
-//            echo '<pre>';
-//            print_r(\Yii::$app->request->post());
-
             foreach (\Yii::$app->request->post() as $key => $data) {
                 if (is_numeric($key)) {
-                    if ($data['te']) {
-                        MManager::setTE($mItem, $key, $data['te']);
+                    $attributes = null;
+
+                    if (is_numeric($data['me'])) {
+                        $attributes['me'] = $data['me'];
                     }
 
-                    if ($data['me']) {
-                        MManager::setME($mItem, $key, $data['me']);
+                    if (is_numeric($data['te'])) {
+                        $attributes['te'] = $data['te'];
                     }
+
+                    $this->updateBlueprintSettings($key, $attributes);
                 }
             }
 
-//            echo '</pre>';
+            return $this->refresh();
         }
 
-
-//        $mItem->getBlueprint()->setME(10);
-//        foreach ($mItem->getBlueprint()->getItems() as $item) {
-//            if ($item->hasBlueprint()) {
-//                $item->getBlueprint()->setME(10);
-//            }
-//        }
+        MManager::applyBlueprintSettings($mItem);
 
         return $this->render('view', ['mItem' => $mItem]);
+    }
+
+    /**
+     * @param int        $typeID
+     * @param array|null $attributes
+     *
+     * @return bool
+     */
+    private function updateBlueprintSettings($typeID, $attributes)
+    {
+        if (empty($attributes)) {
+            return false;
+        }
+
+        $filter = ['userID' => \Yii::$app->user->id, 'typeID' => $typeID];
+
+        $blueprintSettings = BlueprintSettings::findOne($filter);
+
+        if (!$blueprintSettings) {
+            $blueprintSettings = new BlueprintSettings($filter);
+        }
+
+        $blueprintSettings->setAttributes($attributes);
+
+        return $blueprintSettings->save();
     }
 }
