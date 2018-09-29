@@ -61,6 +61,14 @@ class IndexController extends AbstractManufactureController
                         $attributes['te'] = $data['te'];
                     }
 
+                    if (is_numeric($data['meBonus'])) {
+                        $attributes['meBonus'] = $data['meBonus'];
+                    }
+
+                    if (is_numeric($data['teBonus'])) {
+                        $attributes['teBonus'] = $data['teBonus'];
+                    }
+
                     $this->updateBlueprintSettings($key, $attributes);
                 }
             }
@@ -68,7 +76,9 @@ class IndexController extends AbstractManufactureController
             return $this->refresh();
         }
 
+//        MManager::applyCitadelBonus($mItem, 3);
         MManager::applyBlueprintSettings($mItem);
+
 
         return $this->render('view', ['mItem' => $mItem]);
     }

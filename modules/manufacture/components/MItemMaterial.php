@@ -3,11 +3,11 @@
 namespace app\modules\manufacture\components;
 
 /**
- * Class MBlueprint
+ * Class MItemMaterial
  *
  * @package app\modules\manufacture\components
  */
-class MBlueprint extends AbstractBlueprint
+class MItemMaterial extends AbstractItemMaterial
 {
 
 }

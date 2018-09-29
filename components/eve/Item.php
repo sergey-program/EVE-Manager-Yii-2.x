@@ -2,14 +2,15 @@
 
 namespace app\components\eve;
 
-use yii\base\Object;
+use app\models\dump\InvTypes;
+use yii\base\BaseObject;
 
 /**
  * Class Item
  *
  * @package app\components\eve
  */
-class Item extends Object
+class Item extends BaseObject
 {
     /** @var int $typeID */
     public $typeID;
@@ -170,5 +171,13 @@ class Item extends Object
     public function getPriceBuy($quantity = null)
     {
         return $this->priceBuy * (is_numeric($quantity) ? $quantity : $this->quantity);
+    }
+
+    /**
+     * @return InvTypes|null
+     */
+    public function getInvTypeModel()
+    {
+        return InvTypes::findOne($this->typeID);
     }
 }

@@ -2,14 +2,14 @@
 
 namespace app\components\eve;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class ItemCollection
  *
  * @package app\components\eve
  */
-class ItemCollection extends Object
+class ItemCollection extends BaseObject
 {
     /**
      * Items that is used. Simple ArrayCollection pattern.

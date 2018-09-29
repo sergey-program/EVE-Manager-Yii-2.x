@@ -15,8 +15,8 @@ class MarketOrders
 {
     /** @var EsiMarketOrders|null $esiMarketOrders */
     private $esiMarketOrders;
-    /** @var array $prices */
-    public $prices = [];
+    /** @var int $pageLimit */
+    private $pageLimit = 350;
 
     /**
      * @param EsiMarketOrders $esiMarketOrders
@@ -31,11 +31,15 @@ class MarketOrders
     }
 
     /**
-     * @return array
+     * @param int $pageLimit
+     *
+     * @return $this
      */
-    public function getPrices()
+    public function setPageLimit($pageLimit)
     {
-        return $this->prices;
+        $this->pageLimit = $pageLimit;
+
+        return $this;
     }
 
     /**
@@ -43,63 +47,76 @@ class MarketOrders
      *
      * @param int $pages
      *
-     * @return $this
+     * @return array
      *
      * @throws Exception
      */
-    public function getOrders($pages = 350)
+    public function getPrices()
     {
-        for ($i = 1; $i <= $pages; $i++) {
+        $result = [];
+
+        for ($i = 1; $i <= $this->pageLimit; $i++) {
             $orders = $this->esiMarketOrders->getRows($i)->getOrders();
 
             if (isset($orders['error'])) {
-                throw new Exception($orders['error']);
+                continue;
             }
 
-            foreach ($orders as $order) {
-                if ($order['location_id'] != '60003760') { // jita 4-4
-                    continue;
-                }
-
-                // add default values
-                if (!isset($this->prices[$order['type_id']])) {
-                    $this->prices[$order['type_id']] = [
-                        'buy' => 0,
-                        'sell' => 0,
-                        'type_id' => $order['type_id']
-                    ];
-                }
-
-                if ($order['is_buy_order']) {
-                    if ($this->prices[$order['type_id']]['buy'] === 0 || ($this->prices[$order['type_id']]['buy'] < $order['price'])) {
-                        $this->prices[$order['type_id']]['buy'] = $order['price'];
-                    }
-                } else {
-                    if ($this->prices[$order['type_id']]['sell'] === 0 || ($this->prices[$order['type_id']]['sell'] > $order['price'])) {
-                        $this->prices[$order['type_id']]['sell'] = $order['price'];
-                    }
-                }
-            }
+            $result = $this->parseOrders($orders, $result);
 
             if (count($orders) < $this->esiMarketOrders->getMaxItems()) {
                 break;
             }
         }
 
-        return $this;
+        return $result;
     }
 
     /**
-     * @param array|null $prices
+     * @param array $orders
+     * @param array $result
+     *
+     * @return array
+     */
+    public function parseOrders($orders, $result = [])
+    {
+        foreach ($orders as $order) {
+            if ($order['location_id'] != '60003760') { // jita 4-4
+                continue;
+            }
+
+            // add default values
+            if (!isset($result[$order['type_id']])) {
+                $result[$order['type_id']] = [
+                    'buy' => 0,
+                    'sell' => 0,
+                    'type_id' => $order['type_id']
+                ];
+            }
+
+            if ($order['is_buy_order']) {
+                if ($result[$order['type_id']]['buy'] === 0 || ($result[$order['type_id']]['buy'] < $order['price'])) {
+                    $result[$order['type_id']]['buy'] = $order['price'];
+                }
+            } else {
+                if ($result[$order['type_id']]['sell'] === 0 || ($result[$order['type_id']]['sell'] > $order['price'])) {
+                    $result[$order['type_id']]['sell'] = $order['price'];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $prices
      *
      * @return bool
      *
      * @throws \Exception
      */
-    public function updateDB($prices = null)
+    public function updateDB(array $prices)
     {
-        $prices = is_null($prices) ? $this->prices : $prices;
-
         if (empty($prices)) {
             return false;
         }

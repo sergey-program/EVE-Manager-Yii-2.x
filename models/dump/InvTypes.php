@@ -29,6 +29,7 @@ use app\models\MarketPrice;
  * @property InvTypeMaterials[]          $invTypeMaterials
  * @property MarketPrice                 $marketPrice
  * @property IndustryActivityMaterials[] $industryActivityMaterials
+ * @property IndustryActivityMaterials[] $industryActivityMaterialsManufacture
  */
 class InvTypes extends AbstractActiveRecord
 {
@@ -77,6 +78,11 @@ class InvTypes extends AbstractActiveRecord
     public function getIndustryActivityMaterials()
     {
         return $this->hasMany(IndustryActivityMaterials::class, ['typeID' => 'typeID']);
+    }
+
+    public function getIndustryActivityMaterialsManufacture($cacheTime = 60 * 60 * 24)
+    {
+        return $this->getIndustryActivityMaterials()->andWhere(['activityID' => '1'])->cache($cacheTime)->all();
     }
 
     public function getIndustryActivityMaterialsIn()

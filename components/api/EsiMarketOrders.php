@@ -3,14 +3,17 @@
 namespace app\components\api;
 
 use app\models\User;
+use yii\base\BaseObject;
 
 /**
  * Class EsiMarketOrders
  *
  * @package app\components\api
  */
-class EsiMarketOrders
+class EsiMarketOrders extends BaseObject
 {
+    private $maxItems = 1000; // https://esi.evetech.net/ui#/Market/get_markets_region_id_orders
+
     /**
      * Result array of api call.
      *
@@ -31,6 +34,13 @@ class EsiMarketOrders
      * @var int|null|string $regionID
      */
     private $regionID = '10000002';
+
+    private $orderType = 'all'; // @todo add
+
+    public function getMaxItems()
+    {
+        return $this->maxItems;
+    }
 
     /**
      * @param int $typeID
@@ -82,7 +92,7 @@ class EsiMarketOrders
         $url = 'https://esi.tech.ccp.is/latest/markets/' . $this->getRegionID() . '/orders?';
         $url .= $this->getTypeID() ? '&type_id=' . $this->getTypeID() : '';
         $url .= '&page=' . $page;
-
+//$url .= '&order_type='.$this->orderType;
         return $url;
     }
 
@@ -97,7 +107,7 @@ class EsiMarketOrders
 
         /** @var User $user */
         $user = User::find()->one();
-        $user->token->refreshAccessToken();
+//        $user->token->refreshAccessToken();
 
         curl_setopt_array($curl, [
                 CURLOPT_URL => $this->createUrl($page),

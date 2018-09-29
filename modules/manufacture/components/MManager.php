@@ -3,7 +3,6 @@
 namespace app\modules\manufacture\components;
 
 use app\models\BlueprintSettings;
-use app\models\dump\IndustryActivityProducts;
 use app\models\dump\InvTypes;
 
 /**
@@ -29,20 +28,18 @@ class MManager
     }
 
     /**
-     * @param InvTypes $invType
+     * @param     $invType
+     * @param int $quantity
      *
-     * @return MBlueprint|null
+     * @return MItemMaterial
      */
-    public static function createBlueprint($invType)
+    public static function createItemMaterial($invType, $quantity = 1)
     {
-        $invTypeID = is_numeric($invType) ? $invType : $invType->typeID;
-        $iap = IndustryActivityProducts::find()->where(['and', ['activityID' => '1'], ['productTypeID' => $invTypeID]])->cache(60 * 60 * 24)->one();
-
-        if (!empty($iap)) {
-            return new MBlueprint(InvTypes::find()->where(['typeID' => $iap->typeID])->cache(60 * 2)->one()); // bpo
+        if (is_numeric($invType)) {
+            $invType = InvTypes::find()->where(['typeID' => $invType])->cache(60 * 60 * 24)->one();
         }
 
-        return null;
+        return new MItemMaterial($invType, $quantity);
     }
 
     /**
@@ -53,7 +50,7 @@ class MManager
      *
      * @return array
      */
-    public static function getAllBlueprints(MItem $mItem, $asTypeID = true)
+    public static function getAllBlueprints(AbstractItem $mItem, $asTypeID = true)
     {
         $result = [];
 
@@ -74,7 +71,7 @@ class MManager
      *
      * @param MItem $mItem // not bpo
      */
-    public static function applyBlueprintSettings(MItem $mItem)
+    public static function applyBlueprintSettings(AbstractItem $mItem)
     {
         $typeIDs = self::getAllBlueprints($mItem);
         // @todo select all blueprints before use them in foreach loop
@@ -83,8 +80,24 @@ class MManager
             $blueprintSettings = BlueprintSettings::findOne(['typeID' => $typeID, 'userID' => \Yii::$app->user->id]);
 
             if ($blueprintSettings) {
-                self::setME($mItem, $blueprintSettings->typeID, $blueprintSettings->me ? $blueprintSettings->me : 0);
-                self::setTE($mItem, $blueprintSettings->typeID, $blueprintSettings->te ? $blueprintSettings->te : 0);
+                $me = $blueprintSettings->me ? $blueprintSettings->me : 0;
+                $meBonus = $blueprintSettings->meBonus ? $blueprintSettings->meBonus : 0;
+                self::setME($mItem, $blueprintSettings->typeID, $me, $meBonus);
+
+                $te = $blueprintSettings->te ? $blueprintSettings->te : 0;
+                $teBonus = $blueprintSettings->teBonus ? $blueprintSettings->teBonus : 0;
+                self::setTE($mItem, $blueprintSettings->typeID, $te, $teBonus);
+            }
+        }
+    }
+
+    public static function applyCitadelBonus(AbstractItem $mItem, $bonus)
+    {
+        if ($mItem->hasBlueprint()) {
+            $mItem->getBlueprint()->setMeBonus($bonus);
+
+            foreach ($mItem->getBlueprint()->getItems() as $item) {
+                self::applyCitadelBonus($item, $bonus);
             }
         }
     }
@@ -95,7 +108,7 @@ class MManager
      *
      * @return MTotal
      */
-    public static function calculateTotal(MItem $mItem, $quantity = 1)
+    public static function calculateTotal(AbstractItem $mItem, $quantity = 1)
     {
         return new MTotal($mItem, $quantity);
     }
@@ -104,16 +117,18 @@ class MManager
      * @param MItem $mItem // not bpo
      * @param int   $typeID
      * @param int   $me
+     * @param int   $meBonus
      */
-    public static function setME(MItem $mItem, $typeID, $me)
+    public static function setME(AbstractItem $mItem, $typeID, $me, $meBonus = 0)
     {
         if ($mItem->hasBlueprint()) {
             if ($mItem->getBlueprint()->isTypeID($typeID)) {
                 $mItem->getBlueprint()->setME($me);
+                $mItem->getBlueprint()->setMeBonus($meBonus);
             }
 
             foreach ($mItem->getBlueprint()->getItems() as $cItem) {
-                self::setME($cItem, $typeID, $me);
+                self::setME($cItem, $typeID, $me, $meBonus);
             }
         }
     }
@@ -122,16 +137,18 @@ class MManager
      * @param MItem $mItem // not bpo
      * @param int   $typeID
      * @param int   $te
+     * @param int   $teBonus
      */
-    public static function setTE(MItem $mItem, $typeID, $te)
+    public static function setTE(AbstractItem $mItem, $typeID, $te, $teBonus = 0)
     {
         if ($mItem->hasBlueprint()) {
             if ($mItem->getBlueprint()->isTypeID($typeID)) {
                 $mItem->getBlueprint()->setTE($te);
+//                $mItem->getBlueprint()->setTeBonus($teBonus);
             }
 
             foreach ($mItem->getBlueprint()->getItems() as $cItem) {
-                self::setTE($cItem, $typeID, $te);
+                self::setTE($cItem, $typeID, $te, $teBonus);
             }
         }
     }

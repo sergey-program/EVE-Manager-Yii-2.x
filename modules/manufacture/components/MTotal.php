@@ -18,7 +18,7 @@ class MTotal
      * @param MItem $mItem // not bpo
      * @param int   $quantity
      */
-    public function __construct(MItem $mItem, $quantity = 1)
+    public function __construct(AbstractItem $mItem, $quantity = 1)
     {
         if ($mItem->hasBlueprint()) {
             foreach ($mItem->getBlueprint()->getItems() as $item) {

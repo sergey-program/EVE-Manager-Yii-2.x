@@ -18,16 +18,16 @@
 
                     ME: <?= $cItem->getBlueprint()->getMe(); ?>
                     TE: <?= $cItem->getBlueprint()->getTe(); ?>
+                    MEB: <?= $cItem->getBlueprint()->getMeBonus(); ?>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <input class="form-control" type="number" style="width: 55px;" min="0" max="10" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[me]" placeholder="ME">
                     <input class="form-control" type="number" style="width: 55px;" min="0" max="20" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[te]" placeholder="TE">
+                    <input class="form-control" type="number" style="width: 65px;" min="0" max="20" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[meBonus]" placeholder="MEB">
+                    <input class="form-control" type="number" style="width: 65px;" min="0" max="20" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[teBonus]" placeholder="TEB">
                 </div>
 
-                <div class="col-md-3">
-
-                </div>
             </div>
         </div>
 
