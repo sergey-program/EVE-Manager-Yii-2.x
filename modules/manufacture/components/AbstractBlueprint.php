@@ -20,14 +20,19 @@ abstract class AbstractBlueprint
     private $me = 0;
     /** @var int $te */
     private $te = 0;
-    /** @var int $meBonus */
-    private $meBonus = 0;
+    /** @var int $meHull */
+    private $meHull = 0;
+    /** @var float $meRig */
+    private $meRig = 4.2; // 2% * 2.1 @todo create calculator for citadels
+
     /** @var int $teBonus */
     private $teBonus = 0;
     /** @var array|MItem[] $mItems */
     private $mItems = [];
     /** @var IndustryActivityMaterials[]|array $industryActivityMaterials */
     private $industryActivityMaterials = [];
+
+    private $runPrice = 0;
 
     /**
      * MBlueprint constructor.
@@ -70,19 +75,12 @@ abstract class AbstractBlueprint
     private function recalculateMaterials()
     {
         foreach ($this->mItems as $mItem) {
-
             $me = 1 - ($this->getME() / 100);
-            $rig = 1 - (4.2 /100); // 2% * 2.1 @todo create calculator for citadels
-            $hull = 1 - ($this->getMeBonus()/100); // @todo calculate hull me bonus
+            $rig = 1 - ($this->getMeRig() / 100);
+            $hull = 1 - ($this->getMeHull() / 100); // @todo calculate hull me bonus
 
             $qty = ceil($mItem->getBaseQuantity() * $me * $rig * $hull);
             $mItem->setQuantity($qty);
-
-//            $quantity = (($this->getME() > 0) || ($this->getMeBonus() > 0))
-//                ? ceil($mItem->getBaseQuantity() - ($mItem->getBaseQuantity() * (($this->getMe() + $this->getMeBonus()) / 100)))
-//                : $mItem->getBaseQuantity();
-
-//            $mItem->setQuantity($quantity);
         }
     }
 
@@ -148,14 +146,19 @@ abstract class AbstractBlueprint
         return $this->te;
     }
 
+    public function getMeRig()
+    {
+        return $this->meRig;
+    }
+
     /**
-     * @param $meBonus
+     * @param int $me
      *
      * @return $this
      */
-    public function setMeBonus($meBonus)
+    public function setMeHull($me)
     {
-        $this->meBonus = $meBonus;
+        $this->meHull = $me;
         $this->recalculateMaterials();
 
         return $this;
@@ -164,9 +167,21 @@ abstract class AbstractBlueprint
     /**
      * @return int
      */
-    public function getMeBonus()
+    public function getMeHull()
     {
-        return $this->meBonus;
+        return $this->meHull;
+    }
+
+    public function setRunPrice($runPrice)
+    {
+        $this->runPrice = $runPrice;
+
+        return $this;
+    }
+
+    public function getRunPrice()
+    {
+        return $this->runPrice;
     }
 
     /**

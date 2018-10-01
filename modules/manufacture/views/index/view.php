@@ -78,6 +78,13 @@
                                 <?= \Yii::$app->formatter->asDecimal($mTotal->getPriceBuyTotal()); ?>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td colspan="2" class="text-right"><strong>BPC</strong></td>
+                            <td class="text-right">
+                                <?= \Yii::$app->formatter->asInteger($mTotal->getPriceBlueprintRuns()); ?>
+                            </td>
+                        </tr>
                     </table>
 
                 </div>
@@ -85,22 +92,24 @@
         </form>
     </div>
 
-    <div class="col-md-6 col-lg-4">
-        <?= \yii\helpers\Html::beginForm('','post', ['class' => 'form form-inline']);?>
+    <div class="col-md-12 col-lg-12">
+        <?= \yii\helpers\Html::beginForm('', 'post', ['class' => 'form form-inline']); ?>
 
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Blueprints settings</h3>
-                </div>
-
-                <div class="box-body">
-                    <?= $this->render('_rowBpo', ['cItem' => $mItem, 'p' => 20]); ?>
-                </div>
-
-                <div class="box-footer text-right">
-                    <button type="submit" class="btn btn-primary">Применить</button>
-                </div>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Blueprints settings</h3>
             </div>
+
+            <div class="box-body">
+                <table class="table table-hover">
+                    <?= $this->render('_rowBpo', ['cItem' => $mItem, 'p' => 20]); ?>
+                </table>
+            </div>
+
+            <div class="box-footer text-right">
+                <button type="submit" class="btn btn-primary">Применить</button>
+            </div>
+        </div>
         <?= \yii\helpers\Html::endForm(); ?>
     </div>
 

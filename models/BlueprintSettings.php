@@ -15,8 +15,11 @@ use app\models\extend\AbstractActiveRecord;
  * @property int      $typeID
  * @property int      $me
  * @property int      $te
- * @property int      $meBonus
- * @property int      $teBonus
+ * @property int      $meHull
+ * @property int      $teHull
+ * @property int      $meRig
+ * @property int      $teRig
+ * @property int      $runPrice
  *
  * @property User     $user
  * @property InvTypes $invType
@@ -31,7 +34,8 @@ class BlueprintSettings extends AbstractActiveRecord
     public function rules()
     {
         return [
-            [['userID', 'typeID', 'me', 'te','meBonus','teBonus'], 'safe'],
+            [['userID', 'typeID', 'me', 'te', 'meHull', 'teHull'], 'safe'],
+            [['meRig', 'teRig', 'runPrice'], 'safe'],
             [['me', 'te'], 'default', 'value' => 0]
         ];
     }

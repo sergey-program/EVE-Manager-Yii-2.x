@@ -171,6 +171,14 @@ abstract class AbstractItem
         return $default;
     }
 
+    public function getPriceBlueprintRuns($default=0) {
+        if ($this->hasBlueprint()) {
+            return $this->getBlueprint()->getRuns() * $this->getBlueprint()->getRunPrice();
+        }
+
+        return $default;
+    }
+
     /**
      * @param int $default
      *

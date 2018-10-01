@@ -11,6 +11,7 @@ class MTotal
 {
     /** @var array|MItem $mItems */
     private $mItems = [];
+    public $priceBPC = 0;
 
     /**
      * MTotal constructor.
@@ -21,6 +22,8 @@ class MTotal
     public function __construct(AbstractItem $mItem, $quantity = 1)
     {
         if ($mItem->hasBlueprint()) {
+            $this->priceBPC += $mItem->getPriceBlueprintRuns();
+
             foreach ($mItem->getBlueprint()->getItems() as $item) {
                 $this->mergeTotal(MManager::calculateTotal($item, $item->getQuantity() * $quantity));
             }
@@ -34,6 +37,8 @@ class MTotal
      */
     public function mergeTotal(MTotal $mTotal)
     {
+        $this->priceBPC += $mTotal->priceBPC;
+
         foreach ($mTotal->getItems() as $typeID => $mItem) {
             $this->addItem($typeID, $mItem->getQuantity());
         }
@@ -90,5 +95,10 @@ class MTotal
         }
 
         return $result;
+    }
+
+    public function getPriceBlueprintRuns()
+    {
+        return $this->priceBPC;
     }
 }

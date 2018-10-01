@@ -61,12 +61,24 @@ class IndexController extends AbstractManufactureController
                         $attributes['te'] = $data['te'];
                     }
 
-                    if (is_numeric($data['meBonus'])) {
-                        $attributes['meBonus'] = $data['meBonus'];
+                    if (is_numeric($data['meHull'])) {
+                        $attributes['meHull'] = $data['meHull'];
                     }
 
-                    if (is_numeric($data['teBonus'])) {
-                        $attributes['teBonus'] = $data['teBonus'];
+                    if (is_numeric($data['teHull'])) {
+                        $attributes['teHull'] = $data['teHull'];
+                    }
+
+                    if (is_numeric($data['meRig'])) {
+                        $attributes['meRig'] = $data['meRig'];
+                    }
+
+                    if (is_numeric($data['teRig'])) {
+                        $attributes['teRig'] = $data['teRig'];
+                    }
+
+                    if (is_numeric($data['runPrice'])) {
+                        $attributes['runPrice'] = $data['runPrice'];
                     }
 
                     $this->updateBlueprintSettings($key, $attributes);

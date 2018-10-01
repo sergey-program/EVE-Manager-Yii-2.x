@@ -81,20 +81,25 @@ class MManager
 
             if ($blueprintSettings) {
                 $me = $blueprintSettings->me ? $blueprintSettings->me : 0;
-                $meBonus = $blueprintSettings->meBonus ? $blueprintSettings->meBonus : 0;
-                self::setME($mItem, $blueprintSettings->typeID, $me, $meBonus);
+                $meHull = $blueprintSettings->meHull ? $blueprintSettings->meHull : 0;
+                self::setME($mItem, $blueprintSettings->typeID, $me, $meHull);
 
                 $te = $blueprintSettings->te ? $blueprintSettings->te : 0;
-                $teBonus = $blueprintSettings->teBonus ? $blueprintSettings->teBonus : 0;
+                $teBonus = $blueprintSettings->teHull ? $blueprintSettings->teHull : 0;
                 self::setTE($mItem, $blueprintSettings->typeID, $te, $teBonus);
+
+                $runPrice = $blueprintSettings->runPrice ? $blueprintSettings->runPrice: 0;
+                self::setRunPrice($mItem, $blueprintSettings->typeID, $runPrice);
             }
         }
+
+        // @todo refactor, add me\te\runPrice
     }
 
     public static function applyCitadelBonus(AbstractItem $mItem, $bonus)
     {
         if ($mItem->hasBlueprint()) {
-            $mItem->getBlueprint()->setMeBonus($bonus);
+            $mItem->getBlueprint()->setmeHull($bonus);
 
             foreach ($mItem->getBlueprint()->getItems() as $item) {
                 self::applyCitadelBonus($item, $bonus);
@@ -117,18 +122,18 @@ class MManager
      * @param MItem $mItem // not bpo
      * @param int   $typeID
      * @param int   $me
-     * @param int   $meBonus
+     * @param int   $meHull
      */
-    public static function setME(AbstractItem $mItem, $typeID, $me, $meBonus = 0)
+    public static function setME(AbstractItem $mItem, $typeID, $me, $meHull = 0)
     {
         if ($mItem->hasBlueprint()) {
             if ($mItem->getBlueprint()->isTypeID($typeID)) {
                 $mItem->getBlueprint()->setME($me);
-                $mItem->getBlueprint()->setMeBonus($meBonus);
+                $mItem->getBlueprint()->setMeHull($meHull);
             }
 
             foreach ($mItem->getBlueprint()->getItems() as $cItem) {
-                self::setME($cItem, $typeID, $me, $meBonus);
+                self::setME($cItem, $typeID, $me, $meHull);
             }
         }
     }
@@ -149,6 +154,19 @@ class MManager
 
             foreach ($mItem->getBlueprint()->getItems() as $cItem) {
                 self::setTE($cItem, $typeID, $te, $teBonus);
+            }
+        }
+    }
+
+    public static function setRunPrice(AbstractItem $mItem, $typeID, $runPrice)
+    {
+        if ($mItem->hasBlueprint()) {
+            if ($mItem->getBlueprint()->isTypeID($typeID)) {
+                $mItem->getBlueprint()->setRunPrice($runPrice);
+            }
+
+            foreach ($mItem->getBlueprint()->getItems() as $cItem) {
+                self::setRunPrice($cItem, $typeID, $runPrice);
             }
         }
     }
