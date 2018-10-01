@@ -18,6 +18,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <div class="pull-right">
+                    <?= $mItem->getBlueprint()->getME(); ?> / <?= $mItem->getBlueprint()->getMeHull(); ?> / <?= $mItem->getBlueprint()->getMeRig(); ?>
                     <img src="https://image.eveonline.com/Type/<?= $mItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
                          title="<?= $mItem->getBlueprint()->getInvType()->typeName; ?>"
                          class="img-thumbnail"

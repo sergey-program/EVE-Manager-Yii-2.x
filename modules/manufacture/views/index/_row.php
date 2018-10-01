@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @var \app\modules\manufacture\components\MItem $cItem
- * @var int                                       $p
+ * @var \app\modules\manufacture\components\MItemMaterial $cItem
+ * @var int                                               $p
  */
 
 ?>
@@ -15,11 +15,13 @@
     </div>
 
     <div class="col-md-2 text-right">
+        <span class="text-muted"><?= $cItem->getBaseQuantity(); ?></span>
         <?= $cItem->getQuantity(); ?>
     </div>
 
     <div class="col-md-4 text-right">
         <?php if ($cItem->hasBlueprint()): ?>
+            <?= $cItem->getBlueprint()->getME(); ?> / <?= $cItem->getBlueprint()->getMeHull(); ?> / <?= $cItem->getBlueprint()->getMeRig(); ?>
             <img src="https://image.eveonline.com/Type/<?= $cItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
                  class="img-thumbnail img-thumbnail-hand"
                  style="margin-left: 10px; margin-right: 10px;"

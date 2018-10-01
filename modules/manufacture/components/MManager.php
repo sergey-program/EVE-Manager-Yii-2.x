@@ -82,13 +82,14 @@ class MManager
             if ($blueprintSettings) {
                 $me = $blueprintSettings->me ? $blueprintSettings->me : 0;
                 $meHull = $blueprintSettings->meHull ? $blueprintSettings->meHull : 0;
-                self::setME($mItem, $blueprintSettings->typeID, $me, $meHull);
+                $meRig = $blueprintSettings->meRig ? $blueprintSettings->meRig : 0;
+                self::setME($mItem, $blueprintSettings->typeID, $me, $meHull, $meRig);
 
                 $te = $blueprintSettings->te ? $blueprintSettings->te : 0;
                 $teBonus = $blueprintSettings->teHull ? $blueprintSettings->teHull : 0;
                 self::setTE($mItem, $blueprintSettings->typeID, $te, $teBonus);
 
-                $runPrice = $blueprintSettings->runPrice ? $blueprintSettings->runPrice: 0;
+                $runPrice = $blueprintSettings->runPrice ? $blueprintSettings->runPrice : 0;
                 self::setRunPrice($mItem, $blueprintSettings->typeID, $runPrice);
             }
         }
@@ -124,16 +125,17 @@ class MManager
      * @param int   $me
      * @param int   $meHull
      */
-    public static function setME(AbstractItem $mItem, $typeID, $me, $meHull = 0)
+    public static function setME(AbstractItem $mItem, $typeID, $me, $meHull = 0, $meRig = 0)
     {
         if ($mItem->hasBlueprint()) {
             if ($mItem->getBlueprint()->isTypeID($typeID)) {
                 $mItem->getBlueprint()->setME($me);
                 $mItem->getBlueprint()->setMeHull($meHull);
+                $mItem->getBlueprint()->setMeRig($meRig);
             }
 
             foreach ($mItem->getBlueprint()->getItems() as $cItem) {
-                self::setME($cItem, $typeID, $me, $meHull);
+                self::setME($cItem, $typeID, $me, $meHull, $meRig);
             }
         }
     }

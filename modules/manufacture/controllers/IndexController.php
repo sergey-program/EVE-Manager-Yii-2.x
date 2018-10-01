@@ -88,9 +88,7 @@ class IndexController extends AbstractManufactureController
             return $this->refresh();
         }
 
-//        MManager::applyCitadelBonus($mItem, 3);
         MManager::applyBlueprintSettings($mItem);
-
 
         return $this->render('view', ['mItem' => $mItem]);
     }
