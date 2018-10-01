@@ -102,6 +102,16 @@
 
             <div class="box-body">
                 <table class="table table-hover">
+                    <tr class="text-center">
+                        <td>Name</td>
+                        <td>ME</td>
+                        <td>TE</td>
+                        <td>ME Hull</td>
+                        <td>TE Hull</td>
+                        <td>ME Rig</td>
+                        <td>TE Rig</td>
+                        <td>Price per run (bpc)</td>
+                    </tr>
                     <?= $this->render('_rowBpo', ['cItem' => $mItem, 'p' => 20]); ?>
                 </table>
             </div>

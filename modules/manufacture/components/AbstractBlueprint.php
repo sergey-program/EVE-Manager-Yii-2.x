@@ -251,4 +251,24 @@ abstract class AbstractBlueprint
     {
         return $this->meRig;
     }
+
+    /**
+     * @param int $teRig
+     *
+     * @return $this
+     */
+    public function setTeRig($teRig)
+    {
+        $this->teRig = $teRig;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTeRig()
+    {
+        return $this->teRig;
+    }
 }

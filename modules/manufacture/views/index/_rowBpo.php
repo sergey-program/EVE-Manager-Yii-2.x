@@ -12,42 +12,16 @@
         <td>
             <?php $imageUrl = 'https://image.eveonline.com/Type/' . $cItem->getBlueprint()->getInvType()->typeID . '_32.png'; ?>
             <img src="<?= $imageUrl; ?>" title="<?= $cItem->getBlueprint()->getInvType()->typeName; ?>" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
-            <?= $cItem->getBlueprint()->getInvType()->typeName; ?> x<?=$cItem->getBlueprint()->getRuns();?>
+            <?= $cItem->getBlueprint()->getInvType()->typeName; ?> x<?= $cItem->getBlueprint()->getRuns(); ?>
         </td>
 
-        <td>
-            ME: <?= $cItem->getBlueprint()->getMe(); ?>
-            <input class="form-control" type="number" style="width: 55px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[me]" placeholder="10">
-        </td>
-
-        <td>
-            TE: <?= $cItem->getBlueprint()->getTe(); ?>
-            <input class="form-control" type="number" style="width: 55px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[te]" placeholder="10">
-        </td>
-
-        <td>
-            ME Hull: <?= $cItem->getBlueprint()->getMeHull(); ?>
-            <input class="form-control" type="number" style="width: 65px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[meHull]" placeholder="3">
-        </td>
-        <td>
-            TE Hull
-            <input class="form-control" type="number" style="width: 65px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[teHull]" placeholder="0">
-        </td>
-
-        <td>
-            ME Rig
-            <input class="form-control" type="number" style="width: 65px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[meRig]" placeholder="4.2">
-        </td>
-
-        <td>
-            TE Rig
-            <input class="form-control" type="number" style="width: 65px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[teRig]" placeholder="42">
-        </td>
-
-        <td>
-            Price pre run: <?= $cItem->getBlueprint()->getRunPrice(); ?>
-            <input class="form-control" type="number" style="width: 165px;" min="0" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[runPrice]" placeholder="Price per run">
-        </td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[me]" placeholder="<?= $cItem->getBlueprint()->getME(); ?>"></td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[te]" placeholder="<?= $cItem->getBlueprint()->getTE(); ?>"></td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[meHull]" placeholder="<?= $cItem->getBlueprint()->getMeHull(); ?>"></td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[teHull]" placeholder="<?= $cItem->getBlueprint()->getTeHull(); ?>"></td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[meRig]" placeholder="<?= $cItem->getBlueprint()->getMeRig(); ?>"></td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[teRig]" placeholder="<?= $cItem->getBlueprint()->getTeRig(); ?>"></td>
+        <td><input class="form-control" name="<?= $cItem->getBlueprint()->getInvType()->typeID; ?>[runPrice]" placeholder="<?= number_format($cItem->getBlueprint()->getRunPrice(), 0, '.', ' '); ?>"></td>
     </tr>
 
     <?php foreach ($cItem->getBlueprint()->getItems() as $item): ?>
