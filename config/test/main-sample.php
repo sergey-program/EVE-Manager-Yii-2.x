@@ -47,6 +47,9 @@ $config = [
     'modules' => [
         'debug' => 'yii\debug\Module',
         //
+        'manufacture' => 'app\modules\manufacture\ManufactureModule',
+        'calculators' => 'app\modules\calculators\CalculatorsModule',
+        'market-updater' => 'app\modules\marketUpdater\MarketUpdaterModule',
         'corporation' => 'app\modules\corporation\Module',
         'character' => 'app\modules\character\Module',
         'prices' => 'app\modules\prices\Module'
