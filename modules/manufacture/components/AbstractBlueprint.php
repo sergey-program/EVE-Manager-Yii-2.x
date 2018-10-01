@@ -13,56 +13,75 @@ use app\models\dump\InvTypes;
 abstract class AbstractBlueprint
 {
     /** @var InvTypes|null $invType */
-    private $invType;
-    /** @var int $runs */
-    private $runs = 1;
-    /** @var int $me */
-    private $me = 0;
-    /** @var int $te */
-    private $te = 0;
-    /** @var int $meHull */
-    private $meHull = 0;
-    /** @var float $meRig */
-    private $meRig = 4.2; // 2% * 2.1 @todo create calculator for citadels
-
-    /** @var int $teBonus */
-    private $teBonus = 0;
-    /** @var array|MItem[] $mItems */
-    private $mItems = [];
+    protected $invType;
+    /** @var MItem[]|array $mItems */
+    protected $mItems = [];
     /** @var IndustryActivityMaterials[]|array $industryActivityMaterials */
-    private $industryActivityMaterials = [];
+    protected $industryActivityMaterials = [];
 
-    private $runPrice = 0;
+    /** @var int $runs */
+    protected $runs = 1;
+    /** @var int $runPrice */
+    protected $runPrice = 0;
+
+    /** @var int $me */
+    protected $me = 0;
+    /** @var int $te */
+    protected $te = 0;
+
+    /** @var int $meHull */
+    protected $meHull = 0;
+    /** @var int $teHull */
+    protected $teHull = 0;
+
+    /** @var float $meRig */
+    protected $meRig = 4.2; // 2% * 2.1 @todo create calculator for citadels
+    /** @var int $teRig */
+    protected $teRig = 0;
+
+    /** @return $this */
+    abstract protected function recalculateMaterials();
 
     /**
-     * MBlueprint constructor.
+     * @param InvTypes $invType
      *
-     * @param InvTypes $invType // bpo
-     * @param int      $runs
+     * @return $this
      */
-    public function __construct(InvTypes $invType, $runs = 1)
+    public function setInvType(InvTypes $invType)
     {
         $this->invType = $invType;
-        $this->setRuns($runs);
-        $this->loadMaterials();         // load base (qty=1) materials
-        $this->recalculateMaterials();  // recalculate qty regarding runs
+
+        return $this;
     }
 
     /**
+     * @return InvTypes|null
+     */
+    public function getInvType()
+    {
+        return $this->invType;
+    }
+
+    /**
+     * @param int $typeID
+     *
+     * @return bool
+     */
+    public function isTypeID($typeID)
+    {
+        return $this->getInvType() ? ($this->getInvType()->typeID == $typeID) : false;
+    }
+
+    /**
+     * @param array|MItemMaterial[] $mItems
+     *
      * @return $this
      */
-    private function loadMaterials()
+    public function setItems($mItems)
     {
-        $this->mItems = [];
-        /** @var IndustryActivityMaterials[] $iam */
-        $iam = $this->getInvType()->industryActivityMaterialsManufacture;
-
-        if (!empty($iam)) {
-            foreach ($iam as $invTypeMaterial) {
-                $mItem = MManager::createItemMaterial($invTypeMaterial->materialTypeID);
-                $mItem->setBaseQuantity($invTypeMaterial->quantity);
-
-                $this->mItems[$invTypeMaterial->materialTypeID] = $mItem;
+        if (is_array($mItems)) {
+            foreach ($mItems as $mItem) {
+                $this->addItem($mItem);
             }
         }
 
@@ -70,22 +89,27 @@ abstract class AbstractBlueprint
     }
 
     /**
+     * @param MItemMaterial $mItem
      *
+     * @return $this
      */
-    private function recalculateMaterials()
+    public function addItem(MItemMaterial $mItem)
     {
-        foreach ($this->mItems as $mItem) {
-            $me = 1 - ($this->getME() / 100);
-            $rig = 1 - ($this->getMeRig() / 100);
-            $hull = 1 - ($this->getMeHull() / 100); // @todo calculate hull me bonus
+        $this->mItems[] = $mItem;
 
-            $qty = ceil($mItem->getBaseQuantity() * $me * $rig * $hull);
-            $mItem->setQuantity($qty);
-        }
+        return $this;
     }
 
     /**
-     * @param $runs
+     * @return array|MItemMaterial[]
+     */
+    public function getItems()
+    {
+        return $this->mItems;
+    }
+
+    /**
+     * @param int $runs
      *
      * @return $this
      */
@@ -102,6 +126,26 @@ abstract class AbstractBlueprint
     public function getRuns()
     {
         return $this->runs;
+    }
+
+    /**
+     * @param int $runPrice
+     *
+     * @return $this
+     */
+    public function setRunPrice($runPrice)
+    {
+        $this->runPrice = $runPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRunPrice()
+    {
+        return $this->runPrice;
     }
 
     /**
@@ -146,19 +190,14 @@ abstract class AbstractBlueprint
         return $this->te;
     }
 
-    public function getMeRig()
-    {
-        return $this->meRig;
-    }
-
     /**
-     * @param int $me
+     * @param int $meHull
      *
      * @return $this
      */
-    public function setMeHull($me)
+    public function setMeHull($meHull)
     {
-        $this->meHull = $me;
+        $this->meHull = $meHull;
         $this->recalculateMaterials();
 
         return $this;
@@ -172,41 +211,44 @@ abstract class AbstractBlueprint
         return $this->meHull;
     }
 
-    public function setRunPrice($runPrice)
+    /**
+     * @param int $teHull
+     *
+     * @return $this
+     */
+    public function setTeHull($teHull)
     {
-        $this->runPrice = $runPrice;
+        $this->teHull = $teHull;
 
         return $this;
     }
 
-    public function getRunPrice()
-    {
-        return $this->runPrice;
-    }
-
     /**
-     * @return array|MItem[]
+     * @return int
      */
-    public function getItems()
+    public function getTeHull()
     {
-        return $this->mItems;
+        return $this->teHull;
     }
 
     /**
-     * @return InvTypes|null
-     */
-    public function getInvType()
-    {
-        return $this->invType;
-    }
-
-    /**
-     * @param int $typeID
+     * @param float|int $meRig
      *
-     * @return bool
+     * @return $this
      */
-    public function isTypeID($typeID)
+    public function setMeRig($meRig)
     {
-        return $this->getInvType() ? ($this->getInvType()->typeID == $typeID) : false;
+        $this->meRig = $meRig;
+        $this->recalculateMaterials();
+
+        return $this;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getMeRig()
+    {
+        return $this->meRig;
     }
 }
