@@ -29,7 +29,7 @@
                             <div class="box-header with-border">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $invType->typeID; ?>" aria-expanded="false" class="collapsed" style="padding: 0; margin: 0;">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $invType->typeID; ?>" style="padding: 0; margin: 0;">
                                             <img src="https://image.eveonline.com/Type/<?= $invType->typeID; ?>_32.png" class="img-thumbnail" style="margin-right: 10px;">
                                             <span style="font-size: 18px;"><?= $invType->typeName; ?></span>
                                         </a>
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
 
-                            <div id="collapse<?= $invType->typeID; ?>" class="panel-collapse collapse" aria-expanded="false" style="height: 0;">
+                            <div id="collapse<?= $invType->typeID; ?>" class="panel-collapse collapse" style="height: 0;">
                                 <?php
                                 $col = new \app\components\eve\ItemCollection();
                                 $col->addItem(new \app\components\eve\Item(['typeID' => $invType->typeID]));
@@ -88,30 +88,50 @@
 
                                     <table class="table table-condensed table-hover table-bordered" style="margin-top:20px;">
                                         <tr>
-                                            <td></td>
                                             <td class="text-center">Минералов на сумму</td>
                                             <td class="text-center">Мы купили за</td>
                                             <td class="text-center">Профит</td>
                                         </tr>
-                                        <tr>
-                                            <td>По Sell ордерам</td>
+                                        <tr class="text-success">
                                             <td class="text-center">
-                                                <?= number_format($totalSell, 2, '.', ' '); ?>
+                                                S: <?= number_format($totalSell, 2, '.', ' '); ?>
                                             </td>
                                             <td class="text-center">
-                                                <?= number_format($buyPrice, 2, '.', ' '); ?>
+                                                B: <?= number_format($sellPrice, 2, '.', ' '); ?>
                                             </td>
                                             <td class="text-center" title="<?= $totalSell; ?> - <?= $sellPrice; ?>">
                                                 <?= number_format($totalSell - $sellPrice, 2, '.', ' '); ?>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>По Buy ордерам</td>
+                                        <tr class="text-success">
                                             <td class="text-center">
-                                                <?= number_format($totalBuy, 2, '.', ' '); ?>
+                                                B: <?= number_format($totalBuy, 2, '.', ' '); ?>
                                             </td>
                                             <td class="text-center">
-                                                <?= number_format($buyPrice, 2, '.', ' '); ?>
+                                                S: <?= number_format($sellPrice, 2, '.', ' '); ?>
+                                            </td>
+                                            <td class="text-center" title="<?= $totalBuy; ?> - <?= $buyPrice; ?>">
+                                                <?= number_format($totalBuy - $sellPrice, 2, '.', ' '); ?>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="text-danger">
+                                            <td class="text-center">
+                                                S: <?= number_format($totalSell, 2, '.', ' '); ?>
+                                            </td>
+                                            <td class="text-center">
+                                                B: <?= number_format($buyPrice, 2, '.', ' '); ?>
+                                            </td>
+                                            <td class="text-center" title="<?= $totalSell; ?> - <?= $sellPrice; ?>">
+                                                <?= number_format($totalSell - $sellPrice, 2, '.', ' '); ?>
+                                            </td>
+                                        </tr>
+                                        <tr class="text-danger">
+                                            <td class="text-center">
+                                                B: <?= number_format($totalBuy, 2, '.', ' '); ?>
+                                            </td>
+                                            <td class="text-center">
+                                                B: <?= number_format($buyPrice, 2, '.', ' '); ?>
                                             </td>
                                             <td class="text-center" title="<?= $totalBuy; ?> - <?= $buyPrice; ?>">
                                                 <?= number_format($totalBuy - $buyPrice, 2, '.', ' '); ?>

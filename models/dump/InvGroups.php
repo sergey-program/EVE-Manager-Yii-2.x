@@ -56,7 +56,7 @@ class InvGroups extends AbstractActiveRecord
      */
     public function getInvTypes()
     {
-        return $this->hasMany(InvTypes::class, ['groupID' => 'groupID'])->andWhere(['published' => true]);
+        return $this->hasMany(InvTypes::class, ['groupID' => 'groupID'])->andWhere(['published' => true])->cache(60 * 60 * 24);
     }
 
     /**
@@ -64,7 +64,7 @@ class InvGroups extends AbstractActiveRecord
      */
     public function getMarketUpdateGroup()
     {
-        return $this->hasOne(MarketUpdateGroup::class, ['groupID' => 'groupID']);
+        return $this->hasOne(MarketUpdateGroup::class, ['groupID' => 'groupID'])->cache(60 * 1.5);
     }
 
     ### functions

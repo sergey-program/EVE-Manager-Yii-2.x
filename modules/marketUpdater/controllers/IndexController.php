@@ -23,7 +23,7 @@ class IndexController extends AbstractMarketUpdater
             ->setPageTitle('Market updater')
             ->setPageDescription('Setup what groups should be updated instantly.');
 
-        $groups = InvGroups::findAll(['groupID' => [18, 754, 1042, 465, 423]]);
+        $groups = InvGroups::find()->where(['groupID' => [18, 754, 1042, 465, 423]])->cache(60 * 60 * 24)->all();
 
         return $this->render('index', ['groups' => $groups]);
     }
