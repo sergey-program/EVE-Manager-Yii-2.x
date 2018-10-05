@@ -2,22 +2,14 @@
 
 namespace app\commands;
 
-use app\components\updater\MarketOrders;
-use yii\console\Controller;
+use app\modules\marketUpdater\commands\MarketUpdaterController;
 
 /**
  * Class MarketController
  *
  * @package app\commands
  */
-class MarketController extends Controller
+class MarketController extends MarketUpdaterController
 {
-    /**
-     *
-     */
-    public function actionUpdate()
-    {
-        $updater = new MarketOrders();
-        $updater->getOrders()->updateDB();
-    }
+
 }
