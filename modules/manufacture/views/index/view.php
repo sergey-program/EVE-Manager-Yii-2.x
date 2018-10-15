@@ -39,6 +39,12 @@
         </div>
     </div>
 
+    <?php
+    /** @var \app\modules\calculators\components\MineralComponent $mao */
+    $mao = \Yii::$app->mineralAsOre;
+    $itemRequiredCollection = new \app\modules\calculators\components\ItemRequiredCollection();
+    ?>
+
     <div class="col-md-6 col-lg-4">
         <form class="form">
             <div class="box box-primary">
@@ -56,6 +62,7 @@
                                     <div>
                                         <img src="https://image.eveonline.com/Type/<?= $typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
                                         <?= number_format($pItem->getQuantity(), 0, '.', ' '); ?>
+                                        <small class="text-muted"><?= $typeID; ?></small>
                                     </div>
                                 </td>
                                 <td class="text-right">
@@ -69,6 +76,7 @@
                                     <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuyTotal(null)); ?>
                                 </td>
                             </tr>
+                            <?php $itemRequiredCollection->addObjectArray($pItem->getInvType(), $pItem->getQuantity()); ?>
                         <?php endforeach; ?>
 
                         <tr>
@@ -91,6 +99,122 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    <?php $mao->setItemRequiredCollection($itemRequiredCollection); ?>
+
+    <div class="col-md-6">
+        <div class="panel box">
+            <div class="box-body">
+                <table class="table">
+                    <?php $mao->calculate(); ?>
+                    <?php foreach ($mao->primaryOre as $mineralTypeID => $oreTypeID): ?>
+                        <?php $mineralType = \app\models\dump\InvTypes::findOne(['typeID' => $mineralTypeID]); ?>
+                        <?php $oreType = \app\models\dump\InvTypes::findOne(['typeID' => $oreTypeID]); ?>
+                        <tr>
+                            <td style="width: 75px;">
+                                <img src="https://image.eveonline.com/Type/<?= $mineralTypeID; ?>_32.png" class="img-thumbnail">
+                            </td>
+
+                            <td>
+                                <?= \Yii::$app->formatter->asText($mineralType->typeName); ?>
+                                <small class="text-muted"><?= $mineralTypeID; ?></small>
+                                <br/>
+                                <?= \Yii::$app->formatter->asInteger($itemRequiredCollection->getQuantity($mineralTypeID)); ?>
+                            </td>
+
+                            <td style="width: 100px;">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <?= $oreType->typeName ?? 'null'; ?> <span class="caret" style="margin-left: 5px;"></span>
+                                    </button>
+
+                                    <ul class="dropdown-menu">
+                                        <?php foreach ([1,2] as $i): ?>
+                                            <li><a href="#"><?=$i;?></a></li>
+                                        <?php endforeach; ?>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                    </ul>
+                                </div>
+
+                                <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> */ ?>
+                            </td>
+
+                            <td style="width: 75px;">
+                                <?php if ($oreTypeID): ?>
+                                    <img src="https://image.eveonline.com/Type/<?= $oreTypeID; ?>_32.png" class="img-thumbnail">
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($oreTypeID): ?>
+                                    <?= \Yii::$app->formatter->asText($oreType->typeName); ?>
+                                    <small class="text-muted"><?= $oreTypeID; ?></small>
+                                    <br/>
+                                    <?php foreach ($mao->result as $typeID => $itemResult): ?>
+                                        <?php if ($itemResult->invType->typeID == $oreTypeID): ?>
+                                            <?= \Yii::$app->formatter->asInteger($itemResult->getQuantity()); ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </td>
+
+                            <td class="text-right">
+                                <?php if ($oreTypeID): ?>
+                                    <?php foreach ($mao->result as $typeID => $itemResult): ?>
+                                        <?php if ($itemResult->invType->typeID == $oreTypeID): ?>
+                                            <?php foreach ($itemResult->items as $item): ?>
+                                                <img src="https://image.eveonline.com/Type/<?= $item->invType->typeID; ?>_32.png" class="img-thumbnail">
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+
+                <table class="table">
+                    <tr>
+                        <td colspan="2">------</td>
+                    </tr>
+
+                    <?php /* foreach ($mao->result as $typeID => $itemResult): ?>
+                        <tr>
+                            <td>
+                                <img src="https://image.eveonline.com/Type/<?= $itemResult->invType->typeID; ?>_32.png" class="img-thumbnail">
+                                <?= \Yii::$app->formatter->asInteger($itemResult->quantity); ?>
+                            </td>
+                            <td>
+                                <table class="table">
+                                    <?php foreach ($itemResult->items as $itemResultChild): ?>
+                                        <tr>
+                                            <td>
+                                                <img src="https://image.eveonline.com/Type/<?= $itemResultChild->invType->typeID; ?>_32.png" class="img-thumbnail">
+                                                <?= $itemResultChild->invType->typeID; ?>
+                                            </td>
+                                            <td><?= \Yii::$app->formatter->asInteger($itemResultChild->quantity); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php endforeach; */ ?>
+
+                    <?php foreach ([40, 39, 38, 37, 36, 35, 34] as $typeID): ?>
+                        <tr>
+                            <td>
+                                <img src="https://image.eveonline.com/Type/<?= $typeID; ?>_32.png" class="img-thumbnail">
+                                <?= \Yii::$app->formatter->asInteger($mao->getItemRequiredCollection()->getQuantityTotal($typeID)); ?><br/>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="col-md-12 col-lg-12">
