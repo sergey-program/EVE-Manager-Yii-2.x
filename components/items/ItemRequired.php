@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\calculators\components;
+namespace app\components\items;
 
 /**
  * Class ItemRequired

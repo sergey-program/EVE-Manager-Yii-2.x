@@ -2,6 +2,8 @@
 
 namespace app\modules\calculators\components;
 
+use app\components\items\ItemRequiredCollection;
+use app\components\items\ItemResult;
 use app\models\CompressSettings;
 use app\models\dump\InvTypeMaterials;
 use app\models\dump\InvTypes;

@@ -1,13 +1,13 @@
 <?php
 
-namespace app\modules\calculators\components;
+namespace app\components\items;
 
 use yii\base\BaseObject;
 
 /**
  * Class AbstractItemCollection
  *
- * @package app\modules\calculators\components
+ * @package app\components\items
  *
  * @property ItemInterface[]|array $objects
  * @property int[]|array           $typeIDs

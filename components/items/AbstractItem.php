@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\calculators\components;
+namespace app\components\items;
 
 use app\models\dump\InvTypes;
 use yii\base\BaseObject;
@@ -8,7 +8,7 @@ use yii\base\BaseObject;
 /**
  * Class AbstractItem
  *
- * @package app\modules\calculators\components
+ * @package app\components\items
  *
  * @property InvTypes|null $invType
  * @property int|null      $typeID

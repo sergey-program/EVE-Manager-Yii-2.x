@@ -42,7 +42,7 @@
     <?php
     /** @var \app\modules\calculators\components\MineralComponent $mao */
     $mao = \Yii::$app->mineralAsOre;
-    $itemRequiredCollection = new \app\modules\calculators\components\ItemRequiredCollection();
+    $itemRequiredCollection = new \app\components\items\ItemRequiredCollection();
     $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem);
     $itemRequiredCollection->parseTotal($mTotal);
     ?>
