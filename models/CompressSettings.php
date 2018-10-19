@@ -8,9 +8,12 @@ use app\models\extend\AbstractActiveRecord;
 /**
  * Class CompressSettings
  *
+ * Use to count ores for each mineral type in manufacture.
+ *
  * @package app\models
  *
  * @property int      $id
+ * @property int      $userID
  * @property int      $order
  * @property int      $mineralTypeID
  * @property int      $oreTypeID

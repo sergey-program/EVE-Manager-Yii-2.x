@@ -3,6 +3,7 @@
 namespace app\modules\manufacture\controllers;
 
 use app\models\BlueprintSettings;
+use app\models\CompressSettings;
 use app\models\dump\InvTypes;
 use app\modules\manufacture\components\MManager;
 
@@ -116,5 +117,34 @@ class IndexController extends AbstractManufactureController
         $blueprintSettings->setAttributes($attributes);
 
         return $blueprintSettings->save();
+    }
+
+    /**
+     * @param int      $typeID
+     * @param int      $mineralTypeID
+     * @param int|null $oreTypeID
+     *
+     * @return \yii\web\Response
+     */
+    public function actionSetOre($typeID, $mineralTypeID, $oreTypeID = null)
+    {
+        $cs = CompressSettings::findOne(['userID' => \Yii::$app->user->id, 'mineralTypeID' => $mineralTypeID]);
+
+        if ($cs) {
+            if ($cs->oreTypeID == $oreTypeID) {
+                // do something?
+            } else {
+                $cs->oreTypeID = $oreTypeID;
+            }
+        } else {
+            $cs = new CompressSettings();
+            $cs->userID = \Yii::$app->user->id;
+            $cs->mineralTypeID = $mineralTypeID;
+            $cs->oreTypeID = $oreTypeID;
+        }
+
+        $cs->save();
+
+        return $this->redirect(['index/view', 'typeID' => $typeID]);
     }
 }

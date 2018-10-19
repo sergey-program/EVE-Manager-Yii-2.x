@@ -3,6 +3,7 @@
 namespace app\modules\calculators\components;
 
 use app\models\dump\InvTypes;
+use app\modules\manufacture\components\MTotal;
 
 /**
  * Class ItemRequiredCollection
@@ -133,5 +134,16 @@ class ItemRequiredCollection extends AbstractItemCollection
         $result = $this->getQuantity($typeID) - $this->getQuantityWeHave($typeID);
 
         return $ceil ? ceil($result) : $result;
+    }
+
+    public function parseTotal(MTotal $mTotal)
+    {
+        if ($mTotal->getItems()) {
+            foreach ($mTotal->getItems() as $typeID => $mItem) {
+                $this->addObjectArray($mItem->getInvType(), $mItem->getQuantity());
+            }
+        }
+
+        return $this;
     }
 }

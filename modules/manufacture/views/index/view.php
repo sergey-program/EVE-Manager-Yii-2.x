@@ -43,6 +43,8 @@
     /** @var \app\modules\calculators\components\MineralComponent $mao */
     $mao = \Yii::$app->mineralAsOre;
     $itemRequiredCollection = new \app\modules\calculators\components\ItemRequiredCollection();
+    $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem);
+    $itemRequiredCollection->parseTotal($mTotal);
     ?>
 
     <div class="col-md-6 col-lg-4">
@@ -53,8 +55,6 @@
                 </div>
 
                 <div class="box-body no-padding">
-                    <?php $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem); ?>
-
                     <table class="table table-striped table-hover">
                         <?php foreach ($mTotal->getItems() as $typeID => $pItem): ?>
                             <tr>
@@ -76,7 +76,6 @@
                                     <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuyTotal(null)); ?>
                                 </td>
                             </tr>
-                            <?php $itemRequiredCollection->addObjectArray($pItem->getInvType(), $pItem->getQuantity()); ?>
                         <?php endforeach; ?>
 
                         <tr>
@@ -130,13 +129,17 @@
                                     </button>
 
                                     <ul class="dropdown-menu">
-                                        <?php foreach ([1,2] as $i): ?>
-                                            <li><a href="#"><?=$i;?></a></li>
+                                        <?php foreach (\Yii::$app->selectorOres->getCompressed($mineralTypeID) as $i): ?>
+                                            <li><a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $mineralTypeID, 'oreTypeID' => $i->typeID]); ?>"><?= $i->typeName; ?></a>
+                                            </li>
                                         <?php endforeach; ?>
+                                        <li><a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $mineralTypeID, 'oreTypeID' => null]); ?>">Clear</a></li>
+                                        <?php /*
                                         <li><a href="#">Another action</a></li>
                                         <li><a href="#">Something else here</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="#">Separated link</a></li>
+                                        */ ?>
                                     </ul>
                                 </div>
 
