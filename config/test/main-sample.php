@@ -10,6 +10,20 @@ $config = [
     'params' => require_once(FILE_PATH_CONFIG_ENV . '_param.php'),
     'defaultRoute' => 'index/index',
     'components' => [
+        'baseGroups' => [
+            'class' => \app\modules\marketUpdater\components\BaseGroupsComponent::class
+        ],
+        'selectorOres' => [
+            'class' => \app\components\selectors\OresComponent::class
+        ],
+        'mineralAsOre' => [
+            'class' => \app\modules\calculators\components\MineralComponent::class
+        ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'thousandSeparator' => ' ',
+            'decimalSeparator' => '.'
+        ],
         'db' => require_once(FILE_PATH_CONFIG_ENV . '_db.php'),
         'user' => [
             'class' => 'app\components\UserExtended',
