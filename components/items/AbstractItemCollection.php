@@ -9,22 +9,22 @@ use yii\base\BaseObject;
  *
  * @package app\components\items
  *
- * @property ItemInterface[]|array $objects
+ * @property ItemInterface[]|array $items
  * @property int[]|array           $typeIDs
  */
 abstract class AbstractItemCollection extends BaseObject
 {
-    /** @var AbstractItem[]|array $objects */
-    private $objects = [];
+    /** @var AbstractItem[]|array $items */
+    private $items = [];
 
     /**
-     * @param ItemInterface $object
+     * @param AbstractItem $item
      *
      * @return $this
      */
-    public function addObject(AbstractItem $object)
+    public function addItem(AbstractItem $item)
     {
-        $this->objects[] = $object;
+        $this->items[] = $item;
 
         return $this;
     }
@@ -32,9 +32,9 @@ abstract class AbstractItemCollection extends BaseObject
     /**
      * @return AbstractItem[]|array
      */
-    public function getObjects()
+    public function getItems()
     {
-        return $this->objects;
+        return $this->items;
     }
 
     /**
@@ -42,13 +42,13 @@ abstract class AbstractItemCollection extends BaseObject
      *
      * @return AbstractItem|mixed|null
      */
-    public function getObject($typeID)
+    public function getItem($typeID)
     {
         $result = null;
 
-        foreach ($this->getObjects() as $object) {
-            if ($object->isTypeID($typeID)) {
-                $result = $object;
+        foreach ($this->getItems() as $item) {
+            if ($item->isTypeID($typeID)) {
+                $result = $item;
                 break;
             }
         }
@@ -63,8 +63,8 @@ abstract class AbstractItemCollection extends BaseObject
     {
         $result = [];
 
-        foreach ($this->getObjects() as $object) {
-            $result[] = $object->getTypeID();
+        foreach ($this->getItems() as $item) {
+            $result[] = $item->getTypeID();
         }
 
         return $result;
@@ -78,9 +78,9 @@ abstract class AbstractItemCollection extends BaseObject
     public function sort($asc = true)
     {
         if ($asc) {
-            ksort($this->objects);
+            ksort($this->items);
         } else {
-            krsort($this->objects);
+            krsort($this->items);
         }
 
         return $this;

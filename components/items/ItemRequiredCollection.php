@@ -15,34 +15,34 @@ class ItemRequiredCollection extends AbstractItemCollection
     /**
      * @return AbstractItem[]|ItemRequired[]|array
      */
-    public function getObjects()
+    public function getItems()
     {
-        return parent::getObjects();
+        return parent::getItems();
     }
 
     /**
-     * If object in collection, just add quantity. Otherwise add to collection.
+     * If item in collection, just add quantity. Otherwise add to collection.
      *
      * @param AbstractItem|ItemRequired $item
      *
      * @return $this|AbstractItemCollection
      */
-    public function addObject(AbstractItem $item)
+    public function addItem(AbstractItem $item)
     {
-        /** @var ItemRequired|null $foundObject */
-        $foundObject = null;
+        /** @var ItemRequired|null $foundItem */
+        $foundItem = null;
 
-        foreach ($this->getObjects() as $object) {
+        foreach ($this->getItems() as $object) {
             if ($object->isTypeID($item->getTypeID())) {
-                $foundObject = $object;
+                $foundItem = $object;
                 break;
             }
         }
 
-        if ($foundObject) {
-            $foundObject->addQuantity($item->getQuantity());
+        if ($foundItem) {
+            $foundItem->addQuantity($item->getQuantity());
         } else {
-            parent::addObject($item);
+            parent::addItem($item);
         }
 
         return $this;
@@ -56,9 +56,9 @@ class ItemRequiredCollection extends AbstractItemCollection
      *
      * @return $this
      */
-    public function addObjectArray($invType, $quantity = 1)
+    public function addItemArray($invType, $quantity = 1) // @todo refactor method name
     {
-        $this->addObject(new ItemRequired([
+        $this->addItem(new ItemRequired([
             'invType' => $invType,
             'quantity' => $quantity
         ]));
@@ -75,9 +75,9 @@ class ItemRequiredCollection extends AbstractItemCollection
      */
     public function getQuantity($typeID)
     {
-        foreach ($this->getObjects() as $object) {
-            if ($object->isTypeID($typeID)) {
-                return $object->getQuantity();
+        foreach ($this->getItems() as $item) {
+            if ($item->isTypeID($typeID)) {
+                return $item->getQuantity();
             }
         }
 
@@ -93,9 +93,9 @@ class ItemRequiredCollection extends AbstractItemCollection
      */
     public function getQuantityWeHave($typeID)
     {
-        foreach ($this->getObjects() as $object) {
-            if ($object->isTypeID($typeID)) {
-                return $object->getQuantityWeHave();
+        foreach ($this->getItems() as $item) {
+            if ($item->isTypeID($typeID)) {
+                return $item->getQuantityWeHave();
             }
         }
 
@@ -112,9 +112,9 @@ class ItemRequiredCollection extends AbstractItemCollection
      */
     public function addQuantityWeHave($typeID, $quantity = 1)
     {
-        foreach ($this->getObjects() as $object) {
-            if ($object->isTypeID($typeID)) {
-                $object->addQuantityWeHave($quantity);
+        foreach ($this->getItems() as $item) {
+            if ($item->isTypeID($typeID)) {
+                $item->addQuantityWeHave($quantity);
             }
         }
 
@@ -136,11 +136,16 @@ class ItemRequiredCollection extends AbstractItemCollection
         return $ceil ? ceil($result) : $result;
     }
 
+    /**
+     * @param MTotal $mTotal
+     *
+     * @return $this
+     */
     public function parseTotal(MTotal $mTotal)
     {
         if ($mTotal->getItems()) {
             foreach ($mTotal->getItems() as $typeID => $mItem) {
-                $this->addObjectArray($mItem->getInvType(), $mItem->getQuantity());
+                $this->addItemArray($mItem->getInvType(), $mItem->getQuantity());
             }
         }
 
