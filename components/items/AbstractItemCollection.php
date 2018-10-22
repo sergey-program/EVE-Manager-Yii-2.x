@@ -18,11 +18,11 @@ abstract class AbstractItemCollection extends BaseObject
     private $items = [];
 
     /**
-     * @param AbstractItem $item
+     * @param Item $item
      *
      * @return $this
      */
-    public function addItem(AbstractItem $item)
+    public function addItem(Item $item)
     {
         $this->items[] = $item;
 
@@ -30,7 +30,47 @@ abstract class AbstractItemCollection extends BaseObject
     }
 
     /**
-     * @return AbstractItem[]|array
+     * Find item in collection and add quantity.
+     *
+     * @param Item $item
+     *
+     * @return $this
+     */
+    public function addItemQuantity(Item $item)
+    {
+        if ($this->hasItem($item->typeID)) {
+            foreach ($this->items as $cItem) {
+                if ($cItem->isTypeID($item->typeID)) {
+                    $cItem->addQuantity($item->getQuantity());
+                }
+            }
+        } else {
+            $this->items[] = $item;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $typeID
+     *
+     * @return bool
+     */
+    public function hasItem($typeID)
+    {
+        if (!empty($this->items)) {
+            foreach ($this->getItems() as $item) {
+                if ($item->isTypeID($typeID)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return Item[]|array
      */
     public function getItems()
     {

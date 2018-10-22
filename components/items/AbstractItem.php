@@ -12,6 +12,7 @@ use yii\base\BaseObject;
  *
  * @property InvTypes|null $invType
  * @property int|null      $typeID
+ * @property string|null   $typeName
  */
 abstract class AbstractItem extends BaseObject implements ItemInterface
 {
@@ -46,6 +47,14 @@ abstract class AbstractItem extends BaseObject implements ItemInterface
     public function getTypeID()
     {
         return $this->invType ? $this->invType->typeID : null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTypeName()
+    {
+        return $this->invType ? $this->invType->typeName : null;
     }
 
     /**
