@@ -90,9 +90,6 @@ class FormCalculator extends Model
             }
         }
 
-        // redefine collection with new items
-//        $this->itemCollection->setItems($itemFactory->loadItems()->getItems());
-
         return $this;
     }
 }
