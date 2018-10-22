@@ -1,6 +1,5 @@
 <?php
 
-use app\components\eve\ActionReprocess;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
@@ -33,7 +32,6 @@ use yii\helpers\Url;
                     <div class="col-md-6">
                         <div class="col-md-6">
                             <?= $form->field($formCalculator, 'percentPrice', ['enableLabel' => false, 'enableError' => false])->textInput(['placeholder' => 'Discount percent']); ?>
-
                         </div>
 
                         <div class="col-md-6 text-center">
@@ -51,28 +49,27 @@ use yii\helpers\Url;
         </div>
     </div>
 
+
     <?php if (!empty($formCalculator->getItemCollection()->getItems())): ?>
         <div class="col-md-6">
-            <?= $this->render('_boxPrices', [
+            <?= '';/*$this->render('_boxPrices', [
                 'itemCollection' => $formCalculator->getItemCollection(),
                 'formCalculator' => $formCalculator
-            ]); ?>
+            ]);*/ ?>
 
-            <?= $this->render('_boxItems', [
-                'itemCollection' => $formCalculator->getItemCollection()
-            ]); ?>
+            <?= $this->render('_boxItems', ['items' => $formCalculator->getItemCollection()->getItems()]); ?>
         </div>
 
         <div class="col-md-6">
+            <?php /*
             <?= $this->render('_boxPrices', [
                 'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection(), $formCalculator->percentReprocess),
                 'formCalculator' => $formCalculator
             ]); ?>
-
-            <?= $this->render('_boxItems', [
-                'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection(), $formCalculator->percentReprocess)
-            ]); ?>
+*/; ?>
+            <?= $this->render('_boxItems', ['items' => $formCalculator->getItemCollection()->reprocess($formCalculator->percentReprocess)->getItems()]); ?>
         </div>
+
     <?php endif; ?>
 
 

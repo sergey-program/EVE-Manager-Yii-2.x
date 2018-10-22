@@ -2,8 +2,9 @@
 
 namespace app\forms;
 
-use app\components\eve\ItemCollection;
-use app\components\eve\ItemFactory;
+use app\components\items\Item;
+use app\components\items\ItemCollection;
+use app\models\dump\InvTypes;
 use yii\base\Model;
 
 /**
@@ -18,7 +19,7 @@ class FormCalculator extends Model
     /** @var int|float $pricePercent */
     public $percentPrice;
     /** @var  int|float $reprocessPercent */
-    public $percentReprocess;
+    public $percentReprocess = 55; // @todo default rule not working,recheck
 
     /** @var ItemCollection|null $itemCollection */
     private $itemCollection;
@@ -39,7 +40,9 @@ class FormCalculator extends Model
         return [
             ['input', 'trim'],
             ['input', 'required'],
-            [['input', 'percentPrice', 'percentReprocess'], 'safe']
+            ['percentReprocess', 'default', 'value' => 55],
+            [['input', 'percentPrice'], 'safe'],
+
         ];
     }
 
@@ -49,7 +52,8 @@ class FormCalculator extends Model
     public function attributeLabels()
     {
         return [
-            'input' => 'Input'
+            'input' => 'Input',
+            'percentReprocess' => 'reprocess'
         ];
     }
 
@@ -68,7 +72,6 @@ class FormCalculator extends Model
      */
     public function parse()
     {
-        $itemFactory = new ItemFactory();
         $rows = explode("\n", $this->input);
 
         foreach ($rows as $row) {
@@ -78,12 +81,17 @@ class FormCalculator extends Model
             $typeName = str_replace('*', '', trim($columns[0]));
 
             if (is_numeric($quantity)) {
-                $itemFactory->addType($typeName, $quantity);
+
+                $invType = InvTypes::find()->where(['typeName' => $typeName])->cache(60 * 60 * 24)->one();
+
+                if ($invType) {
+                    $this->itemCollection->addItem(new Item(['invType' => $invType, 'quantity' => $quantity]));
+                }
             }
         }
 
         // redefine collection with new items
-        $this->itemCollection->setItems($itemFactory->loadItems()->getItems());
+//        $this->itemCollection->setItems($itemFactory->loadItems()->getItems());
 
         return $this;
     }
