@@ -68,4 +68,20 @@ class InvGroups extends AbstractActiveRecord
     }
 
     ### functions
+
+    /**
+     * @return InvTypes[]|array|\yii\db\ActiveRecord[]
+     */
+    public function getCompressedIce()
+    {
+        return $this->getInvTypes()->andWhere(['volume' => 100])->andWhere('marketGroupID IS NOT NULL')->all();
+    }
+
+    /**
+     * @return InvTypes[]|array|\yii\db\ActiveRecord[]
+     */
+    public function getCompressedOre()
+    {
+        return $this->getInvTypes()->andWhere(['portionSize' => 1])->andWhere('marketGroupID IS NOT NULL')->all();
+    }
 }

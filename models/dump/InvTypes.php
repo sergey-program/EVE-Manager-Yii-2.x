@@ -2,6 +2,7 @@
 
 namespace app\models\dump;
 
+use app\components\items\Item;
 use app\models\extend\AbstractActiveRecord;
 use app\models\MarketPrice;
 
@@ -92,4 +93,12 @@ class InvTypes extends AbstractActiveRecord
 
 
     ### functions
+
+    /**
+     * @return Item
+     */
+    public function getItem()
+    {
+        return new Item(['invType' => $this, 'quantity' => 1]);
+    }
 }
