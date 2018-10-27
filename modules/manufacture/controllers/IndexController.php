@@ -47,77 +47,15 @@ class IndexController extends AbstractManufactureController
      */
     public function actionView($typeID)
     {
-        $mItem = MManager::createItem($typeID);
+//        $mItem = MManager::createItem($typeID);
+//        MManager::applyBlueprintSettings($mItem);
+        $invType =InvTypes::findOne(['typeID'=> $typeID]);
+        $item = $invType->getItem();
 
-        if (\Yii::$app->request->isPost) {
-            foreach (\Yii::$app->request->post() as $key => $data) {
-                if (is_numeric($key)) {
-                    $attributes = null;
-
-                    if (is_numeric($data['me'])) {
-                        $attributes['me'] = $data['me'];
-                    }
-
-                    if (is_numeric($data['te'])) {
-                        $attributes['te'] = $data['te'];
-                    }
-
-                    if (is_numeric($data['meHull'])) {
-                        $attributes['meHull'] = $data['meHull'];
-                    }
-
-                    if (is_numeric($data['teHull'])) {
-                        $attributes['teHull'] = $data['teHull'];
-                    }
-
-                    if (is_numeric($data['meRig'])) {
-                        $attributes['meRig'] = $data['meRig'];
-                    }
-
-                    if (is_numeric($data['teRig'])) {
-                        $attributes['teRig'] = $data['teRig'];
-                    }
-
-                    if (is_numeric($data['runPrice'])) {
-                        $attributes['runPrice'] = $data['runPrice'];
-                    }
-
-                    $this->updateBlueprintSettings($key, $attributes);
-                }
-            }
-
-            return $this->refresh();
-        }
-
-        MManager::applyBlueprintSettings($mItem);
-
-        return $this->render('view', ['mItem' => $mItem]);
+        return $this->render('view', ['item' => $item]);
     }
 
-    /**
-     * @param int        $typeID
-     * @param array|null $attributes
-     *
-     * @return bool
-     */
-    private function updateBlueprintSettings($typeID, $attributes)
-    {
-        if (empty($attributes)) {
-            return false;
-        }
 
-        $filter = ['userID' => \Yii::$app->user->id, 'typeID' => $typeID];
-
-        $blueprintSettings = BlueprintSettings::findOne($filter);
-
-        if (!$blueprintSettings) {
-            $blueprintSettings = new BlueprintSettings($filter);
-        }
-
-        $blueprintSettings->setAttributes($attributes);
-
-        return $blueprintSettings->save();
-    }
 
     /**
      * @param int      $typeID

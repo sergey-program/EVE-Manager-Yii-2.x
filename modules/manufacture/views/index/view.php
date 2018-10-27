@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @var app\components\ViewExtended               $this
- * @var \app\modules\manufacture\components\MItem $mItem
+ * @var \app\components\ViewExtended $this
+ * @var \app\components\items\Item   $item
  */
 
 ?>
@@ -17,34 +17,40 @@
     <div class="col-md-6 col-lg-4">
         <div class="box box-primary">
             <div class="box-header with-border">
+
                 <div class="pull-right">
-                    <?= $mItem->getBlueprint()->getME(); ?> / <?= $mItem->getBlueprint()->getMeHull(); ?> / <?= $mItem->getBlueprint()->getMeRig(); ?>
-                    <img src="https://image.eveonline.com/Type/<?= $mItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
-                         title="<?= $mItem->getBlueprint()->getInvType()->typeName; ?>"
-                         class="img-thumbnail"
-                         style="margin-left: 10px; margin-right: 10px;">
+                    <?= $item->getBlueprint()->getSettings()->me; ?> / <?= $item->getBlueprint()->getSettings()->meHull; ?> / <?= $item->getBlueprint()->getSettings()->meRig; ?>
+
+                    <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $item->typeID]); ?>" title="Update bpo settings">
+                        <img src="<?=  $item->getBlueprint()->getImageSrc();?>" class="img-thumbnail" style="margin-left: 5px;">
+                    </a>
                 </div>
 
                 <h3 class="box-title">
-                    <img src="https://image.eveonline.com/Type/<?= $mItem->getInvType()->typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
-                    <?= $mItem->getInvType()->typeName; ?> (<?= $mItem->getInvType()->typeID; ?>)
+                    <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
+                    <?= $item->typeName; ?> (<?= $item->typeID; ?>)
                 </h3>
+
             </div>
 
             <div class="box-body">
+                <?php /*
                 <?php foreach ($mItem->getBlueprint()->getItems() as $cItem): ?>
                     <?= $this->render('_row', ['cItem' => $cItem, 'p' => 0]); ?>
                 <?php endforeach; ?>
+ */ ?>
             </div>
         </div>
     </div>
 
     <?php
     /** @var \app\modules\calculators\components\MineralComponent $mao */
+    /*
     $mao = \Yii::$app->mineralAsOre;
     $itemRequiredCollection = new \app\components\items\ItemRequiredCollection();
     $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem);
     $itemRequiredCollection->parseTotal($mTotal);
+    */
     ?>
 
     <div class="col-md-6 col-lg-4">
@@ -56,6 +62,7 @@
 
                 <div class="box-body no-padding">
                     <table class="table table-striped table-hover">
+                        <?php /*
                         <?php foreach ($mTotal->getItems() as $typeID => $pItem): ?>
                             <tr>
                                 <td>
@@ -93,6 +100,7 @@
                                 <?= \Yii::$app->formatter->asInteger($mTotal->getPriceBlueprintRuns()); ?>
                             </td>
                         </tr>
+ */ ?>
                     </table>
 
                 </div>
@@ -100,12 +108,13 @@
         </form>
     </div>
 
-    <?php $mao->setItemRequiredCollection($itemRequiredCollection); ?>
+    <?php // $mao->setItemRequiredCollection($itemRequiredCollection); ?>
 
     <div class="col-md-6">
         <div class="panel box">
             <div class="box-body">
                 <table class="table">
+                    <?php /*
                     <?php $mao->calculate(); ?>
                     <?php foreach ($mao->primaryOre as $mineralTypeID => $oreTypeID): ?>
                         <?php $mineralType = \app\models\dump\InvTypes::findOne(['typeID' => $mineralTypeID]); ?>
@@ -139,11 +148,11 @@
                                         <li><a href="#">Something else here</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="#">Separated link</a></li>
-                                        */ ?>
+                                        * / ?>
                                     </ul>
                                 </div>
 
-                                <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> */ ?>
+                                <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> * / ?>
                             </td>
 
                             <td style="width: 75px;">
@@ -178,6 +187,7 @@
                             </td>
                         </tr>
                     <?php endforeach; ?>
+ */ ?>
                 </table>
 
                 <table class="table">
@@ -210,8 +220,10 @@
                     <?php foreach ([40, 39, 38, 37, 36, 35, 34] as $typeID): ?>
                         <tr>
                             <td>
+                                <?php /*
                                 <img src="https://image.eveonline.com/Type/<?= $typeID; ?>_32.png" class="img-thumbnail">
                                 <?= \Yii::$app->formatter->asInteger($mao->getItemRequiredCollection()->getQuantityTotal($typeID)); ?><br/>
+ */ ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -220,35 +232,5 @@
         </div>
     </div>
 
-    <div class="col-md-12 col-lg-12">
-        <?= \yii\helpers\Html::beginForm('', 'post', ['class' => 'form form-inline']); ?>
-
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Blueprints settings</h3>
-            </div>
-
-            <div class="box-body">
-                <table class="table table-hover">
-                    <tr class="text-center">
-                        <td>Name</td>
-                        <td>ME</td>
-                        <td>TE</td>
-                        <td>ME Hull</td>
-                        <td>TE Hull</td>
-                        <td>ME Rig</td>
-                        <td>TE Rig</td>
-                        <td>Price per run (bpc)</td>
-                    </tr>
-                    <?= $this->render('_rowBpo', ['cItem' => $mItem, 'p' => 20]); ?>
-                </table>
-            </div>
-
-            <div class="box-footer text-right">
-                <button type="submit" class="btn btn-primary">Применить</button>
-            </div>
-        </div>
-        <?= \yii\helpers\Html::endForm(); ?>
-    </div>
 
 </div>
