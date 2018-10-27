@@ -22,23 +22,26 @@
                     <?= $item->getBlueprint()->getSettings()->me; ?> / <?= $item->getBlueprint()->getSettings()->meHull; ?> / <?= $item->getBlueprint()->getSettings()->meRig; ?>
 
                     <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $item->typeID]); ?>" title="Update bpo settings">
-                        <img src="<?=  $item->getBlueprint()->getImageSrc();?>" class="img-thumbnail" style="margin-left: 5px;">
+                        <img src="<?= $item->getBlueprint()->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px;">
                     </a>
                 </div>
 
                 <h3 class="box-title">
-                    <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
-                    <?= $item->typeName; ?> (<?= $item->typeID; ?>)
+                    <img src="<?= $item->getImageSrc(); ?>" class="img-thumbnail" style="margin-right: 10px;">
+                    <?= $item->typeName; ?>
+                    <small class="text-muted"><?= $item->typeID; ?></small>
                 </h3>
 
             </div>
 
             <div class="box-body">
-                <?php /*
-                <?php foreach ($mItem->getBlueprint()->getItems() as $cItem): ?>
-                    <?= $this->render('_row', ['cItem' => $cItem, 'p' => 0]); ?>
-                <?php endforeach; ?>
- */ ?>
+                <?php if ($item->hasBlueprint()): ?>
+                    <?php foreach ($item->getBlueprint()->getMaterials() as $mItem): ?>
+                        <?= $this->render('_row', ['mItem' => $mItem, 'p' => 0]); ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text text-warning">Item has not blueprint.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>

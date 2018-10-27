@@ -1,41 +1,40 @@
 <?php
 
 /**
- * @var \app\modules\manufacture\components\MItemMaterial $cItem
- * @var int                                               $p
+ * @var \app\components\items\Item $mItem
+ * @var int                        $p
  */
 
 ?>
 
-
-<div class="row" style="margin-bottom: 10px; margin-left: <?= $p; ?>px">
+<div class="row" style="margin-bottom: 5px; margin-left: <?= $p; ?>px;">
     <div class="col-md-6">
-        <img src="https://image.eveonline.com/Type/<?= $cItem->getInvType()->typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
-        <?= $cItem->getInvType()->typeName; ?> <span class="text-muted"><?= $cItem->getInvType()->typeID; ?></span>
+        <img src="<?= $mItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-right: 10px;" onclick="$('#<?= $mItem->typeID; ?>').toggle();">
+        <?= $mItem->typeName; ?>
+        <small class="text-muted"><?= $mItem->typeID; ?></small>
     </div>
 
     <div class="col-md-2 text-right">
-        <span class="text-muted"><?= $cItem->getBaseQuantity(); ?></span>
-        <?= $cItem->getQuantity(); ?>
+        <span class="text-muted"><?= 0; //$cItem->getBaseQuantity();         ?></span>
+        <?= $mItem->getQuantity(); ?>
     </div>
 
     <div class="col-md-4 text-right">
-        <?php if ($cItem->hasBlueprint()): ?>
-            <?= $cItem->getBlueprint()->getME(); ?> / <?= $cItem->getBlueprint()->getMeHull(); ?> / <?= $cItem->getBlueprint()->getMeRig(); ?>
-            <img src="https://image.eveonline.com/Type/<?= $cItem->getBlueprint()->getInvType()->typeID; ?>_32.png"
-                 class="img-thumbnail img-thumbnail-hand"
-                 style="margin-left: 10px; margin-right: 10px;"
-                 title="<?= $cItem->getBlueprint()->getInvType()->typeName; ?>"
-                 onclick="$('#<?= $cItem->getInvType()->typeID; ?>').toggle();">
+        <?php if ($mItem->hasBlueprint()): ?>
+            <?= $mItem->getBlueprint()->getSettings()->me; ?> / <?= $mItem->getBlueprint()->getSettings()->meHull; ?> / <?= $mItem->getBlueprint()->getSettings()->meRig; ?>
+
+            <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $mItem->typeID]); ?>">
+                <img src="<?= $mItem->getBlueprint()->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px;">
+            </a>
         <?php endif; ?>
 
     </div>
 </div>
 
-<?php if ($cItem->hasBlueprint()): ?>
-    <div id="<?= $cItem->getInvType()->typeID; ?>" style="display: none;">
-        <?php foreach ($cItem->getBlueprint()->getItems() as $nItem): ?>
-            <?= $this->render('_row', ['cItem' => $nItem, 'p' => $p + 30]); ?>
+<?php if ($mItem->hasBlueprint()): ?>
+    <div id="<?= $mItem->typeID; ?>" style="display: none;">
+        <?php foreach ($mItem->getBlueprint()->getMaterials() as $nItem): ?>
+            <?= $this->render('_row', ['mItem' => $nItem, 'p' => $p + 30]); ?>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
