@@ -9,7 +9,15 @@ namespace app\components\items;
  */
 class Item extends AbstractItem
 {
+    use TraitBlueprint;
     use TraitRequired;
     use TraitPrice;
-    use TraitReprocessable;
+    use TraitReprocess;
+
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->loadBlueprint();
+    }
 }
