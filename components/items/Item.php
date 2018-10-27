@@ -20,4 +20,14 @@ class Item extends AbstractItem
 
         $this->loadBlueprint();
     }
+
+    /**
+     * @param int $size
+     *
+     * @return string
+     */
+    public function getImageSrc($size = 32)
+    {
+        return 'https://image.eveonline.com/Type/' . $this->typeID . '_' . $size . '.png';
+    }
 }
