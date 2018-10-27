@@ -13,6 +13,7 @@ class Item extends AbstractItem
     use TraitRequired;
     use TraitPrice;
     use TraitReprocess;
+    use TraitParentItem;
 
     /**
      * @param int $size

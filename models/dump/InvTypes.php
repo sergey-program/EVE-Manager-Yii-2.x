@@ -95,10 +95,12 @@ class InvTypes extends AbstractActiveRecord
     ### functions
 
     /**
+     * @param int $quantity
+     *
      * @return Item
      */
-    public function getItem()
+    public function getItem($quantity = 1)
     {
-        return new Item(['invType' => $this, 'quantity' => 1]);
+        return new Item(['invType' => $this, 'quantity' => $quantity]);
     }
 }

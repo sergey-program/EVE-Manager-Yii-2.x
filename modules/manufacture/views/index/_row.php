@@ -14,9 +14,9 @@
         <small class="text-muted"><?= $mItem->typeID; ?></small>
     </div>
 
-    <div class="col-md-2 text-right">
-        <span class="text-muted"><?= 0; //$cItem->getBaseQuantity();         ?></span>
-        <?= $mItem->getQuantity(); ?>
+    <div class="col-md-2 text-left">
+        <?= \Yii::$app->formatter->asInteger($mItem->getQuantity()); ?>
+        <small class="text-muted"><?= \Yii::$app->formatter->asInteger($mItem->getParentQuantity()); ?></small>
     </div>
 
     <div class="col-md-4 text-right">
