@@ -21,20 +21,20 @@ class IndexController extends AbstractManufactureController
     {
         $invTypes = [];
 
-        if (\Yii::$app->request->isPost) {
-            $query = \Yii::$app->getRequest()->post('query');
-            $invTypes = InvTypes::find()
-                ->where([
-                    'and',
-                    ['like', 'typeName', $query],
-                    ['published' => true],
-                    ['not', ['groupID' => [1950, 1953, 1955]]],
-                    ['not like', 'typeName', 'Blueprint'],
-                    ['not like', 'typeName', 'Formula'],
-                    ['not like', 'typeName', 'skin']
-                ])
-                ->orderBy('typeName')
-                ->all();
+        $string = \Yii::$app->getRequest()->get('query');
+
+        if ($string) {
+            $filter = [
+                'and',
+                ['like', 'typeName', $string],
+                ['published' => true],
+                ['not', ['groupID' => [1950, 1953, 1955]]],
+                ['not like', 'typeName', 'Blueprint'],
+                ['not like', 'typeName', 'Formula'],
+                ['not like', 'typeName', 'skin']
+            ];
+
+            $invTypes = InvTypes::find()->where($filter)->orderBy('typeName')->all();
         }
 
         return $this->render('index', ['invTypes' => $invTypes]);

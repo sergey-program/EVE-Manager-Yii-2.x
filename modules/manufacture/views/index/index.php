@@ -1,30 +1,34 @@
 <?php
 
 /**
- * @var app\components\ViewExtended $this
- * @var \app\models\dump\InvTypes[] $invTypes
+ * @var \app\components\ViewExtended $this
+ * @var \app\models\dump\InvTypes[]  $invTypes
  */
 
 ?>
 
 <div class="row">
-    <div class="col-md-6">
-        <?= \yii\helpers\Html::beginForm(); ?>
-
-        <input type="text" name="query" placeholder="partial string">
-
-        <?= \yii\helpers\Html::endForm(); ?>
-    </div>
 
     <div class="col-md-6">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">result</h3>
+                <h3 class="box-title">Search item</h3>
             </div>
 
             <div class="box-body">
-                <table class="table">
+                <?= \yii\helpers\Html::beginForm(\yii\helpers\Url::to('index'),'get'); ?>
 
+                <div class="form-group">
+                    <input type="text" name="query" placeholder="partial string" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <?= \yii\helpers\Html::submitButton('Найти', ['class' => 'btn btn-primary']); ?>
+                </div>
+
+                <?= \yii\helpers\Html::endForm(); ?>
+
+                <table class="table">
                     <?php foreach ($invTypes as $invType): ?>
                         <tr>
                             <td>
