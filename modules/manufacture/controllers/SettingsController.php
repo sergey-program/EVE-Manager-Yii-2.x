@@ -5,20 +5,13 @@ namespace app\modules\manufacture\controllers;
 use app\models\BlueprintSettings;
 use app\models\dump\InvTypes;
 
+/**
+ * Class SettingsController
+ *
+ * @package app\modules\manufacture\controllers
+ */
 class SettingsController extends AbstractManufactureController
 {
-    /**
-     * Original item that came from url by typeID.
-     *
-     * @var InvTypes|null $item
-     */
-    private $item;
-
-    public function actionIndex()
-    {
-
-    }
-
     /**
      * @param int $typeID // item, not bpo
      *
@@ -26,8 +19,13 @@ class SettingsController extends AbstractManufactureController
      */
     public function actionUpdate($typeID)
     {
-        $item = $this->detectItem($typeID);
-        $this->getView()->setPageTitle($this->item->typeName);
+        $invType = InvTypes::findOne(['typeID' => $typeID]);
+        $item = $invType->getItem(); // original item from url
+        $this->getView()->setPageTitle($item->typeName);
+
+        if ($item->isBlueprint()) {
+            $item = $item->getProduct();
+        }
 
         if (\Yii::$app->request->isPost) { // @todo refactor this one
             foreach (\Yii::$app->request->post() as $key => $data) {
@@ -73,19 +71,6 @@ class SettingsController extends AbstractManufactureController
             'item' => $item,
             'bpo' => $item->getBlueprint()
         ]);
-    }
-
-    /**
-     * @param int $typeID
-     *
-     * @return \app\components\items\Item|bool|false|null
-     */
-    private function detectItem($typeID)
-    {
-        $invType = InvTypes::findOne(['typeID' => $typeID]);
-        $this->item = $invType->getItem();
-
-        return $this->item->isBlueprint() ? $this->item->getProduct() : $this->item;
     }
 
     /**
