@@ -10,7 +10,7 @@ namespace app\components\items;
  * @property int               $reprocessPercent
  * @property Item[]|array|null $reprocessResult
  */
-trait TraitReprocessable
+trait TraitReprocess
 {
     /** @var int $percent */
     public $reprocessPercent = 84;
@@ -80,6 +80,8 @@ trait TraitReprocessable
     }
 
     /**
+     * Calculate items that will be after reprocess.
+     *
      * @return $this
      */
     public function reprocess()
