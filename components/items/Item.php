@@ -14,13 +14,6 @@ class Item extends AbstractItem
     use TraitPrice;
     use TraitReprocess;
 
-    public function __construct(array $config = [])
-    {
-        parent::__construct($config);
-
-        $this->loadBlueprint();
-    }
-
     /**
      * @param int $size
      *
