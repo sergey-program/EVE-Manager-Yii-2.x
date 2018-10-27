@@ -3,11 +3,15 @@
 namespace app\components\items;
 
 use app\models\dump\IndustryActivityProducts;
-use app\models\dump\InvTypes;
 
+/**
+ * Trait TraitBlueprint
+ *
+ * @package app\components\items
+ */
 trait TraitBlueprint
 {
-    /** @var InvTypes|null $blueprint */
+    /** @var Item|null|false $blueprint */
     protected $blueprint = null;
 
     /**
@@ -16,13 +20,9 @@ trait TraitBlueprint
     protected function loadBlueprint()
     {
         if (is_null($this->blueprint)) {
-            $iam = IndustryActivityProducts::find()->where([
-                'productTypeID' => $this->typeID,
-                'activityID' => 1
-            ])->one();
-
-
-            $this->blueprint = $iam ? $iam->invType : false;
+            $filter = ['productTypeID' => $this->typeID, 'activityID' => 1];
+            $iam = IndustryActivityProducts::find()->where($filter)->cache(60 * 60 * 24)->one();
+            $this->blueprint = $iam ? new Item(['invType' => $iam->invType]) : false;
         }
 
         return $this;
