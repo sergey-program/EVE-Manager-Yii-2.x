@@ -6,6 +6,7 @@ use app\components\items\Item;
 use app\components\items\ItemCollection;
 use app\models\dump\InvTypes;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class FormCalculator
@@ -73,6 +74,7 @@ class FormCalculator extends Model
     public function parse()
     {
         $rows = explode("\n", $this->input);
+        $items = [];
 
         foreach ($rows as $row) {
             $columns = explode("\t", $row);
@@ -81,11 +83,22 @@ class FormCalculator extends Model
             $typeName = str_replace('*', '', trim($columns[0]));
 
             if (is_numeric($quantity)) {
+                    $items[] = ['n'=>$typeName, 'q'=>$quantity];
+//
+//                $invType = InvTypes::find()->where(['typeName' => $typeName])->cache(60 * 60 * 24)->one();
+//
+//                if ($invType) {
+//                    $this->itemCollection->addItem(new Item(['invType' => $invType, 'quantity' => $quantity]));
+//                }
+            }
+        }
 
-                $invType = InvTypes::find()->where(['typeName' => $typeName])->cache(60 * 60 * 24)->one();
+        $invTypes = InvTypes::find()->where(['typeName' => ArrayHelper::getColumn($items,'n')])->all();
 
-                if ($invType) {
-                    $this->itemCollection->addItem(new Item(['invType' => $invType, 'quantity' => $quantity]));
+        foreach ($items as $item){
+            foreach ($invTypes as $invType){
+                if ($item['n'] == $invType->typeName){
+                    $this->itemCollection->addItem(new Item(['invType' => $invType, 'quantity' => $item['q']]));
                 }
             }
         }

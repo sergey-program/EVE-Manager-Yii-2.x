@@ -15,14 +15,15 @@ use app\models\MarketPrice;
  */
 abstract class AbstractItem
 {
-    /** @var MBlueprint|null $mBlueprint */
-    protected $mBlueprint = false;
-    /** @var MarketPrice|null $marketPrice */
-    protected $marketPrice = false;
-    /** @var InvTypes|null $invType */
-    protected $invType;
-    /** @var int $quantity */
-    protected $quantity;
+//    /** @var MBlueprint|null $mBlueprint */
+//    protected $mBlueprint = false;
+//    /** @var MarketPrice|null $marketPrice */
+//    protected $marketPrice = false;
+//
+//    /** @var InvTypes|null $invType */
+//    protected $invType;
+//    /** @var int $quantity */
+//    protected $quantity;
 
     /**
      * MItem constructor.
