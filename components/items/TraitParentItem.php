@@ -2,10 +2,16 @@
 
 namespace app\components\items;
 
+/**
+ * Trait TraitParentItem
+ *
+ * @package app\components\items
+ */
 trait TraitParentItem
 {
     /**
-     * This item used to manufacture of this bpo. Cannot be loaded automatically.
+     * If $parentBlueprint set - this item is used for manufacture of something.
+     * Cannot be loaded automatically.
      *
      * @var Item|null
      */
@@ -30,29 +36,4 @@ trait TraitParentItem
     {
         return $this->parentBlueprint;
     }
-
-    /**
-     * Quantity that requires for parent bpo (base).
-     *
-     * @return int
-     */
-    public function getParentQuantity()
-    {
-        $result = 0;
-
-        /** @var Item $parentBlueprint */
-        $parentBlueprint = $this->getParentBlueprint();
-
-        if ($parentBlueprint && !empty($parentBlueprint->getBaseMaterials())) {
-            foreach ($parentBlueprint->getBaseMaterials() as $material) {
-                if ($this->typeID == $material->materialTypeID) {
-                    $result = $material->quantity;
-                    break;
-                }
-            }
-        }
-
-        return $result;
-    }
-
 }
