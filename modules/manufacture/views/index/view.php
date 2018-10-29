@@ -65,25 +65,24 @@
 
                 <div class="box-body no-padding">
                     <table class="table table-striped table-hover">
-                        <?php /*
-                        <?php foreach ($mTotal->getItems() as $typeID => $pItem): ?>
+                        <?php foreach ($item->getBlueprint()->getTotalManufacture() as $pItem): ?>
                             <tr>
                                 <td>
                                     <div>
-                                        <img src="https://image.eveonline.com/Type/<?= $typeID; ?>_32.png" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
+                                        <img src="<?= $pItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
                                         <?= number_format($pItem->getQuantity(), 0, '.', ' '); ?>
-                                        <small class="text-muted"><?= $typeID; ?></small>
+                                        <small class="text-muted"><?= $pItem->typeID; ?></small>
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceSell(null)); ?>
+                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceSell()); ?>
                                     <br/>
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuy(null)); ?>
+                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuy()); ?>
                                 </td>
                                 <td class="text-right">
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceSellTotal(null)); ?>
+                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceTotalSell()); ?>
                                     <br/>
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuyTotal(null)); ?>
+                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceTotalBuy()); ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -91,19 +90,19 @@
                         <tr>
                             <td colspan="2" class="text-right"><strong>Total</strong></td>
                             <td class="text-right">
-                                <?= \Yii::$app->formatter->asDecimal($mTotal->getPriceSellTotal()); ?>
+                                <?= \Yii::$app->formatter->asDecimal($item->getBlueprint()->getTotalPriceSell()); ?>
                                 <br/>
-                                <?= \Yii::$app->formatter->asDecimal($mTotal->getPriceBuyTotal()); ?>
+                                <?= \Yii::$app->formatter->asDecimal($item->getBlueprint()->getTotalPriceBuy()); ?>
                             </td>
                         </tr>
 
                         <tr>
                             <td colspan="2" class="text-right"><strong>BPC</strong></td>
                             <td class="text-right">
-                                <?= \Yii::$app->formatter->asInteger($mTotal->getPriceBlueprintRuns()); ?>
+                                <?= \Yii::$app->formatter->asInteger(0/*$mTotal->getPriceBlueprintRuns()*/); ?>
                             </td>
                         </tr>
- */ ?>
+
                     </table>
 
                 </div>

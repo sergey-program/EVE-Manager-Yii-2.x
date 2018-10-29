@@ -16,7 +16,8 @@
 
     <div class="col-md-2 text-left">
         <?= \Yii::$app->formatter->asInteger($mItem->getQuantity()); ?>
-        <small class="text-muted"><?= \Yii::$app->formatter->asInteger($mItem->getParentQuantity()); ?></small>
+        <br/>
+        <small class="text-muted"><?= \Yii::$app->formatter->asInteger($mItem->getQuantity(false)); ?></small>
     </div>
 
     <div class="col-md-4 text-right">
@@ -26,6 +27,10 @@
             <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $mItem->typeID]); ?>">
                 <img src="<?= $mItem->getBlueprint()->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px;">
             </a>
+        <?php else: ?>
+            <?= \Yii::$app->formatter->asInteger($mItem->getQuantityTotal()); ?>
+            <br/>
+            <small class="text-muted"><?= \Yii::$app->formatter->asInteger($mItem->getQuantityTotal(false)); ?></small>
         <?php endif; ?>
 
     </div>

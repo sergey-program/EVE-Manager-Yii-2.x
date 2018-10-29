@@ -92,9 +92,11 @@ abstract class AbstractItem extends BaseObject implements ItemInterface
     }
 
     /**
+     * @param mixed|null $option
+     *
      * @return int
      */
-    public function getQuantity()
+    public function getQuantity($option = null)
     {
         return $this->quantity;
     }
