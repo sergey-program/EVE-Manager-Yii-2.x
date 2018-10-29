@@ -2,18 +2,12 @@
 
 namespace app\components\items;
 
-/**
- * Trait TraitParentItem
- *
- * @package app\components\items
- */
-trait TraitParentItem
+trait TraitParentBlueprint
 {
     /**
-     * If $parentBlueprint set - this item is used for manufacture of something.
-     * Cannot be loaded automatically.
+     * This material was created\called by this bpo.
      *
-     * @var Item|null
+     * @var Item $blueprint
      */
     public $parentBlueprint;
 
@@ -30,7 +24,7 @@ trait TraitParentItem
     }
 
     /**
-     * @return Item|null
+     * @return Item
      */
     public function getParentBlueprint()
     {
