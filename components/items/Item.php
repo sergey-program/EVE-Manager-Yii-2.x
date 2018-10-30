@@ -12,8 +12,6 @@ class Item extends AbstractItem
     use TraitBlueprint;
     use TraitParentBlueprint;
 
-
-    use TraitRequired;
     use TraitPrice;
     use TraitReprocess;
 //    use TraitParentItem;

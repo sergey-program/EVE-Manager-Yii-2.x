@@ -110,86 +110,88 @@
         </form>
     </div>
 
-    <?php // $mao->setItemRequiredCollection($itemRequiredCollection); ?>
-
     <div class="col-md-6">
         <div class="panel box">
             <div class="box-body">
                 <table class="table">
-                    <?php /*
-                    <?php $mao->calculate(); ?>
-                    <?php foreach ($mao->primaryOre as $mineralTypeID => $oreTypeID): ?>
-                        <?php $mineralType = \app\models\dump\InvTypes::findOne(['typeID' => $mineralTypeID]); ?>
-                        <?php $oreType = \app\models\dump\InvTypes::findOne(['typeID' => $oreTypeID]); ?>
+
+                    <?php
+                    $m = new \app\modules\calculators\components\MineralComponent();
+                    $m->setMineralsCollection($item->getBlueprint()->getTotalManufacture());
+                    $m->calculate();
+                    ?>
+
+                    <?php foreach ($m->getMineralsCollection()->getItems() as $iItem): ?>
                         <tr>
                             <td style="width: 75px;">
-                                <img src="https://image.eveonline.com/Type/<?= $mineralTypeID; ?>_32.png" class="img-thumbnail">
+                                <img src="<?= $iItem->getImageSrc(); ?>" class="img-thumbnail">
                             </td>
 
                             <td>
-                                <?= \Yii::$app->formatter->asText($mineralType->typeName); ?>
-                                <small class="text-muted"><?= $mineralTypeID; ?></small>
+                                <?= \Yii::$app->formatter->asText($iItem->typeName); ?>
+                                <small class="text-muted"><?= $iItem->typeID; ?></small>
                                 <br/>
-                                <?= \Yii::$app->formatter->asInteger($itemRequiredCollection->getQuantity($mineralTypeID)); ?>
+                                <?= \Yii::$app->formatter->asInteger($iItem->getQuantity()); ?>
                             </td>
 
                             <td style="width: 100px;">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <?= $oreType->typeName ?? 'null'; ?> <span class="caret" style="margin-left: 5px;"></span>
+                                        <?= '' //$oreType->typeName ?? 'null';       ?> <span class="caret" style="margin-left: 5px;"></span>
                                     </button>
 
                                     <ul class="dropdown-menu">
-                                        <?php foreach (\Yii::$app->selectorOres->getCompressed($mineralTypeID) as $i): ?>
-                                            <li><a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $mineralTypeID, 'oreTypeID' => $i->typeID]); ?>"><?= $i->typeName; ?></a>
+                                        <?php foreach (\Yii::$app->selectorOres->getCompressed($iItem->typeID) as $i): ?>
+                                            <li>
+                                                <a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $iItem->typeID, 'oreTypeID' => $i->typeID]); ?>">
+                                                    <?= $i->typeName; ?>
+                                                </a>
                                             </li>
                                         <?php endforeach; ?>
-                                        <li><a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $mineralTypeID, 'oreTypeID' => null]); ?>">Clear</a></li>
+
+                                        <li>
+                                            <a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $iItem->typeID, 'oreTypeID' => null]); ?>">
+                                                Clear
+                                            </a>
+                                        </li>
                                         <?php /*
                                         <li><a href="#">Another action</a></li>
                                         <li><a href="#">Something else here</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="#">Separated link</a></li>
-                                        * / ?>
+                                        */ ?>
                                     </ul>
                                 </div>
 
-                                <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> * / ?>
+                                <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> */ ?>
                             </td>
 
                             <td style="width: 75px;">
-                                <?php if ($oreTypeID): ?>
-                                    <img src="https://image.eveonline.com/Type/<?= $oreTypeID; ?>_32.png" class="img-thumbnail">
+                                <?php if ($iOre = $m->getOreForMineral($iItem)): ?>
+                                    <img src="<?= $iOre->getImageSrc(); ?>" class="img-thumbnail">
                                 <?php endif; ?>
                             </td>
 
                             <td>
-                                <?php if ($oreTypeID): ?>
-                                    <?= \Yii::$app->formatter->asText($oreType->typeName); ?>
-                                    <small class="text-muted"><?= $oreTypeID; ?></small>
+                                <?php if ($iOre): ?>
+                                    <?= \Yii::$app->formatter->asText($iOre->typeName); ?>
+                                    <small class="text-muted"><?= $iOre->typeID; ?></small>
                                     <br/>
-                                    <?php foreach ($mao->result as $typeID => $itemResult): ?>
-                                        <?php if ($itemResult->invType->typeID == $oreTypeID): ?>
-                                            <?= \Yii::$app->formatter->asInteger($itemResult->getQuantity()); ?>
-                                        <?php endif; ?>
+                                    <?= \Yii::$app->formatter->asInteger($iOre->getQuantity()); ?>
+                                    <br/>
+                                    <br/>
+                                    <?php foreach ($iOre->getReprocessResult() as $rItem): ?>
+                                        <img src="<?= $rItem->getImageSrc(); ?>" class="img-thumbnail">
+                                        <?= \Yii::$app->formatter->asInteger($rItem->getQuantity() * $iOre->getQuantity()); ?>
+                                        <br/>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </td>
 
-                            <td class="text-right">
-                                <?php if ($oreTypeID): ?>
-                                    <?php foreach ($mao->result as $typeID => $itemResult): ?>
-                                        <?php if ($itemResult->invType->typeID == $oreTypeID): ?>
-                                            <?php foreach ($itemResult->items as $item): ?>
-                                                <img src="https://image.eveonline.com/Type/<?= $item->invType->typeID; ?>_32.png" class="img-thumbnail">
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </td>
+                            <td class="text-right"></td>
                         </tr>
                     <?php endforeach; ?>
- */ ?>
+
                 </table>
 
                 <table class="table">

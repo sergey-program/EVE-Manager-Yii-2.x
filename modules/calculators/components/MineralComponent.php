@@ -2,135 +2,149 @@
 
 namespace app\modules\calculators\components;
 
-use app\components\items\ItemRequiredCollection;
-use app\components\items\ItemResult;
-use app\models\CompressSettings;
-use app\models\dump\InvTypeMaterials;
-use app\models\dump\InvTypes;
+use app\components\items\Item;
+use app\components\items\ItemCollection;
 use yii\base\Component;
 
 class MineralComponent extends Component
 {
-    /** @var ItemRequiredCollection */
-    private $itemRequiredCollection;
-    /** @var array|null $primaryOre */
-    public $primaryOre;
+    /** @var ItemCollection|null $mineralsCollection */
+    private $mineralsCollection;
+    /** @var ItemCollection|null $oresCollection */
+    private $oresCollection;
+    /** @var MineralAsOre|null $mineralAsOre */
+    private $mineralAsOre;
 
     public function init()
     {
-        foreach ([40, 39, 38, 37, 36, 35, 34] as $mineralTypeID) { // defaults
-            $this->primaryOre[$mineralTypeID] = null;
-        }
-
-        $cSettings = CompressSettings::findAll(['userID' => \Yii::$app->user->id]);
-
-        foreach ($cSettings as $setting) {
-            $this->primaryOre[$setting->mineralTypeID] = $setting->oreTypeID;
-        }
+        $this->mineralAsOre = new MineralAsOre();
+        $this->oresCollection = new ItemCollection();
 
         parent::init();
     }
 
-    /** @var ItemResult[] $result */
-    public $result = [];
+    /**
+     * @return ItemCollection|null
+     */
+    public function getMineralsCollection()
+    {
+        return $this->mineralsCollection;
+    }
 
     /**
-     * @param ItemRequiredCollection $irc
+     * @param ItemCollection|array $collection
      *
      * @return $this
      */
-    public function setItemRequiredCollection(ItemRequiredCollection $irc)
+    public function setMineralsCollection($collection)
     {
-        $this->itemRequiredCollection = $irc->sort(false);
+        if (is_array($collection)) {
+            $this->mineralsCollection = new ItemCollection();
+
+            foreach ($collection as $item) {
+                $this->mineralsCollection->addItem($item);
+            }
+        } else {
+            $this->mineralsCollection = $collection;
+        }
 
         return $this;
     }
 
     /**
-     * @return ItemRequiredCollection
+     * @return ItemCollection
      */
-    public function getItemRequiredCollection()
+    public function getOresCollection()
     {
-        return $this->itemRequiredCollection;
+        return $this->oresCollection;
     }
 
     public function calculate()
     {
-        foreach ($this->itemRequiredCollection->getTypeIDs() as $typeID) { // each mineral
-            $this->calculateMineral($typeID);
+        $items = $this->mineralsCollection->getItems();
+        krsort($items);
+
+        foreach ($items as $mineral) { // each mineral
+            $this->calculateMineral($mineral);
         }
 
-        return $this->result;
+        return $this;
     }
 
-    public function calculateMineral($mineralTypeID)
+    /**
+     * @param Item $mineral
+     *
+     * @return $this
+     */
+    public function calculateMineral($mineral)
     {
+        /** @var Item|null $ore */
+        $ore = $this->mineralAsOre->getOreForMineral($mineral->typeID);
 
-        $oreTypeID = $this->getPrimaryOre($mineralTypeID); // primary ore for this mineral
-
-        if ($oreTypeID) { // primary ore exist calculate minerals
-            $runs = $this->calculateByPrimaryOre($mineralTypeID, $oreTypeID);
+        if ($ore) { // primary ore exist calculate minerals
+            $runs = $this->calculateByPrimaryOre($mineral, $ore);
 
             if ($runs) {
-                $itemOre = new ItemResult([
-                    'invType' => $runs[0],
-                    'quantity' => $runs[1] // runs
-                ]);
-
-                $this->calculateOre($itemOre);
-                $this->result[] = $itemOre;
+                $ore->setQuantity($runs);
+                $this->oresCollection->addItem($ore);
             }
         }
 
         return $this;
     }
 
-    private function calculateByPrimaryOre($mineralTypeID, $oreTypeID) // calculate regarding base items
+    private function getRequiredMinerals($typeID)
     {
-        $invType = InvTypes::findOne(['typeID' => $oreTypeID]); // ore
+        $required = $this->mineralsCollection->getItem($typeID);
+        $weHave = 0;
+
+        if ($required && $required->getQuantity() > 0) {
+            foreach ($this->oresCollection->getItems() as $ore) {
+                foreach ($ore->getReprocessResult() as $rItem) {
+                    if ($rItem->typeID == $typeID) {
+                        $weHave += $rItem->getQuantity() * $ore->getQuantity();
+                    }
+                }
+            }
+
+            return ($required->getQuantity() - $weHave);
+        }
+
+        return 0;
+    }
+
+    private function calculateByPrimaryOre(Item $mineral, Item $ore) // calculate regarding base items
+    {
         $refineRuns = 0;
 
-        foreach ($invType->invTypeMaterials as $invTypeMaterial) {
-            if ($invTypeMaterial->materialTypeID == $mineralTypeID) {
-                $refineRuns = ceil($this->getItemRequiredCollection()->getQuantityTotal($mineralTypeID) / $this->getRealQuantity($invTypeMaterial));     //  total we need / after refine
+        foreach ($ore->getReprocessResult() as $rItem) {
+            if ($rItem->typeID == $mineral->typeID) {
+                $rMinerals = $this->getRequiredMinerals($mineral->typeID);
+
+                if ($rMinerals && $rItem->getQuantity()) {
+                    $refineRuns = ceil($rMinerals / $rItem->getQuantity()); //  total we need / after refine = refine runs
+                }
 
                 break;
             }
         }
 
-        return [$invType, $refineRuns];
+        return $refineRuns;
     }
 
-    private function calculateOre(ItemResult $itemResult) // calculate all minerals from ore by refine
+    public function getOreForMineral(Item $mineral)
     {
-        foreach ($itemResult->invType->invTypeMaterials as $invTypeMaterial) {
-            $quantity = ceil($this->getRealQuantity($invTypeMaterial) * $itemResult->getQuantity()); // (count after refine) * base quantity (runs)
-            $itemResult->addItems(new ItemResult(['invType' => $invTypeMaterial->materialInvType, 'quantity' => $quantity]));
+        $oreID = $this->mineralAsOre->getOreForMineral($mineral->typeID);
 
-            $this->itemRequiredCollection->addQuantityWeHave($invTypeMaterial->materialTypeID, $quantity);
-        }
-    }
-
-    private function getRealQuantity(InvTypeMaterials $invTypeMaterial)
-    {
-        return floor($invTypeMaterial->quantity * 0.84);
-    }
-
-    /**
-     * Return typeID of ore.
-     *
-     * @param int $typeID // mineral type ID
-     *
-     * @return int|null
-     */
-    private function getPrimaryOre($typeID)
-    {
-        if (isset($this->primaryOre[$typeID])) {
-            if ($this->primaryOre[$typeID]) {
-                return $this->primaryOre[$typeID];
+        if ($oreID && $this->getOresCollection()) {
+            foreach ($this->oresCollection->getItems() as $ore) {
+                if ($oreID->typeID == $ore->typeID) {
+                    return $ore;
+                }
             }
         }
 
         return null;
     }
+
 }
