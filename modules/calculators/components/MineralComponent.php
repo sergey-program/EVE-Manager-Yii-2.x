@@ -86,7 +86,7 @@ class MineralComponent extends Component
 
             if ($runs) {
                 $ore->setQuantity($runs);
-                $this->oresCollection->addItem($ore);
+                $this->oresCollection->addItemQuantity($ore);
             }
         }
 
@@ -100,9 +100,14 @@ class MineralComponent extends Component
 
         if ($required && $required->getQuantity() > 0) {
             foreach ($this->oresCollection->getItems() as $ore) {
-                foreach ($ore->getReprocessResult() as $rItem) {
+                foreach ($ore->getReprocessResult(true) as $rItem) {
                     if ($rItem->typeID == $typeID) {
                         $weHave += $rItem->getQuantity() * $ore->getQuantity();
+                        var_dump($ore->typeName);
+                        var_dump($rItem->getQuantity());
+                        var_dump($ore->getQuantity());
+                        var_dump($weHave);
+                        echo '<br/>';
                     }
                 }
             }
@@ -117,11 +122,16 @@ class MineralComponent extends Component
     {
         $refineRuns = 0;
 
-        foreach ($ore->getReprocessResult() as $rItem) {
+        foreach ($ore->getReprocessResult(true) as $rItem) {
             if ($rItem->typeID == $mineral->typeID) {
                 $rMinerals = $this->getRequiredMinerals($mineral->typeID);
 
                 if ($rMinerals && $rItem->getQuantity()) {
+
+//                    if ($mineral->typeID ==36 && $ore->typeID ==  28421 ){
+//                        var_dump($rMinerals);
+//                        var_dump($rItem->getQuantity());
+//                    }
                     $refineRuns = ceil($rMinerals / $rItem->getQuantity()); //  total we need / after refine = refine runs
                 }
 

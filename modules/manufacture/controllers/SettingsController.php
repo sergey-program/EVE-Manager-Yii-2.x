@@ -3,6 +3,7 @@
 namespace app\modules\manufacture\controllers;
 
 use app\models\BlueprintSettings;
+use app\models\CompressSettings;
 use app\models\dump\InvTypes;
 
 /**
@@ -91,4 +92,50 @@ class SettingsController extends AbstractManufactureController
 
         return $blueprintSettings->save();
     }
+
+    public function actionCompressedOre($typeID){
+        $invType = InvTypes::findOne(['typeID' => $typeID]);
+        $item = $invType->getItem(); // original item from url
+        $this->getView()->setPageTitle($item->typeName);
+
+        if ($item->isBlueprint()) {
+            $item = $item->getProduct();
+        }
+
+        if (\Yii::$app->request->isPost){
+            $cs = CompressSettings::findOne(['userID' => \Yii::$app->user->id, 'mineralTypeID' => $mineralTypeID]);
+
+            if ($cs) {
+                if ($cs->oreTypeID == $oreTypeID) {
+                    // do something?
+                } else {
+                    $cs->oreTypeID = $oreTypeID;
+                }
+            } else {
+                $cs = new CompressSettings();
+                $cs->userID = \Yii::$app->user->id;
+                $cs->mineralTypeID = $mineralTypeID;
+                $cs->oreTypeID = $oreTypeID;
+            }
+
+            $cs->save();
+
+            return $this->redirect(['index/view', 'typeID' => $typeID]);
+        }
+
+        return $this->redirect(['index/view', 'typeID'=> $item->typeID]);
+    }
+
+
+//    /**
+//     * @param int      $typeID
+//     * @param int      $mineralTypeID
+//     * @param int|null $oreTypeID
+//     *
+//     * @return \yii\web\Response
+//     */
+//    public function actionSetOre($typeID, $mineralTypeID, $oreTypeID = null)
+//    {
+//
+//    }
 }

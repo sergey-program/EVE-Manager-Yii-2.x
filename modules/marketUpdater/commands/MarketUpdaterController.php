@@ -21,16 +21,16 @@ class MarketUpdaterController extends Controller
      */
     public function actionUpdate()
     {
-        $marketUpdateGroup = MarketUpdateGroup::find()->addOrderBy(['timeUpdate' => SORT_DESC])->limit(1)->one();
+        $marketUpdateGroup = MarketUpdateGroup::find()->addOrderBy(['timeUpdate' => SORT_ASC])->limit(1)->one();
 
         if ($this->isLocked()) {
             echo 'Is locked. Run later' . "\n";
         } else {
-            echo "Not locked. Locking... ";
+            echo "Not locked. Locking...\n";
             $this->lock($marketUpdateGroup->groupID);
-            echo 'Updating... ';
+            echo "Updating... GroupID " . $marketUpdateGroup->groupID."\n";
             MarketGroup::update($marketUpdateGroup->groupID);
-            echo "Update is done. Unlocking... ";
+            echo "Update is done. Unlocking...\n";
             $this->unlock();
             echo "Unlocked.\n";
             echo "Done well.\n";

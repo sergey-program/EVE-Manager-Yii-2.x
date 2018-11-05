@@ -47,8 +47,6 @@ class IndexController extends AbstractManufactureController
      */
     public function actionView($typeID)
     {
-//        $mItem = MManager::createItem($typeID);
-//        MManager::applyBlueprintSettings($mItem);
         $invType =InvTypes::findOne(['typeID'=> $typeID]);
         $item = $invType->getItem();
 
@@ -57,32 +55,4 @@ class IndexController extends AbstractManufactureController
 
 
 
-    /**
-     * @param int      $typeID
-     * @param int      $mineralTypeID
-     * @param int|null $oreTypeID
-     *
-     * @return \yii\web\Response
-     */
-    public function actionSetOre($typeID, $mineralTypeID, $oreTypeID = null)
-    {
-        $cs = CompressSettings::findOne(['userID' => \Yii::$app->user->id, 'mineralTypeID' => $mineralTypeID]);
-
-        if ($cs) {
-            if ($cs->oreTypeID == $oreTypeID) {
-                // do something?
-            } else {
-                $cs->oreTypeID = $oreTypeID;
-            }
-        } else {
-            $cs = new CompressSettings();
-            $cs->userID = \Yii::$app->user->id;
-            $cs->mineralTypeID = $mineralTypeID;
-            $cs->oreTypeID = $oreTypeID;
-        }
-
-        $cs->save();
-
-        return $this->redirect(['index/view', 'typeID' => $typeID]);
-    }
 }

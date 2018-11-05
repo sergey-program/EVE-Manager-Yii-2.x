@@ -17,25 +17,8 @@ trait TraitReprocess
     /** @var Item[]|array $reprocessResult */
     public $reprocessResult = null;
 
-    /**
-     * @param int $percent
-     *
-     * @return $this
-     */
-    public function setReprocessPercent($percent)
-    {
-        $this->reprocessPercent = $percent;
 
-        return $this;
-    }
 
-    /**
-     * @return int
-     */
-    public function getReprocessPercent()
-    {
-        return $this->reprocessPercent;
-    }
 
     /**
      * Quantity that user will receive after reprocess.
@@ -92,6 +75,8 @@ trait TraitReprocess
             foreach ($invTypeMaterials as $invTypeMaterial) {
                 $quantity = $invTypeMaterial->quantity * $this->getQuantity();
                 $quantity = ceil($quantity * ($this->getReprocessPercent() / 100));
+
+                echo 'After reprocess ' . $this->getInvType()->typeID . ' => ' . $invTypeMaterial->materialTypeID . ' => ' . $quantity . '<br/>';
 
                 $this->addReprocessResult(new Item(['invType' => $invTypeMaterial->materialInvType, 'quantity' => $quantity]));
             }

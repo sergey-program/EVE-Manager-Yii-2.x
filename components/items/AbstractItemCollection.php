@@ -24,13 +24,14 @@ abstract class AbstractItemCollection extends BaseObject
      */
     public function addItem(Item $item)
     {
-        $this->items[] = $item;
+        $this->items[] = clone $item;
 
         return $this;
     }
 
     /**
      * Find item in collection and add quantity.
+     * If item was not found, add new one.
      *
      * @param Item $item
      *
@@ -39,13 +40,13 @@ abstract class AbstractItemCollection extends BaseObject
     public function addItemQuantity(Item $item)
     {
         if ($this->hasItem($item->typeID)) {
-            foreach ($this->items as $cItem) {
+            foreach ($this->getItems() as $cItem) {
                 if ($cItem->isTypeID($item->typeID)) {
                     $cItem->addQuantity($item->getQuantity());
                 }
             }
         } else {
-            $this->items[] = $item;
+            $this->items[] = clone $item;
         }
 
         return $this;
@@ -74,6 +75,8 @@ abstract class AbstractItemCollection extends BaseObject
      */
     public function getItems()
     {
+        sort($this->items);
+
         return $this->items;
     }
 
@@ -124,5 +127,25 @@ abstract class AbstractItemCollection extends BaseObject
         }
 
         return $this;
+    }
+
+    public function getPriceBuy()
+    {
+        $result = 0;
+        foreach ($this->getItems() as $item) {
+            $result += $item->getPriceBuy() * $item->getQuantity();
+        }
+
+        return $result;
+    }
+
+    public function getPriceSell()
+    {
+        $result = 0;
+        foreach ($this->getItems() as $item) {
+            $result += $item->getPriceSell() * $item->getQuantity();
+        }
+
+        return $result;
     }
 }
