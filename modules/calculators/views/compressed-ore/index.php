@@ -12,7 +12,8 @@ $actionRefine = \Yii::$app->actionRefine;
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-lg-6">
+    <div class="col-md-12">
+
         <?php foreach ($groups as $group): ?>
             <?php foreach ($group->getCompressedOre() as $invType): ?>
                 <?php $item = $invType->getItem(); ?>
@@ -29,12 +30,12 @@ $actionRefine = \Yii::$app->actionRefine;
 
                             <div class="col-md-4">
                                 <small title="<?= $item->typeName; ?> price.">
-                                    S: <span class="text-success"><?= \Yii::$app->formatter->asDecimal($item->getPriceSell()); ?></span>;
+                                    S: <span class="text-success"><?= \Yii::$app->formatter->asDecimal($item->getPriceSell()); ?></span>
                                     B: <span class="text-danger"><?= \Yii::$app->formatter->asDecimal($item->getPriceBuy()); ?></span>
                                 </small>
                                 <br/>
                                 <small title="Price as minerals.">
-                                    S: <span class="text-success"><?= \Yii::$app->formatter->asDecimal($collection->getPriceSell()); ?></span>;
+                                    S: <span class="text-success"><?= \Yii::$app->formatter->asDecimal($collection->getPriceSell()); ?></span>
                                     B: <span class="text-danger"><?= \Yii::$app->formatter->asDecimal($collection->getPriceBuy()); ?></span>
                                 </small>
                             </div>
@@ -95,5 +96,6 @@ $actionRefine = \Yii::$app->actionRefine;
 
             <?php endforeach; ?>
         <?php endforeach; ?>
+
     </div>
 </div>

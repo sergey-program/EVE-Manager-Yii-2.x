@@ -12,7 +12,8 @@ $actionRefine = \Yii::$app->actionRefine;
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-lg-6">
+    <div class="col-md-12">
+
         <?php foreach ($group->getCompressedIce() as $invType): ?>
             <?php $item = $invType->getItem(); ?>
             <?php $collection = $actionRefine->runOne($item); ?>
@@ -93,5 +94,6 @@ $actionRefine = \Yii::$app->actionRefine;
             </div>
 
         <?php endforeach; ?>
+
     </div>
 </div>
