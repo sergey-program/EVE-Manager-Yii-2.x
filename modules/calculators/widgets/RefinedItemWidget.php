@@ -6,20 +6,22 @@ use app\components\items\Item;
 use yii\base\Widget;
 
 /**
- * Class ReprocessItemWidget
+ * Class RefinedItemWidget
  *
  * @package app\modules\calculators\widgets
  */
-class ReprocessItemWidget extends Widget
+class RefinedItemWidget extends Widget
 {
     /** @var Item $item */
     public $item;
 
     /**
      * @return string
+     *
+     * @throws \Exception
      */
     public function run()
     {
-        return $this->render('reprocess-item', ['item' => $this->item]);
+        return $this->render('refined-item', ['item' => $this->item]);
     }
 }

@@ -12,6 +12,9 @@ use app\models\dump\InvGroups;
  */
 class CompressedIceController extends AbstractCalculatorsController
 {
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         $this
