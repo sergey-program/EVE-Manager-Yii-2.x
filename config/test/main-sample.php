@@ -10,6 +10,9 @@ $config = [
     'params' => require_once(FILE_PATH_CONFIG_ENV . '_param.php'),
     'defaultRoute' => 'index/index',
     'components' => [
+        'actionRefine' => ['class' => \app\components\actions\ActionRefine::class],
+        'actionReprocess' => ['class' => \app\components\actions\ActionReprocess::class],
+        //
         'baseGroups' => [
             'class' => \app\modules\marketUpdater\components\BaseGroupsComponent::class
         ],
