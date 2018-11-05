@@ -6,72 +6,94 @@
  * @var \app\models\dump\InvGroups[] $groups
  */
 
+/** @var \app\components\actions\ActionRefine $actionRefine */
+$actionRefine = \Yii::$app->actionRefine;
+
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-lg-6">
+        <?php foreach ($groups as $group): ?>
+            <?php foreach ($group->getCompressedOre() as $invType): ?>
+                <?php $item = $invType->getItem(); ?>
+                <?php $collection = $actionRefine->runOne($item); ?>
 
-        <?php foreach ($groups as $key => $group): ?>
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <div class="pull-right">
-                        <?php $time = $group->marketUpdateGroup->timeUpdate ?? null; ?>
-                        <small class="text-muted" style="margin-right: 20px;" title="Когда последний раз обновлялось"><?= \Yii::$app->formatter->asDatetime($time, 'Y-m-d HH:i:s'); ?></small>
-                        <a href="<?= \yii\helpers\Url::to(['update-group', 'groupID' => $group->groupID]); ?>">Обновить цены</a>
-                    </div>
-                    <h3 class="box-title"><?= $group->groupName; ?></h3>
-
-                </div>
-
-                <div class="box-body">
-                    <?php foreach ($group->getCompressedOre() as $invType): ?>
-                        <?php $item = $invType->getItem(); ?>
-
-                        <div class="panel box box-primary">
-                            <div class="box-header with-border">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $item->typeID; ?>" style="padding: 0; margin: 0;">
-                                            <img src="https://image.eveonline.com/Type/<?= $item->typeID; ?>_32.png" class="img-thumbnail" style="margin-right: 10px;">
-                                            <span style="font-size: 18px;"><?= $item->typeName; ?></span>
-                                        </a>
-                                    </div>
-
-                                    <div class="col-md-4 text-right">
-                                        <small>
-                                            <span class="text-success" title="Sell"><?= \Yii::$app->formatter->asDecimal($item->getPriceSell()); ?></span>
-                                            <br/>
-                                            <span class="text-danger" title="Buy"><?= \Yii::$app->formatter->asDecimal($item->getPriceBuy()); ?></span>
-                                        </small>
-                                    </div>
-                                </div>
+                <div class="panel box box-primary">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="<?= $item->getImageSrc(); ?>" class="img-thumbnail margin-r-5">
+                                <a data-toggle="collapse" href="#collapse<?= $item->typeID; ?>"><h3 class="box-title"><?= $item->typeName; ?></h3></a>
+                                <small class="text-muted"><?= $item->typeID; ?></small>
                             </div>
 
-                            <div id="collapse<?= $item->typeID; ?>" class="panel-collapse collapse" style="height: 0;">
+                            <div class="col-md-4">
+                                <small title="<?= $item->typeName; ?> price.">
+                                    S: <span class="text-success"><?= \Yii::$app->formatter->asDecimal($item->getPriceSell()); ?></span>;
+                                    B: <span class="text-danger"><?= \Yii::$app->formatter->asDecimal($item->getPriceBuy()); ?></span>
+                                </small>
+                                <br/>
+                                <small title="Price as minerals.">
+                                    S: <span class="text-success"><?= \Yii::$app->formatter->asDecimal($collection->getPriceSell()); ?></span>;
+                                    B: <span class="text-danger"><?= \Yii::$app->formatter->asDecimal($collection->getPriceBuy()); ?></span>
+                                </small>
+                            </div>
 
-                                <div class="box-body">
-                                    <?php foreach ($item->getReprocessResult() as $rItem): ?>
-                                        <?= \app\modules\calculators\widgets\ReprocessItemWidget::widget(['item' => $rItem]); ?>
-                                    <?php endforeach; ?>
-
-                                    <hr/>
-
-                                    <div class="row">
-                                        <div class="col-md-12 text-right">
-                                            <span title="Материалы по Sell цене">S: <?= \Yii::$app->formatter->asDecimal($item->getReprocessPriceSell()); ?></span>
-                                            <br/>
-                                            <span title="Материалы по Buy цене">B: <?= \Yii::$app->formatter->asDecimal($item->getReprocessPriceBuy()); ?></span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-4 text-right">
+                                <small class="text-muted" title="Last group update time">
+                                    <?php $timeItem = $item->getMarketPrice() ? $item->getMarketPrice()->timeUpdate : null; ?>
+                                    <?= \Yii::$app->formatter->asDatetime($timeItem, 'Y-MM-dd HH:mm:ss VV'); ?>
+                                </small>
+                                <br/>
+                                <small class="text-muted" title="Last group update time">
+                                    <?php
+                                    $groupMineral = \app\models\MarketUpdateGroup::findOne(18); // minerals group
+                                    $timeMineral = $groupMineral ? $groupMineral->timeUpdate : null;
+                                    ?>
+                                    <?= \Yii::$app->formatter->asDatetime($timeMineral, 'Y-MM-dd HH:mm:ss VV'); ?>
+                                </small>
                             </div>
                         </div>
+                    </div>
 
-                    <?php endforeach; ?>
+                    <div id="collapse<?= $item->typeID; ?>" class="panel-collapse collapse">
+                        <div class="box-body">
+                            <table class="table table-bordered table-condensed table-striped">
+                                <?php foreach ($collection->getItems() as $rItem): ?>
+                                    <tr>
+                                        <td>
+                                            <img src="<?= $rItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-right: 10px;">
+                                            <?= \Yii::$app->formatter->asInteger($rItem->getQuantity()); ?>
+                                            <?= $rItem->typeName; ?>
+                                            <small class="text-muted"><?= $rItem->getTypeID(); ?></small>
+                                        </td>
+                                        <td class="text-right">
+                                            <span class="text-muted" title="Sell"><?= \Yii::$app->formatter->asDecimal($rItem->getPriceSell()); ?></span>
+                                            <br/>
+                                            <span class="text-muted" title="Buy"><?= \Yii::$app->formatter->asDecimal($rItem->getPriceBuy()); ?></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <?= \Yii::$app->formatter->asDecimal($rItem->getPriceSell() * $rItem->getQuantity()); ?>
+                                            <br/>
+                                            <?= \Yii::$app->formatter->asDecimal($rItem->getPriceBuy() * $rItem->getQuantity()); ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <tr>
+                                    <td><?= $actionRefine->percent; ?>% used for refine.</td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span title="Материалы по Sell цене">S: <?= \Yii::$app->formatter->asDecimal($collection->getPriceSell()); ?></span>
+                                        <br/>
+                                        <span title="Материалы по Buy цене">B: <?= \Yii::$app->formatter->asDecimal($collection->getPriceBuy()); ?></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
+            <?php endforeach; ?>
         <?php endforeach; ?>
     </div>
 </div>
-

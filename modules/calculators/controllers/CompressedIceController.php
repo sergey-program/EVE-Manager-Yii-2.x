@@ -20,9 +20,9 @@ class CompressedIceController extends AbstractCalculatorsController
             ->setPageTitle('Compressed ICE')
             ->setPageDescription('Calculate compressed ice prices.');
 
-        $groups = InvGroups::find()->where(['groupID' => 465])->orderBy(['groupName' => 'ASC'])->all();
+        $group = InvGroups::find()->where(['groupID' => 465])->orderBy(['groupName' => 'ASC'])->one();
 
-        return $this->render('index', ['groups' => $groups]);
+        return $this->render('index', ['group' => $group]);
     }
 
     /**
