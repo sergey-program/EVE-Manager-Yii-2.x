@@ -2,10 +2,8 @@
 
 namespace app\modules\manufacture\controllers;
 
-use app\models\BlueprintSettings;
-use app\models\CompressSettings;
+use app\components\actions\ActionManufacture;
 use app\models\dump\InvTypes;
-use app\modules\manufacture\components\MManager;
 
 /**
  * Class IndexController
@@ -47,12 +45,9 @@ class IndexController extends AbstractManufactureController
      */
     public function actionView($typeID)
     {
-        $invType =InvTypes::findOne(['typeID'=> $typeID]);
+        $invType = InvTypes::findOne(['typeID' => $typeID]);
         $item = $invType->getItem();
 
         return $this->render('view', ['item' => $item]);
     }
-
-
-
 }

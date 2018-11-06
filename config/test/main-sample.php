@@ -12,6 +12,7 @@ $config = [
     'components' => [
         'actionRefine' => ['class' => \app\components\actions\ActionRefine::class],
         'actionReprocess' => ['class' => \app\components\actions\ActionReprocess::class],
+        'actionManufacture' => ['class' => \app\components\actions\ActionManufacture::class],
         //
         'baseGroups' => [
             'class' => \app\modules\marketUpdater\components\BaseGroupsComponent::class

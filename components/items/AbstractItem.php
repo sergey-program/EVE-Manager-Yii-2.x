@@ -2,6 +2,7 @@
 
 namespace app\components\items;
 
+use app\models\dump\IndustryActivityProducts;
 use app\models\dump\InvTypes;
 use yii\base\BaseObject;
 
@@ -20,6 +21,8 @@ abstract class AbstractItem extends BaseObject implements ItemInterface
     private $invType;
     /** @var int $quantity */
     private $quantity = 1;
+    /** @var Blueprint|null $blueprint */
+    private $blueprint;
 
     /**
      * @param InvTypes $invType
@@ -96,8 +99,40 @@ abstract class AbstractItem extends BaseObject implements ItemInterface
      *
      * @return int
      */
-    public function getQuantity($option = null)
+    public function getQuantity()
     {
         return $this->quantity;
+    }
+
+    /**
+     * Current item is bpo.
+     *
+     * @return bool
+     */
+    public function isBlueprint()
+    {
+        return is_int(strpos($this->typeName, 'Blueprint'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBlueprint()
+    {
+        return $this->getBlueprint() ? true : false;
+    }
+
+    /**
+     * @return Blueprint|false|null
+     */
+    public function getBlueprint()
+    {
+        if (is_null($this->blueprint)) {
+            $filter = ['productTypeID' => $this->typeID, 'activityID' => 1]; // activity == manufacture
+            $product = IndustryActivityProducts::find()->where($filter)->cache(60 * 60 * 24)->one();
+            $this->blueprint = $product ? new Blueprint(['invType' => $product->invType, 'parentItem' => $this]) : false;
+        }
+
+        return $this->blueprint;
     }
 }

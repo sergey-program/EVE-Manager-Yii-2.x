@@ -5,23 +5,20 @@
  * @var \app\components\items\Item   $item
  */
 
+/** @var \app\components\actions\ActionManufacture $actionManufacture */
+$actionManufacture = \Yii::$app->actionManufacture;
+
 ?>
-<style>
-    .img-thumbnail-hand {
-        cursor: pointer;
-    }
-</style>
 
 <div class="row">
 
     <div class="col-md-6 col-lg-4">
         <div class="box box-primary">
             <div class="box-header with-border">
-
                 <div class="pull-right">
                     <?= $item->getBlueprint()->getSettings()->me; ?> / <?= $item->getBlueprint()->getSettings()->meHull; ?> / <?= $item->getBlueprint()->getSettings()->meRig; ?>
 
-                    <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $item->typeID]); ?>" title="Update bpo settings">
+                    <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $item->getBlueprint()->typeID]); ?>" title="Update bpo settings">
                         <img src="<?= $item->getBlueprint()->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px;">
                     </a>
                 </div>
@@ -31,12 +28,11 @@
                     <?= $item->typeName; ?>
                     <small class="text-muted"><?= $item->typeID; ?></small>
                 </h3>
-
             </div>
 
             <div class="box-body">
                 <?php if ($item->hasBlueprint()): ?>
-                    <?php foreach ($item->getBlueprint()->getMaterials() as $mItem): ?>
+                    <?php foreach ($actionManufacture->calculate($item->getBlueprint(), $item->getQuantity())->getItems() as $mItem): ?>
                         <?= $this->render('_row', ['mItem' => $mItem, 'p' => 0]); ?>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -46,16 +42,7 @@
         </div>
     </div>
 
-    <?php
-    /** @var \app\modules\calculators\components\MineralComponent $mao */
-    /*
-    $mao = \Yii::$app->mineralAsOre;
-    $itemRequiredCollection = new \app\components\items\ItemRequiredCollection();
-    $mTotal = \app\modules\manufacture\components\MManager::calculateTotal($mItem);
-    $itemRequiredCollection->parseTotal($mTotal);
-    */
-    ?>
-
+    <?php /*
     <div class="col-md-6 col-lg-4">
         <form class="form">
             <div class="box box-primary">
@@ -99,7 +86,7 @@
                         <tr>
                             <td colspan="2" class="text-right"><strong>BPC</strong></td>
                             <td class="text-right">
-                                <?= \Yii::$app->formatter->asInteger(0/*$mTotal->getPriceBlueprintRuns()*/); ?>
+                                <?= \Yii::$app->formatter->asInteger(0/*$mTotal->getPriceBlueprintRuns()* /); ?>
                             </td>
                         </tr>
 
@@ -109,6 +96,8 @@
             </div>
         </form>
     </div>
+    */ ?>
+    <?php /*
 
     <div class="col-md-12">
         <div class="panel box">
@@ -161,11 +150,11 @@
                                         <li><a href="#">Something else here</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="#">Separated link</a></li>
-                                        */ ?>
+                                        * / ?>
                                             </ul>
                                         </div>
 
-                                        <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> */ ?>
+                                        <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> * / ?>
                                     </td>
 
                                     <td style="width: 75px;">
@@ -234,5 +223,5 @@
         </div>
     </div>
 
-
+*/ ?>
 </div>

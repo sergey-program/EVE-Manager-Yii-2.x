@@ -5,6 +5,10 @@
  * @var int                        $p
  */
 
+
+/** @var \app\components\actions\ActionManufacture $actionManufacture */
+$actionManufacture = \Yii::$app->actionManufacture;
+
 ?>
 
 <div class="row" style="margin-bottom: 5px; margin-left: <?= $p; ?>px;">
@@ -14,10 +18,8 @@
         <small class="text-muted"><?= $mItem->typeID; ?></small>
     </div>
 
-    <div class="col-md-2 text-left">
+    <div class="col-md-2 text-left" style="line-height: 41.33px;">
         <?= \Yii::$app->formatter->asInteger($mItem->getQuantity()); ?>
-        <br/>
-        <small class="text-muted"><?= \Yii::$app->formatter->asInteger($mItem->getQuantity(false)); ?></small>
     </div>
 
     <div class="col-md-4 text-right">
@@ -27,18 +29,13 @@
             <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $mItem->typeID]); ?>">
                 <img src="<?= $mItem->getBlueprint()->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px;">
             </a>
-        <?php else: ?>
-            <?= \Yii::$app->formatter->asInteger($mItem->getQuantityTotal()); ?>
-            <br/>
-            <small class="text-muted"><?= \Yii::$app->formatter->asInteger($mItem->getQuantityTotal(false)); ?></small>
         <?php endif; ?>
-
     </div>
 </div>
 
 <?php if ($mItem->hasBlueprint()): ?>
     <div id="<?= $mItem->typeID; ?>" style="display: none;">
-        <?php foreach ($mItem->getBlueprint()->getMaterials() as $nItem): ?>
+        <?php foreach ($actionManufacture->calculate($mItem->getBlueprint(), $mItem->getQuantity())->getItems() as $nItem): ?>
             <?= $this->render('_row', ['mItem' => $nItem, 'p' => $p + 30]); ?>
         <?php endforeach; ?>
     </div>
