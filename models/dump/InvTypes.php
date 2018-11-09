@@ -92,6 +92,17 @@ class InvTypes extends AbstractActiveRecord
         return $this->hasMany(IndustryActivityMaterials::class, ['materialTypeID' => 'typeID']);
     }
 
+    /**
+     * @param mixed $condition
+     *
+     * @return Blueprint|Item|null
+     */
+    public static function findItem($condition)
+    {
+        $invType = InvTypes::findOne($condition);
+
+        return $invType ? $invType->getItem() : null;
+    }
 
     ### functions
 

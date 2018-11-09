@@ -71,7 +71,12 @@ class SettingsController extends AbstractManufactureController
             return $this->refresh();
         }
 
-        return $this->render('update', ['blueprint' => $blueprint]);
+        $prevItem = InvTypes::findItem(\Yii::$app->session->get('lastViewedItemID'));
+
+        return $this->render('update', [
+            'blueprint' => $blueprint,
+            'prevItem' => $prevItem
+        ]);
     }
 
     /**

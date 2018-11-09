@@ -3,6 +3,7 @@
 /**
  * @var \app\components\ViewExtended    $this
  * @var \app\components\items\Blueprint $blueprint
+ * @var \app\components\items\Item      $prevItem
  */
 
 ?>
@@ -89,3 +90,21 @@
     </div>
     <?= \yii\helpers\Html::endForm(); ?>
 </div>
+
+<?php if ($prevItem): ?>
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Return back to</h3>
+            </div>
+
+            <div class="box-body">
+                <a href="<?= \yii\helpers\Url::to(['index/view', 'typeID' => $prevItem->typeID]); ?>">
+                    <img src="<?= $prevItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-right: 10px;" title="<?= $prevItem->typeName; ?>">
+                    <a href="<?= \yii\helpers\Url::to(['index/view', 'typeID' => $prevItem->typeID]); ?>"><?= $prevItem->typeName; ?></a>
+                </a>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+

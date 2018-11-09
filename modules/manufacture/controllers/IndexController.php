@@ -2,8 +2,8 @@
 
 namespace app\modules\manufacture\controllers;
 
-use app\components\actions\ActionManufacture;
 use app\models\dump\InvTypes;
+use yii\helpers\Url;
 
 /**
  * Class IndexController
@@ -47,6 +47,8 @@ class IndexController extends AbstractManufactureController
     {
         $invType = InvTypes::findOne(['typeID' => $typeID]);
         $item = $invType->getItem();
+
+        \Yii::$app->session->set('lastViewedItemID', $typeID);
 
         return $this->render('view', ['item' => $item]);
     }
