@@ -105,13 +105,13 @@ abstract class AbstractItem extends BaseObject implements ItemInterface
     }
 
     /**
-     * Current item is bpo.
+     * Wrapper. Current item is bpo.
      *
      * @return bool
      */
     public function isBlueprint()
     {
-        return is_int(strpos($this->typeName, 'Blueprint'));
+        return $this->getInvType()->isBlueprint();
     }
 
     /**

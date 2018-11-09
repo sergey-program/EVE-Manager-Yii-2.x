@@ -2,6 +2,7 @@
 
 namespace app\models\dump;
 
+use app\components\items\Blueprint;
 use app\components\items\Item;
 use app\models\extend\AbstractActiveRecord;
 use app\models\MarketPrice;
@@ -95,12 +96,24 @@ class InvTypes extends AbstractActiveRecord
     ### functions
 
     /**
+     * Current item is bpo.
+     *
+     * @return bool
+     */
+    public function isBlueprint()
+    {
+        return is_int(strpos($this->typeName, 'Blueprint'));
+    }
+
+    /**
      * @param int $quantity
      *
-     * @return Item
+     * @return Item|Blueprint
      */
     public function getItem($quantity = 1)
     {
-        return new Item(['invType' => $this, 'quantity' => $quantity]);
+        return $this->isBlueprint()
+            ? new Blueprint(['invType' => $this, 'runs' => $quantity])
+            : new Item(['invType' => $this, 'quantity' => $quantity]);
     }
 }

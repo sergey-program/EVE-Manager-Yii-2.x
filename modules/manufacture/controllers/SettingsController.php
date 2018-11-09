@@ -5,6 +5,7 @@ namespace app\modules\manufacture\controllers;
 use app\models\BlueprintSettings;
 use app\models\CompressSettings;
 use app\models\dump\InvTypes;
+use yii\base\NotSupportedException;
 
 /**
  * Class SettingsController
@@ -17,15 +18,17 @@ class SettingsController extends AbstractManufactureController
      * @param int $typeID // item, not bpo
      *
      * @return string|\yii\web\Response
+     *
+     * @throws \Exception
      */
     public function actionUpdate($typeID)
     {
         $invType = InvTypes::findOne(['typeID' => $typeID]);
-        $item = $invType->getItem(); // original item from url
-        $this->getView()->setPageTitle($item->typeName);
+        $blueprint = $invType->getItem(); // original item from url
+        $this->getView()->setPageTitle($blueprint->typeName);
 
-        if ($item->isBlueprint()) {
-            $item = $item->getProduct();
+        if (!$blueprint->isBlueprint()) {
+            throw new NotSupportedException('TypeID ' . $typeID . ' is not bpo.');
         }
 
         if (\Yii::$app->request->isPost) { // @todo refactor this one
@@ -68,10 +71,7 @@ class SettingsController extends AbstractManufactureController
             return $this->refresh();
         }
 
-        return $this->render('update', [
-            'item' => $item,
-            'bpo' => $item->getBlueprint()
-        ]);
+        return $this->render('update', ['blueprint' => $blueprint]);
     }
 
     /**
@@ -93,7 +93,8 @@ class SettingsController extends AbstractManufactureController
         return $blueprintSettings->save();
     }
 
-    public function actionCompressedOre($typeID){
+    public function actionCompressedOre($typeID)
+    {
         $invType = InvTypes::findOne(['typeID' => $typeID]);
         $item = $invType->getItem(); // original item from url
         $this->getView()->setPageTitle($item->typeName);
@@ -102,7 +103,7 @@ class SettingsController extends AbstractManufactureController
             $item = $item->getProduct();
         }
 
-        if (\Yii::$app->request->isPost){
+        if (\Yii::$app->request->isPost) {
             $cs = CompressSettings::findOne(['userID' => \Yii::$app->user->id, 'mineralTypeID' => $mineralTypeID]);
 
             if ($cs) {
@@ -123,7 +124,7 @@ class SettingsController extends AbstractManufactureController
             return $this->redirect(['index/view', 'typeID' => $typeID]);
         }
 
-        return $this->redirect(['index/view', 'typeID'=> $item->typeID]);
+        return $this->redirect(['index/view', 'typeID' => $item->typeID]);
     }
 
 

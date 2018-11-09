@@ -26,7 +26,7 @@ $actionManufacture = \Yii::$app->actionManufacture;
         <?php if ($mItem->hasBlueprint()): ?>
             <?= $mItem->getBlueprint()->getSettings()->me; ?> / <?= $mItem->getBlueprint()->getSettings()->meHull; ?> / <?= $mItem->getBlueprint()->getSettings()->meRig; ?>
 
-            <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $mItem->typeID]); ?>">
+            <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $mItem->getBlueprint()->typeID]); ?>">
                 <img src="<?= $mItem->getBlueprint()->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px;">
             </a>
         <?php endif; ?>
