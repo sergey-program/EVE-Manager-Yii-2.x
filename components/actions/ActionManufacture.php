@@ -16,11 +16,10 @@ class ActionManufacture extends Component
 {
     /**
      * @param Blueprint $blueprint
-     * @param int       $runs
      *
      * @return ItemCollection
      */
-    public function calculate(Blueprint $blueprint, $runs = 1)
+    public function calculate(Blueprint $blueprint)
     {
         $collection = new ItemCollection();
 
@@ -29,11 +28,36 @@ class ActionManufacture extends Component
             $meRig = 1 - ($blueprint->getSettings()->meRig / 100);
             $meHull = 1 - ($blueprint->getSettings()->meHull / 100);
 
-            $quantity = ceil($material->getQuantity() * $runs * $me * $meRig * $meHull); // * $this->getRuns();
+            $quantity = ceil($material->getQuantity() * $me * $meRig * $meHull); // * $this->getRuns();
 
-            $collection->addItem(new Item(['invType' => $material->invType, 'quantity' => $quantity]));
+            $collection->addItemQuantity(new Item(['invType' => $material->invType, 'quantity' => $quantity]));
         }
 
         return $collection;
+    }
+
+    /**
+     * @param Blueprint $blueprint
+     *
+     * @return ItemCollection
+     */
+    public function calculateMinerals(Blueprint $blueprint)
+    {
+        $result = new ItemCollection();
+        $collection = $this->calculate($blueprint);
+
+        foreach ($collection->getItems() as $item) {
+            if ($item->hasBlueprint()) {
+                $collectionInner = $this->calculateMinerals($item->getBlueprint());
+
+                foreach ($collectionInner->getItems() as $itemInner) {
+                    $result->addItemQuantity($itemInner);
+                }
+            } else {
+                $result->addItemQuantity($item);
+            }
+        }
+
+        return $result;
     }
 }

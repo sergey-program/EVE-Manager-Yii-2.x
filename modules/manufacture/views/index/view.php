@@ -32,7 +32,7 @@ $actionManufacture = \Yii::$app->actionManufacture;
 
             <div class="box-body">
                 <?php if ($item->hasBlueprint()): ?>
-                    <?php foreach ($actionManufacture->calculate($item->getBlueprint(), $item->getQuantity())->getItems() as $mItem): ?>
+                    <?php foreach ($actionManufacture->calculate($item->getBlueprint())->getItems() as $mItem): ?>
                         <?= $this->render('_row', ['mItem' => $mItem, 'p' => 0]); ?>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -42,7 +42,6 @@ $actionManufacture = \Yii::$app->actionManufacture;
         </div>
     </div>
 
-    <?php /*
     <div class="col-md-6 col-lg-4">
         <form class="form">
             <div class="box box-primary">
@@ -52,7 +51,8 @@ $actionManufacture = \Yii::$app->actionManufacture;
 
                 <div class="box-body no-padding">
                     <table class="table table-striped table-hover">
-                        <?php foreach ($item->getBlueprint()->getTotalManufacture() as $pItem): ?>
+                        <?php $minerals = $actionManufacture->calculateMinerals($item->getBlueprint()); ?>
+                        <?php foreach ($minerals->getItems() as $pItem): ?>
                             <tr>
                                 <td>
                                     <div>
@@ -77,16 +77,16 @@ $actionManufacture = \Yii::$app->actionManufacture;
                         <tr>
                             <td colspan="2" class="text-right"><strong>Total</strong></td>
                             <td class="text-right">
-                                <?= \Yii::$app->formatter->asDecimal($item->getBlueprint()->getTotalPriceSell()); ?>
+                                <?= \Yii::$app->formatter->asDecimal($minerals->getPriceSell()); ?>
                                 <br/>
-                                <?= \Yii::$app->formatter->asDecimal($item->getBlueprint()->getTotalPriceBuy()); ?>
+                                <?= \Yii::$app->formatter->asDecimal($minerals->getPriceBuy()); ?>
                             </td>
                         </tr>
 
                         <tr>
                             <td colspan="2" class="text-right"><strong>BPC</strong></td>
                             <td class="text-right">
-                                <?= \Yii::$app->formatter->asInteger(0/*$mTotal->getPriceBlueprintRuns()* /); ?>
+                                <?= \Yii::$app->formatter->asInteger(0/*$mTotal->getPriceBlueprintRuns() */); ?>
                             </td>
                         </tr>
 
@@ -96,7 +96,7 @@ $actionManufacture = \Yii::$app->actionManufacture;
             </div>
         </form>
     </div>
-    */ ?>
+
     <?php /*
 
     <div class="col-md-12">

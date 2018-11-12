@@ -140,6 +140,7 @@ class Blueprint extends Item
     public function getMaterials()
     {
         if (is_null($this->materials)) {
+            /** @var IndustryActivityMaterials[] $materials */
             $materials = IndustryActivityMaterials::find()->where(['typeID' => $this->typeID, 'activityID' => 1])->cache(60 * 60 * 24)->all();
 
             if (empty($materials)) {

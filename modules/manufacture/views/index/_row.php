@@ -35,7 +35,7 @@ $actionManufacture = \Yii::$app->actionManufacture;
 
 <?php if ($mItem->hasBlueprint()): ?>
     <div id="<?= $mItem->typeID; ?>" style="display: none;">
-        <?php foreach ($actionManufacture->calculate($mItem->getBlueprint(), $mItem->getQuantity())->getItems() as $nItem): ?>
+        <?php foreach ($actionManufacture->calculate($mItem->getBlueprint())->getItems() as $nItem): ?>
             <?= $this->render('_row', ['mItem' => $nItem, 'p' => $p + 30]); ?>
         <?php endforeach; ?>
     </div>
