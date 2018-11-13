@@ -3,6 +3,7 @@
 namespace app\components\actions;
 
 use app\components\items\Blueprint;
+use app\components\items\BlueprintCollection;
 use app\components\items\Item;
 use app\components\items\ItemCollection;
 use yii\base\Component;
@@ -55,6 +56,33 @@ class ActionManufacture extends Component
                 }
             } else {
                 $result->addItemQuantity($item);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return all used blueprints by main blueprint.
+     *
+     * @param Blueprint $blueprint
+     *
+     * @return BlueprintCollection
+     */
+    public function getAllBlueprints(Blueprint $blueprint)
+    {
+        $result = new BlueprintCollection();
+        $result->addItem($blueprint);
+
+        $collection = $this->calculate($blueprint);
+
+        foreach ($collection->getItems() as $item) {
+            if ($item->hasBlueprint()) {
+                $collectionInner = $this->getAllBlueprints($item->getBlueprint());
+
+                foreach ($collectionInner->getItems() as $itemInner) {
+                    $result->addItem($itemInner);
+                }
             }
         }
 

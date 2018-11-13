@@ -39,6 +39,7 @@ abstract class AbstractItemCollection extends BaseObject
      */
     public function addItemQuantity(Item $item)
     {
+        // @todo refactor for bpos (add runs)
         if ($this->hasItem($item->typeID)) {
             foreach ($this->getItems() as $cItem) {
                 if ($cItem->isTypeID($item->typeID)) {
@@ -71,7 +72,7 @@ abstract class AbstractItemCollection extends BaseObject
     }
 
     /**
-     * @return Item[]|array
+     * @return Item[]|Blueprint[]|array
      */
     public function getItems()
     {
@@ -127,25 +128,5 @@ abstract class AbstractItemCollection extends BaseObject
         }
 
         return $this;
-    }
-
-    public function getPriceBuy()
-    {
-        $result = 0;
-        foreach ($this->getItems() as $item) {
-            $result += $item->getPriceBuy() * $item->getQuantity();
-        }
-
-        return $result;
-    }
-
-    public function getPriceSell()
-    {
-        $result = 0;
-        foreach ($this->getItems() as $item) {
-            $result += $item->getPriceSell() * $item->getQuantity();
-        }
-
-        return $result;
     }
 }

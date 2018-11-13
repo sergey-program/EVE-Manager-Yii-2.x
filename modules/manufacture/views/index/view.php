@@ -8,6 +8,8 @@
 /** @var \app\components\actions\ActionManufacture $actionManufacture */
 $actionManufacture = \Yii::$app->actionManufacture;
 
+$bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
+
 ?>
 
 <div class="row">
@@ -43,62 +45,96 @@ $actionManufacture = \Yii::$app->actionManufacture;
     </div>
 
     <div class="col-md-6 col-lg-4">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Materials</h3>
+            </div>
+
+            <div class="box-body no-padding">
+                <table class="table table-striped table-hover">
+                    <?php $minerals = $actionManufacture->calculateMinerals($item->getBlueprint()); ?>
+                    <?php foreach ($minerals->getItems() as $pItem): ?>
+                        <tr>
+                            <td>
+                                <div>
+                                    <img src="<?= $pItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
+                                    <?= number_format($pItem->getQuantity(), 0, '.', ' '); ?>
+                                    <small class="text-muted"><?= $pItem->typeID; ?></small>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <?= \Yii::$app->formatter->asDecimal($pItem->getPriceSell()); ?>
+                                <br/>
+                                <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuy()); ?>
+                            </td>
+                            <td class="text-right">
+                                <?= \Yii::$app->formatter->asDecimal($pItem->getPriceTotalSell()); ?>
+                                <br/>
+                                <?= \Yii::$app->formatter->asDecimal($pItem->getPriceTotalBuy()); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                    <tr>
+                        <td colspan="2" class="text-right"><strong>Total</strong></td>
+                        <td class="text-right">
+                            <?= \Yii::$app->formatter->asDecimal($minerals->getPriceSell()); ?>
+                            <br/>
+                            <?= \Yii::$app->formatter->asDecimal($minerals->getPriceBuy()); ?>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
         <form class="form">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Materials</h3>
+                    <h3 class="box-title">Copy prices</h3>
                 </div>
 
                 <div class="box-body no-padding">
                     <table class="table table-striped table-hover">
-                        <?php $minerals = $actionManufacture->calculateMinerals($item->getBlueprint()); ?>
-                        <?php foreach ($minerals->getItems() as $pItem): ?>
+                        <?php foreach ($bCollection->getItems() as $bItem): ?>
                             <tr>
                                 <td>
-                                    <div>
-                                        <img src="<?= $pItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
-                                        <?= number_format($pItem->getQuantity(), 0, '.', ' '); ?>
-                                        <small class="text-muted"><?= $pItem->typeID; ?></small>
-                                    </div>
+                                    <a href="<?= \yii\helpers\Url::to(['settings/update', 'typeID' => $bItem->typeID]); ?>">
+                                        <img src="<?= $bItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-left: 10px; margin-right: 10px;">
+                                    </a>
+                                    <?= $bItem->typeName; ?>
+                                    <small class="text-muted"><?= $bItem->typeID; ?></small>
                                 </td>
+
                                 <td class="text-right">
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceSell()); ?>
-                                    <br/>
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceBuy()); ?>
+                                    <?= \Yii::$app->formatter->asInteger($bItem->getRuns()); ?>
                                 </td>
+
                                 <td class="text-right">
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceTotalSell()); ?>
-                                    <br/>
-                                    <?= \Yii::$app->formatter->asDecimal($pItem->getPriceTotalBuy()); ?>
+                                    <?= \Yii::$app->formatter->asInteger($bItem->getSettings()->runPrice); ?>
+                                </td>
+
+                                <td class="text-right">
+                                    <?= \Yii::$app->formatter->asInteger($bItem->getSettings()->runPrice * $bItem->getRuns()); ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
 
                         <tr>
-                            <td colspan="2" class="text-right"><strong>Total</strong></td>
+                            <td colspan="3" class="text-right"><strong>Total</strong></td>
                             <td class="text-right">
-                                <?= \Yii::$app->formatter->asDecimal($minerals->getPriceSell()); ?>
-                                <br/>
-                                <?= \Yii::$app->formatter->asDecimal($minerals->getPriceBuy()); ?>
+                                <?= \Yii::$app->formatter->asInteger($bCollection->getRunPrices()); ?>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td colspan="2" class="text-right"><strong>BPC</strong></td>
-                            <td class="text-right">
-                                <?= \Yii::$app->formatter->asInteger(0/*$mTotal->getPriceBlueprintRuns() */); ?>
-                            </td>
-                        </tr>
-
                     </table>
-
                 </div>
             </div>
         </form>
     </div>
 
     <?php /*
-
     <div class="col-md-12">
         <div class="panel box">
             <div class="box-body">
@@ -145,7 +181,7 @@ $actionManufacture = \Yii::$app->actionManufacture;
                                                         Clear
                                                     </a>
                                                 </li>
-                                                <?php /*
+                                                <?php / *
                                         <li><a href="#">Another action</a></li>
                                         <li><a href="#">Something else here</a></li>
                                         <li role="separator" class="divider"></li>
@@ -154,7 +190,7 @@ $actionManufacture = \Yii::$app->actionManufacture;
                                             </ul>
                                         </div>
 
-                                        <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> * / ?>
+                                        <?php / * <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> * / ?>
                                     </td>
 
                                     <td style="width: 75px;">
@@ -223,5 +259,5 @@ $actionManufacture = \Yii::$app->actionManufacture;
         </div>
     </div>
 
-*/ ?>
+ */ ?>
 </div>
