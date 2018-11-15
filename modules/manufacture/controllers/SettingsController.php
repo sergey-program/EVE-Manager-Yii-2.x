@@ -98,50 +98,34 @@ class SettingsController extends AbstractManufactureController
         return $blueprintSettings->save();
     }
 
-    public function actionCompressedOre($typeID)
+    /**
+     * Save ore settings. Set primary ore for mineral.
+     *
+     * @param int $typeID        Used to return back.
+     * @param int $mineralTypeID Mineral.
+     * @param int $oreTypeID     Primary ore. Set null to remove.
+     *
+     * @return \yii\web\Response
+     */
+    public function actionSetCompressedOre($typeID, $mineralTypeID, $oreTypeID = null)
     {
-        $invType = InvTypes::findOne(['typeID' => $typeID]);
-        $item = $invType->getItem(); // original item from url
-        $this->getView()->setPageTitle($item->typeName);
+        $cs = CompressSettings::findOne(['userID' => \Yii::$app->user->id, 'mineralTypeID' => $mineralTypeID]);
 
-        if ($item->isBlueprint()) {
-            $item = $item->getProduct();
-        }
-
-        if (\Yii::$app->request->isPost) {
-            $cs = CompressSettings::findOne(['userID' => \Yii::$app->user->id, 'mineralTypeID' => $mineralTypeID]);
-
-            if ($cs) {
-                if ($cs->oreTypeID == $oreTypeID) {
-                    // do something?
-                } else {
-                    $cs->oreTypeID = $oreTypeID;
-                }
+        if ($cs) {
+            if ($cs->oreTypeID == $oreTypeID) {
+                // do something?
             } else {
-                $cs = new CompressSettings();
-                $cs->userID = \Yii::$app->user->id;
-                $cs->mineralTypeID = $mineralTypeID;
                 $cs->oreTypeID = $oreTypeID;
             }
-
-            $cs->save();
-
-            return $this->redirect(['index/view', 'typeID' => $typeID]);
+        } else {
+            $cs = new CompressSettings();
+            $cs->userID = \Yii::$app->user->id;
+            $cs->mineralTypeID = $mineralTypeID;
+            $cs->oreTypeID = $oreTypeID;
         }
 
-        return $this->redirect(['index/view', 'typeID' => $item->typeID]);
+        $cs->save();
+
+        return $this->redirect(['index/view', 'typeID' => $typeID]);
     }
-
-
-//    /**
-//     * @param int      $typeID
-//     * @param int      $mineralTypeID
-//     * @param int|null $oreTypeID
-//     *
-//     * @return \yii\web\Response
-//     */
-//    public function actionSetOre($typeID, $mineralTypeID, $oreTypeID = null)
-//    {
-//
-//    }
 }

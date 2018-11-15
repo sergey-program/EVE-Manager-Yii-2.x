@@ -7,6 +7,8 @@
 
 /** @var \app\components\actions\ActionManufacture $actionManufacture */
 $actionManufacture = \Yii::$app->actionManufacture;
+/** @var \app\components\actions\ActionRefine $actionRefine */
+$actionRefine = \Yii::$app->actionRefine;
 
 $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
 
@@ -134,7 +136,7 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
         </form>
     </div>
 
-    <?php /*
+
     <div class="col-md-12">
         <div class="panel box">
             <div class="box-body">
@@ -144,11 +146,12 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
 
                             <?php
                             $m = new \app\modules\calculators\components\MineralComponent();
-                            $m->setMineralsCollection($item->getBlueprint()->getTotalManufacture());
+                            $mineralCollection = $actionManufacture->calculateMinerals($item->getBlueprint());
+                            $m->setCollectionMinerals($mineralCollection);
                             $m->calculate();
                             ?>
 
-                            <?php foreach ($m->getMineralsCollection()->getItems() as $iItem): ?>
+                            <?php foreach ($m->getCollectionMinerals()->getItems() as $iItem): ?>
                                 <tr>
                                     <td style="width: 75px;">
                                         <img src="<?= $iItem->getImageSrc(); ?>" class="img-thumbnail">
@@ -170,27 +173,27 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
                                             <ul class="dropdown-menu">
                                                 <?php foreach (\Yii::$app->selectorOres->getCompressed($iItem->typeID) as $i): ?>
                                                     <li>
-                                                        <a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $iItem->typeID, 'oreTypeID' => $i->typeID]); ?>">
+                                                        <a href="<?= \yii\helpers\Url::to(['settings/set-compressed-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $iItem->typeID, 'oreTypeID' => $i->typeID]); ?>">
                                                             <?= $i->typeName; ?>
                                                         </a>
                                                     </li>
                                                 <?php endforeach; ?>
 
                                                 <li>
-                                                    <a href="<?= \yii\helpers\Url::to(['index/set-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $iItem->typeID, 'oreTypeID' => null]); ?>">
+                                                    <a href="<?= \yii\helpers\Url::to(['settings/set-compressed-ore', 'typeID' => \Yii::$app->request->get('typeID'), 'mineralTypeID' => $iItem->typeID, 'oreTypeID' => null]); ?>">
                                                         Clear
                                                     </a>
                                                 </li>
-                                                <?php / *
+                                                <?php /*
                                         <li><a href="#">Another action</a></li>
                                         <li><a href="#">Something else here</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="#">Separated link</a></li>
-                                        * / ?>
+                                        */ ?>
                                             </ul>
                                         </div>
 
-                                        <?php / * <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> * / ?>
+                                        <?php /* <input class="form-control" type="text" name="" value="<?= $oreTypeID; ?>"> */ ?>
                                     </td>
 
                                     <td style="width: 75px;">
@@ -207,11 +210,11 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
                                             <?= \Yii::$app->formatter->asInteger($iOre->getQuantity()); ?>
                                             <br/>
                                             <br/>
-                                            <?php foreach ($iOre->getReprocessResult() as $rItem): ?>
+                                            <?php /* foreach ($iOre->getReprocessResult() as $rItem): ?>
                                                 <img src="<?= $rItem->getImageSrc(); ?>" class="img-thumbnail">
                                                 <?= \Yii::$app->formatter->asInteger($rItem->getQuantity() * $iOre->getQuantity()); ?>
                                                 <br/>
-                                            <?php endforeach; ?>
+                                            <?php endforeach; */ ?>
                                         <?php endif; ?>
                                     </td>
 
@@ -225,7 +228,7 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
                     <div class="col-md-6 col-lg-6">
 
                         <table class="table talbe-hover">
-                            <?php foreach ($m->getOresCollection()->getItems() as $item): ?>
+                            <?php foreach ($m->getCollectionOres()->getItems() as $item): ?>
                                 <tr>
                                     <td>
                                         <img class="img-thumbnail" src="<?= $item->getImageSrc(); ?>"/> <?= $item->typeName; ?>
@@ -236,14 +239,14 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
                         </table>
 
                         <table class="table table-hover">
-                            <?php foreach ($m->getOresCollection()->reprocess(84)->getItems() as $item): ?>
+                            <?php foreach ($actionRefine->runCollection($m->getCollectionOres())->getItems() as $item): ?>
                                 <tr>
                                     <td>
                                         <img src="<?= $item->getImageSrc(); ?>" class="img-thumbnail"> <?= $item->typeName; ?>
                                     </td>
 
                                     <td>
-                                        <?= \Yii::$app->formatter->asInteger($m->getMineralsCollection()->getItem($item->typeID)->getQuantity()); ?>
+                                        <?= \Yii::$app->formatter->asInteger($m->getCollectionMinerals()->getItem($item->typeID)->getQuantity()); ?>
                                         -
                                         <?= \Yii::$app->formatter->asInteger($item->getQuantity()); ?>
                                         <br/>
@@ -259,5 +262,4 @@ $bCollection = $actionManufacture->getAllBlueprints($item->getBlueprint());
         </div>
     </div>
 
- */ ?>
 </div>

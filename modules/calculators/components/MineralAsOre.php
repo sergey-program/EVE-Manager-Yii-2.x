@@ -19,10 +19,12 @@ class MineralAsOre
      */
     public function __construct()
     {
-        $this->compressSettings = CompressSettings::find()->where(['userID' => \Yii::$app->user->id])->orderBy(['order'=>'DESC'])->all();
+        $this->compressSettings = CompressSettings::find()->where(['userID' => \Yii::$app->user->id])->orderBy(['order' => 'DESC'])->all();
     }
 
     /**
+     * Return preferred ore for specific mineral ($typeID).
+     *
      * @param int $typeID
      *
      * @return \app\components\items\Item|null
@@ -31,7 +33,6 @@ class MineralAsOre
     {
         foreach ($this->compressSettings as $compressSetting) {
             if ($compressSetting->mineralTypeID == $typeID) {
-
                 return $compressSetting->oreType ? $compressSetting->oreType->getItem() : null;
             }
         }

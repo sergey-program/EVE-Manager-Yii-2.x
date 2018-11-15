@@ -8,17 +8,20 @@ use yii\base\Component;
 
 class MineralComponent extends Component
 {
-    /** @var ItemCollection|null $mineralsCollection */
-    private $mineralsCollection;
+    /** @var ItemCollection|null $collectionMinerals */
+    private $collectionMinerals;
     /** @var ItemCollection|null $oresCollection */
-    private $oresCollection;
+    private $collectionOres;
     /** @var MineralAsOre|null $mineralAsOre */
     private $mineralAsOre;
 
+    /**
+     *
+     */
     public function init()
     {
         $this->mineralAsOre = new MineralAsOre();
-        $this->oresCollection = new ItemCollection();
+        $this->collectionOres = new ItemCollection();
 
         parent::init();
     }
@@ -26,9 +29,9 @@ class MineralComponent extends Component
     /**
      * @return ItemCollection|null
      */
-    public function getMineralsCollection()
+    public function getCollectionMinerals()
     {
-        return $this->mineralsCollection;
+        return $this->collectionMinerals;
     }
 
     /**
@@ -36,16 +39,16 @@ class MineralComponent extends Component
      *
      * @return $this
      */
-    public function setMineralsCollection($collection)
+    public function setCollectionMinerals($collection)
     {
         if (is_array($collection)) {
-            $this->mineralsCollection = new ItemCollection();
+            $this->collectionMinerals = new ItemCollection();
 
             foreach ($collection as $item) {
-                $this->mineralsCollection->addItem($item);
+                $this->collectionMinerals->addItem($item);
             }
         } else {
-            $this->mineralsCollection = $collection;
+            $this->collectionMinerals = clone $collection;
         }
 
         return $this;
@@ -54,14 +57,34 @@ class MineralComponent extends Component
     /**
      * @return ItemCollection
      */
-    public function getOresCollection()
+    public function getCollectionOres()
     {
-        return $this->oresCollection;
+        return $this->collectionOres;
+    }
+
+    /**
+     * @param ItemCollection|array $collection
+     *
+     * @return $this
+     */
+    public function setCollectionOres($collection)
+    {
+        if (is_array($collection)) {
+            $this->collectionOres = new ItemCollection();
+
+            foreach ($collection as $item) {
+                $this->collectionOres->addItem($item);
+            }
+        } else {
+            $this->collectionOres = clone $collection;
+        }
+
+        return $this;
     }
 
     public function calculate()
     {
-        $items = $this->mineralsCollection->getItems();
+        $items = $this->collectionMinerals->getItems();
         krsort($items);
 
         foreach ($items as $mineral) { // each mineral
@@ -86,28 +109,31 @@ class MineralComponent extends Component
 
             if ($runs) {
                 $ore->setQuantity($runs);
-                $this->oresCollection->addItemQuantity($ore);
+                $this->collectionOres->addItemQuantity($ore);
             }
         }
 
         return $this;
     }
 
+    /**
+     * @param $typeID
+     *
+     * @return float|int
+     */
     private function getRequiredMinerals($typeID)
     {
-        $required = $this->mineralsCollection->getItem($typeID);
+        $required = $this->collectionMinerals->getItem($typeID);
         $weHave = 0;
 
         if ($required && $required->getQuantity() > 0) {
-            foreach ($this->oresCollection->getItems() as $ore) {
-                foreach ($ore->getReprocessResult(true) as $rItem) {
+            foreach ($this->collectionOres->getItems() as $ore) {
+                /** @var ItemCollection $reprocessed */
+                $reprocessed = \Yii::$app->actionRefine->runOne($ore);
+
+                foreach ($reprocessed->getItems() as $rItem) {
                     if ($rItem->typeID == $typeID) {
-                        $weHave += $rItem->getQuantity() * $ore->getQuantity();
-                        var_dump($ore->typeName);
-                        var_dump($rItem->getQuantity());
-                        var_dump($ore->getQuantity());
-                        var_dump($weHave);
-                        echo '<br/>';
+                        $weHave += $rItem->getQuantity();
                     }
                 }
             }
@@ -118,15 +144,26 @@ class MineralComponent extends Component
         return 0;
     }
 
+    /**
+     * Calculate one mineral by one ore.
+     *
+     * @param Item $mineral
+     * @param Item $ore
+     *
+     * @return float|int
+     */
     private function calculateByPrimaryOre(Item $mineral, Item $ore) // calculate regarding base items
     {
         $refineRuns = 0;
 
-        foreach ($ore->getReprocessResult(true) as $rItem) {
-            if ($rItem->typeID == $mineral->typeID) {
-                $rMinerals = $this->getRequiredMinerals($mineral->typeID);
+        /** @var ItemCollection $reprocessed */
+        $reprocessed = \Yii::$app->actionRefine->runOne($ore);                  // reprocess one ore
 
-                if ($rMinerals && $rItem->getQuantity()) {
+        foreach ($reprocessed->getItems() as $rItem) {
+            if ($rItem->typeID == $mineral->typeID) {                           // found mineral in this ore
+                $rMinerals = $this->getRequiredMinerals($mineral->typeID);      // get count of mineral we still needs
+
+                if (($rMinerals > 0) && $rItem->getQuantity()) {
 
 //                    if ($mineral->typeID ==36 && $ore->typeID ==  28421 ){
 //                        var_dump($rMinerals);
@@ -146,8 +183,8 @@ class MineralComponent extends Component
     {
         $oreID = $this->mineralAsOre->getOreForMineral($mineral->typeID);
 
-        if ($oreID && $this->getOresCollection()) {
-            foreach ($this->oresCollection->getItems() as $ore) {
+        if ($oreID && $this->getcollectionOres()) {
+            foreach ($this->collectionOres->getItems() as $ore) {
                 if ($oreID->typeID == $ore->typeID) {
                     return $ore;
                 }

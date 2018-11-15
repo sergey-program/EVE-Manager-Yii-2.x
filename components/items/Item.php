@@ -13,7 +13,7 @@ class Item extends AbstractItem
 //    use TraitParentBlueprint;
 
     use TraitPrice;
-    use TraitReprocess;
+//    use TraitReprocess;
 //    use TraitParentItem;
     use TraitTotal;
 
