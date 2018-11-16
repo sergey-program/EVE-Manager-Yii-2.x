@@ -2,10 +2,18 @@
 
 namespace app\modules\calculators\components;
 
+use app\components\actions\ActionRefine;
 use app\components\items\Item;
 use app\components\items\ItemCollection;
 use yii\base\Component;
 
+/**
+ * Class MineralComponent
+ *
+ * Recalculate how much ores we need to get same count of minerals.
+ *
+ * @package app\modules\calculators\components
+ */
 class MineralComponent extends Component
 {
     /** @var ItemCollection|null $collectionMinerals */
@@ -156,19 +164,16 @@ class MineralComponent extends Component
     {
         $refineRuns = 0;
 
+        /** @var ActionRefine $actionRefine */
+        $actionRefine = \Yii::$app->actionRefine;
         /** @var ItemCollection $reprocessed */
-        $reprocessed = \Yii::$app->actionRefine->runOne($ore);                  // reprocess one ore
+        $reprocessed = $actionRefine->runOne($ore);                             // reprocess one ore
 
         foreach ($reprocessed->getItems() as $rItem) {
             if ($rItem->typeID == $mineral->typeID) {                           // found mineral in this ore
                 $rMinerals = $this->getRequiredMinerals($mineral->typeID);      // get count of mineral we still needs
 
                 if (($rMinerals > 0) && $rItem->getQuantity()) {
-
-//                    if ($mineral->typeID ==36 && $ore->typeID ==  28421 ){
-//                        var_dump($rMinerals);
-//                        var_dump($rItem->getQuantity());
-//                    }
                     $refineRuns = ceil($rMinerals / $rItem->getQuantity()); //  total we need / after refine = refine runs
                 }
 
@@ -179,6 +184,13 @@ class MineralComponent extends Component
         return $refineRuns;
     }
 
+    /**
+     * Return ore from from result ore collection.
+     *
+     * @param Item $mineral
+     *
+     * @return \app\components\items\Blueprint|Item|null
+     */
     public function getOreForMineral(Item $mineral)
     {
         $oreID = $this->mineralAsOre->getOreForMineral($mineral->typeID);

@@ -42,11 +42,13 @@ class ActionRefine extends Component
 
         if ($refineResult) {
             foreach ($refineResult as $invTypeMaterial) {
-                $quantity = $invTypeMaterial->quantity * $item->getQuantity();
-                $quantity = ceil($quantity * ($this->percent / 100));
+                $quantity = ceil($invTypeMaterial->quantity * ($this->percent / 100));     // one unit
+                $quantity = $item->getQuantity() * $quantity;                                   // all units
 
-                $material = new Item(['invType' => $invTypeMaterial->materialInvType, 'quantity' => $quantity]);
-                $result->addItemQuantity($material);
+                $result->addItemQuantity(new Item([
+                    'invType' => $invTypeMaterial->materialInvType,
+                    'quantity' => $quantity
+                ]));
             }
         } else {
             if ($rup) {

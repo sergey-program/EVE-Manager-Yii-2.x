@@ -5,7 +5,6 @@
  * @var int                        $p
  */
 
-
 /** @var \app\components\actions\ActionManufacture $actionManufacture */
 $actionManufacture = \Yii::$app->actionManufacture;
 
