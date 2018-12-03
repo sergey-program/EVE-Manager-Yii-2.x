@@ -16,6 +16,8 @@ use yii\base\Component;
 class ActionManufacture extends Component
 {
     /**
+     * Return materials required for blueprint.
+     *
      * @param Blueprint $blueprint
      *
      * @return ItemCollection
@@ -24,20 +26,21 @@ class ActionManufacture extends Component
     {
         $collection = new ItemCollection();
 
-        foreach ($blueprint->getMaterials() as $material) {
-            $me = 1 - ($blueprint->getSettings()->me / 100);
-            $meRig = 1 - ($blueprint->getSettings()->meRig / 100);
-            $meHull = 1 - ($blueprint->getSettings()->meHull / 100);
-
-            $quantity = ceil($material->getQuantity() * $me * $meRig * $meHull); // * $this->getRuns();
-
-            $collection->addItemQuantity(new Item(['invType' => $material->invType, 'quantity' => $quantity]));
+        if ($blueprint->getMaterials()) {
+            foreach ($blueprint->getMaterials() as $material) {
+                $me = 1 - ($blueprint->getSettings()->me / 100);
+                $meRig = 1 - ($blueprint->getSettings()->meRig / 100);
+                $meHull = 1 - ($blueprint->getSettings()->meHull / 100);
+                $quantity = ceil($material->getQuantity() * $me * $meRig * $meHull); // * $this->getRuns();
+                $collection->addItemQuantity(new Item(['invType' => $material->invType, 'quantity' => $quantity]));
+            }
         }
-
         return $collection;
     }
 
     /**
+     * Return minerals (raw materials that cannot be manufactured).
+     *
      * @param Blueprint $blueprint
      *
      * @return ItemCollection

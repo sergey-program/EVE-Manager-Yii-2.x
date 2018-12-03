@@ -29,5 +29,6 @@ if (!YII_ENV_PROD) {
     ini_set('display_errors', 1);
 }
 
+
 $application = new Application($configPath);
 $application->run();
