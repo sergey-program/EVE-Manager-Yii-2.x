@@ -35,7 +35,8 @@ class CompressedOreController extends AbstractCalculatorsController
      */
     public function actionUpdateGroup($groupID)
     {
-        MarketGroup::update($groupID);
+        throw new \Exception('Not implemented');
+//        MarketGroup::update($groupID);
 
         return $this->redirect('index');
     }

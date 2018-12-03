@@ -62,10 +62,10 @@ class InvGroups extends AbstractActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMarketUpdateGroup()
-    {
-        return $this->hasOne(MarketUpdateGroup::class, ['groupID' => 'groupID'])->cache(60 * 1.5);
-    }
+//    public function getMarketUpdateGroup()
+//    {
+//        return $this->hasOne(MarketUpdateGroup::class, ['groupID' => 'groupID'])->cache(60 * 1.5);
+//    }
 
     ### functions
 

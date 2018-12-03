@@ -2,8 +2,7 @@
 
 namespace app\modules\marketUpdater\commands;
 
-use app\components\updater\MarketGroup;
-use app\models\MarketUpdateGroup;
+use app\models\MarketPriceSchedule;
 use yii\console\Controller;
 
 /**
@@ -14,52 +13,79 @@ use yii\console\Controller;
 class MarketUpdaterController extends Controller
 {
     const LOCK_NAME = 'market-updater';
+    /** @var float|int $lockDuration */
     private $lockDuration = 60 * 10;
 
     /**
-     *
+     * @param bool $force
      */
-    public function actionUpdate()
+    public function actionUpdate($force = false)
     {
-        $marketUpdateGroup = MarketUpdateGroup::find()->addOrderBy(['timeUpdate' => SORT_ASC])->limit(1)->one();
+        /** @var MarketPriceSchedule $marketUpdateGroup */
+        $marketPriceSchedule = MarketPriceSchedule::find()->addOrderBy(['timeUpdated' => SORT_ASC])->limit(1)->one();
+        $typeID = $marketPriceSchedule->typeID;
 
-        if ($this->isLocked()) {
-            echo 'Is locked. Run later' . "\n";
+        if ($force) {
+            $this->unlock($typeID);
+        }
+
+        if ($this->isLocked($typeID)) {
+            echo 'Is locked. Run later...' . "\n";
         } else {
-            echo "Not locked. Locking...\n";
-            $this->lock($marketUpdateGroup->groupID);
-            echo "Updating... GroupID " . $marketUpdateGroup->groupID."\n";
-            MarketGroup::update($marketUpdateGroup->groupID);
-            echo "Update is done. Unlocking...\n";
-            $this->unlock();
-            echo "Unlocked.\n";
-            echo "Done well.\n";
+            echo "Not locked.\n";
+            if (\Yii::$app->actionUpdatePrice->canUpdate($typeID)) {
+                echo "Can update, out of cache.\n";
+                echo "Locking...\n";
+                $this->lock($typeID);
+                echo "Updating... TypeID " . $typeID . "\n";
+                \Yii::$app->actionUpdatePrice->update($typeID);
+                echo "Update is done. Unlocking...\n";
+                $this->unlock($typeID);
+                echo "Unlocked.\n";
+                echo "Done well.\n";
+            } else {
+                echo "Cannot update typeID (" . $typeID . "), query is cached.\n";
+            }
         }
     }
 
     /**
+     * @param int $typeID
+     *
      * @return int|bool
      */
-    private function isLocked()
+    private function isLocked($typeID)
     {
-        return \Yii::$app->cache->get(self::LOCK_NAME);
+        return \Yii::$app->cache->get($this->getLockName($typeID));
     }
 
     /**
-     * @param int $groupID
+     * @param int $typeID
      *
      * @return bool
      */
-    private function lock($groupID)
+    private function lock($typeID)
     {
-        return \Yii::$app->cache->set(self::LOCK_NAME, $groupID, $this->lockDuration);
+        return \Yii::$app->cache->set($this->getLockName($typeID), $typeID, $this->lockDuration);
     }
 
     /**
+     * @param int $typeID
+     *
      * @return bool
      */
-    private function unlock()
+    private function unlock($typeID)
     {
-        return \Yii::$app->cache->delete(self::LOCK_NAME);
+        return \Yii::$app->cache->delete($this->getLockName($typeID));
+    }
+
+    /**
+     * @param int $typeID
+     *
+     * @return string
+     */
+    private function getLockName($typeID)
+    {
+        return self::LOCK_NAME . '-' . $typeID;
     }
 }
