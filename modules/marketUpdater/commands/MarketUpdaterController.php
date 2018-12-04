@@ -18,10 +18,11 @@ class MarketUpdaterController extends Controller
 
     /**
      * @param bool $force
+     * @param int  $quantity
      */
     public function actionUpdate($force = false, $quantity = 5)
     {
-        // @todo select 10 on each call
+        $quantity = is_numeric($quantity) ? $quantity : 1;
 
         /** @var MarketPriceSchedule $marketUpdateGroup */
         $marketPriceSchedules = MarketPriceSchedule::find()->addOrderBy(['timeUpdated' => SORT_ASC])->limit($quantity)->all();
