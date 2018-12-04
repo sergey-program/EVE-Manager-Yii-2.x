@@ -93,7 +93,7 @@ class InvTypes extends AbstractActiveRecord
     }
 
     /**
-     * @param mixed $condition
+     * @param array|string $condition
      *
      * @return Blueprint|Item|null
      */
@@ -102,6 +102,25 @@ class InvTypes extends AbstractActiveRecord
         $invType = InvTypes::findOne($condition);
 
         return $invType ? $invType->getItem() : null;
+    }
+
+    /**
+     * @param array|string $condition
+     *
+     * @return array|null|Item[]
+     */
+    public static function findItems($condition)
+    {
+        $result = null;
+        $invTypes = InvTypes::find()->where($condition)->orderBy('typeName')->all();
+
+        if ($invTypes) {
+            foreach ($invTypes as $invType) {
+                $result[] = $invType->getItem();
+            }
+        }
+
+        return $result;
     }
 
     ### functions

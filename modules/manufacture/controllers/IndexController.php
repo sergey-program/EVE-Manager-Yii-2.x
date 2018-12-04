@@ -3,7 +3,6 @@
 namespace app\modules\manufacture\controllers;
 
 use app\models\dump\InvTypes;
-use yii\helpers\Url;
 
 /**
  * Class IndexController
@@ -17,8 +16,7 @@ class IndexController extends AbstractManufactureController
      */
     public function actionIndex()
     {
-        $invTypes = [];
-
+        $items = [];
         $string = \Yii::$app->getRequest()->get('query');
 
         if ($string) {
@@ -32,10 +30,13 @@ class IndexController extends AbstractManufactureController
                 ['not like', 'typeName', 'skin']
             ];
 
-            $invTypes = InvTypes::find()->where($filter)->orderBy('typeName')->all();
+            $items = InvTypes::findItems($filter);
         }
 
-        return $this->render('index', ['invTypes' => $invTypes]);
+        return $this->render('index', [
+            'items' => $items,
+            'lastItems' => \Yii::$app->lastOpenedItems->getItems() // @todo this is only module component
+        ]);
     }
 
     /**
@@ -49,6 +50,7 @@ class IndexController extends AbstractManufactureController
         $item = $invType->getItem();
 
         \Yii::$app->session->set('lastViewedItemID', $typeID);
+        \Yii::$app->lastOpenedItems->addTypeID($typeID);
 
         return $this->render('view', ['item' => $item]);
     }
