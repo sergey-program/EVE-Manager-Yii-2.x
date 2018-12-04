@@ -2,14 +2,12 @@
 
 namespace app\modules\calculators\controllers;
 
-use app\models\dump\InvGroups;
-
 /**
  * Class CompressedIceController
  *
  * @package app\modules\calculators\controllers
  */
-class CompressedIceController extends AbstractCalculatorsController
+class CompressedIceController extends AbstractCompressedController
 {
     /**
      * @return string
@@ -19,12 +17,12 @@ class CompressedIceController extends AbstractCalculatorsController
         $this
             ->getView()
             ->addBread('Calculators')
-            ->setPageTitle('Compressed ICE')
+            ->setPageTitle('Compressed Ice')
             ->setPageDescription('Calculate compressed ice prices.');
 
-        // @todo add settings for reprocess list
-        $group = InvGroups::find()->where(['groupID' => 465])->orderBy(['groupName' => 'ASC'])->one();
+        $groupIDs = [465];
+        $items = $this->getGroupItems($groupIDs);
 
-        return $this->render('index', ['group' => $group]);
+        return $this->render('index', ['items' => $items]);
     }
 }

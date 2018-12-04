@@ -59,29 +59,13 @@ class InvGroups extends AbstractActiveRecord
         return $this->hasMany(InvTypes::class, ['groupID' => 'groupID'])->andWhere(['published' => true])->cache(60 * 60 * 24);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-//    public function getMarketUpdateGroup()
-//    {
-//        return $this->hasOne(MarketUpdateGroup::class, ['groupID' => 'groupID'])->cache(60 * 1.5);
-//    }
-
     ### functions
 
     /**
      * @return InvTypes[]|array|\yii\db\ActiveRecord[]
      */
-    public function getCompressedIce()
+    public function getCompressed()
     {
-        return $this->getInvTypes()->andWhere(['volume' => 100])->andWhere('marketGroupID IS NOT NULL')->all();
-    }
-
-    /**
-     * @return InvTypes[]|array|\yii\db\ActiveRecord[]
-     */
-    public function getCompressedOre()
-    {
-        return $this->getInvTypes()->andWhere(['portionSize' => 1])->andWhere('marketGroupID IS NOT NULL')->all();
+        return $this->getInvTypes()->andWhere(['like', 'typeName', 'compressed'])->andWhere('marketGroupID IS NOT NULL')->all();
     }
 }
