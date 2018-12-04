@@ -3,6 +3,7 @@
 /**
  * @var app\components\ViewExtended $this
  */
+
 ?>
 
 <p class="alert alert-info text-center">Someday here will be some kind of dashboard.</p>

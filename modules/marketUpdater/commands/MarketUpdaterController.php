@@ -19,32 +19,39 @@ class MarketUpdaterController extends Controller
     /**
      * @param bool $force
      */
-    public function actionUpdate($force = false)
+    public function actionUpdate($force = false, $quantity = 5)
     {
+        // @todo select 10 on each call
+
         /** @var MarketPriceSchedule $marketUpdateGroup */
-        $marketPriceSchedule = MarketPriceSchedule::find()->addOrderBy(['timeUpdated' => SORT_ASC])->limit(1)->one();
-        $typeID = $marketPriceSchedule->typeID;
+        $marketPriceSchedules = MarketPriceSchedule::find()->addOrderBy(['timeUpdated' => SORT_ASC])->limit($quantity)->all();
 
-        if ($force) {
-            $this->unlock($typeID);
-        }
+        foreach ($marketPriceSchedules as $marketPriceSchedule) {
+            $typeID = $marketPriceSchedule->typeID;
+            echo 'Trying update typeID: ' . $typeID . "\n";
 
-        if ($this->isLocked($typeID)) {
-            echo 'Is locked. Run later...' . "\n";
-        } else {
-            echo "Not locked.\n";
-            if (\Yii::$app->actionUpdatePrice->canUpdate($typeID)) {
-                echo "Can update, out of cache.\n";
-                echo "Locking...\n";
-                $this->lock($typeID);
-                echo "Updating... TypeID " . $typeID . "\n";
-                \Yii::$app->actionUpdatePrice->update($typeID);
-                echo "Update is done. Unlocking...\n";
+            if ($force) {
+                echo "Force unlocking...\n";
                 $this->unlock($typeID);
-                echo "Unlocked.\n";
-                echo "Done well.\n";
+            }
+
+            if ($this->isLocked($typeID)) {
+                echo 'Is locked. Run later...' . "\n";
             } else {
-                echo "Cannot update typeID (" . $typeID . "), query is cached.\n";
+                echo "Not locked.\n";
+                if (\Yii::$app->actionUpdatePrice->canUpdate($typeID)) {
+                    echo "Can update, out of cache.\n";
+                    echo "Locking...\n";
+                    $this->lock($typeID);
+                    echo "Updating... TypeID " . $typeID . "\n";
+                    \Yii::$app->actionUpdatePrice->update($typeID);
+                    echo "Update is done. Unlocking...\n";
+                    $this->unlock($typeID);
+                    echo "Unlocked.\n";
+                    echo "Done well.\n";
+                } else {
+                    echo "Cannot update typeID (" . $typeID . "), api data is cached.\n";
+                }
             }
         }
     }

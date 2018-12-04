@@ -1,16 +1,16 @@
 <?php
 
 use app\assets\AppAsset;
-use app\components\ViewExtended;
-use yii\bootstrap\BootstrapAsset;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this);
+
 /**
  * @var app\components\ViewExtended $this
  * @var string                      $content
  */
+
 ?>
 
 <?php $this->beginPage(); ?>
@@ -85,7 +85,7 @@ AppAsset::register($this);
         </section>
 
         <section class="content">
-            <?= $content ?>
+            <?= $content; ?>
         </section>
     </div>
 
@@ -328,11 +328,11 @@ AppAsset::register($this);
 <!-- AdminLTE for demo purposes -->
 <script src="/_theme/dist/js/demo.js"></script>
 
-<?php $this->endBody() ?>
+<?php $this->endBody(); ?>
 </body>
 
 </html>
 
-<?php $this->endPage() ?>
+<?php $this->endPage(); ?>
 
 
