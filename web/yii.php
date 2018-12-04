@@ -29,12 +29,13 @@ abstract class BaseApplication extends yii\base\Application
  * Class WebApplication
  * Include only Web application related components here
  *
- * @property \app\components\User                      $user         The user component. This property is read-only. Extended component.
- * @property \app\components\MyResponse                $response     The response component. This property is read-only. Extended component.
- * @property \app\components\ErrorHandler              $errorHandler The error handler application component. This property is read-only. Extended component.
- * @property \app\components\actions\ActionUpdatePrice $actionUpdatePrice
- * @property \app\components\actions\ActionRefine      $actionRefine
- * @property \app\components\actions\ActionReprocess   $actionReprocess
+ * @property \app\components\User                                         $user         The user component. This property is read-only. Extended component.
+ * @property \app\components\MyResponse                                   $response     The response component. This property is read-only. Extended component.
+ * @property \app\components\ErrorHandler                                 $errorHandler The error handler application component. This property is read-only. Extended component.
+ * @property \app\components\actions\ActionUpdatePrice                    $actionUpdatePrice
+ * @property \app\components\actions\ActionRefine                         $actionRefine
+ * @property \app\components\actions\ActionReprocess                      $actionReprocess
+ * @property \app\modules\manufacture\components\LastOpenedItemsComponent $lastOpenedItems
  */
 class WebApplication extends yii\web\Application
 {

@@ -9,9 +9,11 @@ $config = [
     'params' => require(FILE_PATH_CONFIG_ENV . '_param.php'),
     'controllerNamespace' => 'app\commands',
     'components' => [
-        'baseGroups' => [
-            'class' => \app\modules\marketUpdater\components\BaseGroupsComponent::class
-        ],
+        'actionRefine' => ['class' => \app\components\actions\ActionRefine::class],
+        'actionReprocess' => ['class' => \app\components\actions\ActionReprocess::class],
+        'actionManufacture' => ['class' => \app\components\actions\ActionManufacture::class],
+        'actionUpdatePrice' => ['class' => \app\components\actions\ActionUpdatePrice::class],
+        //
         'db' => require(FILE_PATH_CONFIG_ENV . '_db.php'),
         'authManager' => require(FILE_PATH_CONFIG_ENV . '_auth.php'),
         'cache' => [

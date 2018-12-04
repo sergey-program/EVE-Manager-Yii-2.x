@@ -9,14 +9,14 @@ $config = [
     'bootstrap' => ['log'],
     'params' => require_once(FILE_PATH_CONFIG_ENV . '_param.php'),
     'defaultRoute' => 'index/index',
+    'timeZone' => 'Europe/Volgograd',
     'components' => [
         'actionRefine' => ['class' => \app\components\actions\ActionRefine::class],
         'actionReprocess' => ['class' => \app\components\actions\ActionReprocess::class],
         'actionManufacture' => ['class' => \app\components\actions\ActionManufacture::class],
+        'actionUpdatePrice' => ['class' => \app\components\actions\ActionUpdatePrice::class],
+        'lastOpenedItems' => ['class' => \app\modules\manufacture\components\LastOpenedItemsComponent::class],
         //
-        'baseGroups' => [
-            'class' => \app\modules\marketUpdater\components\BaseGroupsComponent::class
-        ],
         'selectorOres' => [
             'class' => \app\components\selectors\OresComponent::class
         ],
@@ -41,18 +41,10 @@ $config = [
             'showScriptName' => false,
             'rules' => require(FILE_PATH_CONFIG_ENV . '_routes.php')
         ],
-        'request' => [
-            'cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7', // change salt manually
-        ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
-        'errorHandler' => [
-            'errorAction' => 'error/index',
-        ],
-        'view' => [
-            'class' => 'app\components\ViewExtended'
-        ],
+        'request' => ['cookieValidationKey' => 'eVgiVONC78oRwFJZd7R379eOF9SeqoP7'], // change salt manually
+        'cache' => ['class' => 'yii\caching\FileCache'],
+        'errorHandler' => ['errorAction' => 'error/index'],
+        'view' => ['class' => 'app\components\ViewExtended'],
         // send all mails to a file by default. You have to set
         // 'useFileTransport' to false and configure a transport
         // for the mailer to send real emails.
