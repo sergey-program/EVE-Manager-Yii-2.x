@@ -33,6 +33,8 @@ abstract class BaseApplication extends yii\base\Application
  * @property \app\components\MyResponse                $response     The response component. This property is read-only. Extended component.
  * @property \app\components\ErrorHandler              $errorHandler The error handler application component. This property is read-only. Extended component.
  * @property \app\components\actions\ActionUpdatePrice $actionUpdatePrice
+ * @property \app\components\actions\ActionRefine      $actionRefine
+ * @property \app\components\actions\ActionReprocess   $actionReprocess
  */
 class WebApplication extends yii\web\Application
 {

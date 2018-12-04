@@ -90,7 +90,7 @@ use yii\helpers\Url;
                                     <?= $item->typeName; ?>
                                     <small class="text-muted"><?= $item->typeID; ?> (<?= $item->getInvType()->groupID; ?>)</small>
                                     <?php if (true): ?>
-                                        <a href="<?= Url::to(['index/add', 'typeID' => $item->typeID]); ?>">
+                                        <a href="<?= Url::to(['schedule/add', 'typeID' => $item->typeID]); ?>">
                                             <i class="fa fa-fw fa-plus text-success"></i>
                                         </a>
                                     <?php endif; ?>

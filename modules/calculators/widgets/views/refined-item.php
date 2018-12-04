@@ -1,14 +1,11 @@
 <?php
 
-$actionRefine = \Yii::$app->actionRefine;
-
 /**
  * @var app\components\ViewExtended          $this
  * @var \app\components\items\Item           $item
  * @var \app\components\actions\ActionRefine $actionRefine
+ * @var \app\components\items\ItemCollection $collection
  */
-
-$collection = $actionRefine->runOne($item);
 
 ?>
 
@@ -16,7 +13,7 @@ $collection = $actionRefine->runOne($item);
     <div class="box-header with-border">
         <div class="row">
             <div class="col-md-4">
-                <img src="<?= $item->getImageSrc(); ?>" class="img-thumbnail margin-r-5">
+                <img src="<?= $item->getImageSrc(); ?>" class="img-thumbnail margin-r-5" alt="<?= $item->typeName; ?>">
                 <a data-toggle="collapse" href="#collapse<?= $item->typeID; ?>"><h3 class="box-title"><?= $item->typeName; ?></h3></a>
                 <small class="text-muted"><?= $item->typeID; ?></small>
             </div>
@@ -34,17 +31,8 @@ $collection = $actionRefine->runOne($item);
             </div>
 
             <div class="col-md-4 text-right">
-                <small class="text-muted" title="Last group update time">
-                    <?php $timeItem = $item->getMarketPrice() ? $item->getMarketPrice()->timeUpdate : null; ?>
-                    <?= \Yii::$app->formatter->asDatetime($timeItem, 'Y-MM-dd HH:mm:ss VV'); ?>
-                </small>
-                <br/>
-                <small class="text-muted" title="Last group update time">
-                    <?php
-                    $groupMineral = \app\models\MarketUpdateGroup::findOne(18); // minerals group
-                    $timeMineral = $groupMineral ? $groupMineral->timeUpdate : null;
-                    ?>
-                    <?= \Yii::$app->formatter->asDatetime($timeMineral, 'Y-MM-dd HH:mm:ss VV'); ?>
+                <small class="text-muted">
+                    <?= \Yii::$app->formatter->asRelativeTime($item->getMarketPrice()->timeUpdate ?? null); ?>
                 </small>
             </div>
         </div>
@@ -56,7 +44,7 @@ $collection = $actionRefine->runOne($item);
                 <?php foreach ($collection->getItems() as $rItem): ?>
                     <tr>
                         <td>
-                            <img src="<?= $rItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-right: 10px;">
+                            <img src="<?= $rItem->getImageSrc(); ?>" class="img-thumbnail" style="margin-right: 10px;" alt="<?= $rItem->typeName; ?>">
                             <?= \Yii::$app->formatter->asInteger($rItem->getQuantity()); ?>
                             <?= $rItem->typeName; ?>
                             <small class="text-muted"><?= $rItem->getTypeID(); ?></small>
@@ -71,10 +59,11 @@ $collection = $actionRefine->runOne($item);
                             <br/>
                             <?= \Yii::$app->formatter->asDecimal($rItem->getPriceBuy() * $rItem->getQuantity()); ?>
                         </td>
+                        <td class="text-right text-muted"><?= \Yii::$app->formatter->asRelativeTime($rItem->getMarketPrice()->timeUpdate); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <tr>
-                    <td><?= $actionRefine->percent; ?>% used for refine.</td>
+                    <td><?= \Yii::$app->actionRefine->percent; ?>% used for refine.</td>
                     <td></td>
                     <td class="text-right">
                         <span title="Материалы по Sell цене">S: <?= \Yii::$app->formatter->asDecimal($collection->getPriceSell()); ?></span>

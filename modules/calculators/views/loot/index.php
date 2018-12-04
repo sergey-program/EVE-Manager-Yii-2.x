@@ -49,28 +49,26 @@ use yii\helpers\Url;
         </div>
     </div>
 
-
     <?php if (!empty($formCalculator->getItemCollection()->getItems())): ?>
         <div class="col-md-6">
-            <?= '';/*$this->render('_boxPrices', [
+            <?= $this->render('_boxPrices', [
                 'itemCollection' => $formCalculator->getItemCollection(),
                 'formCalculator' => $formCalculator
-            ]);*/ ?>
+            ]); ?>
 
             <?= $this->render('_boxItems', ['items' => $formCalculator->getItemCollection()->getItems()]); ?>
         </div>
 
+        <?php $collection= \Yii::$app->actionReprocess->runCollection($formCalculator->getItemCollection()); ?>
+
         <div class="col-md-6">
-            <?php /*
             <?= $this->render('_boxPrices', [
-                'itemCollection' => ActionReprocess::run($formCalculator->getItemCollection(), $formCalculator->percentReprocess),
+                'itemCollection' =>  $collection,
                 'formCalculator' => $formCalculator
             ]); ?>
-*/; ?>
-            <?= $this->render('_boxItems', ['items' => $formCalculator->getItemCollection()->reprocess($formCalculator->percentReprocess)->getItems()]); ?>
+
+            <?= $this->render('_boxItems', ['items' => $collection->getItems()]); ?>
         </div>
 
     <?php endif; ?>
-
-
 </div>

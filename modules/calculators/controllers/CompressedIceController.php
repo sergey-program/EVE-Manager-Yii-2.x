@@ -2,7 +2,6 @@
 
 namespace app\modules\calculators\controllers;
 
-use app\components\updater\MarketGroup;
 use app\models\dump\InvGroups;
 
 /**
@@ -23,23 +22,9 @@ class CompressedIceController extends AbstractCalculatorsController
             ->setPageTitle('Compressed ICE')
             ->setPageDescription('Calculate compressed ice prices.');
 
+        // @todo add settings for reprocess list
         $group = InvGroups::find()->where(['groupID' => 465])->orderBy(['groupName' => 'ASC'])->one();
 
         return $this->render('index', ['group' => $group]);
-    }
-
-    /**
-     * @param int $groupID
-     *
-     * @return \yii\web\Response
-     *
-     * @throws \Exception
-     */
-    public function actionUpdateGroup($groupID)
-    {
-        throw new \Exception('Not implemented');
-//        MarketGroup::update($groupID);
-
-        return $this->redirect('index');
     }
 }

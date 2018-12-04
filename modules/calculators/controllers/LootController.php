@@ -2,7 +2,6 @@
 
 namespace app\modules\calculators\controllers;
 
-use app\components\updater\MarketOrders;
 use app\forms\FormCalculator;
 
 /**
@@ -33,15 +32,14 @@ class LootController extends AbstractCalculatorsController
     }
 
     /**
-     * Temp action for price update. Remove after cron setuped.
-     *
-     * @return \yii\web\Response
+     * @throws \Exception
      */
     public function actionUpdatePrices()
     {
-        $updater = new MarketOrders();
-        $updater->getOrders()->updateDB();
-
-        return $this->redirect(['index']);
+        throw new \Exception('Not implemented yet.');
+        // @todo should update all unupdated item prices
+//        $updater = new MarketOrders();
+//        $updater->getOrders()->updateDB();
+//        return $this->redirect(['index']);
     }
 }

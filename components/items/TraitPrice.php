@@ -46,13 +46,11 @@ trait TraitPrice
     }
 
     /**
-     * @param bool $withME
-     *
      * @return float|int
      */
-    public function getPriceTotalSell($withME = true)
+    public function getPriceTotalSell()
     {
-        return $this->getQuantity($withME) * $this->getPriceSell();
+        return $this->getQuantity() * $this->getPriceSell();
     }
 
     /**
@@ -60,8 +58,8 @@ trait TraitPrice
      *
      * @return float|int
      */
-    public function getPriceTotalBuy($withME = true)
+    public function getPriceTotalBuy()
     {
-        return $this->getQuantity($withME) * $this->getPriceBuy();
+        return $this->getQuantity() * $this->getPriceBuy();
     }
 }

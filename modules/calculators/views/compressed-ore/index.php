@@ -9,7 +9,7 @@
 ?>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <?php foreach ($groups as $group): ?>
             <?php foreach ($group->getCompressedOre() as $invType): ?>
                 <?= \app\modules\calculators\widgets\RefinedItemWidget::widget(['item' => $invType->getItem()]); ?>

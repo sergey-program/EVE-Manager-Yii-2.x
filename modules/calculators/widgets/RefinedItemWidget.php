@@ -22,6 +22,9 @@ class RefinedItemWidget extends Widget
      */
     public function run()
     {
-        return $this->render('refined-item', ['item' => $this->item]);
+        return $this->render('refined-item', [
+            'item' => $this->item,
+            'collection' => \Yii::$app->actionRefine->runOne($this->item)
+        ]);
     }
 }
