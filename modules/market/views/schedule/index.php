@@ -3,9 +3,9 @@
 use yii\helpers\Url;
 
 /**
- * @var app\components\ViewExtended    $this
+ * @var app\components\ViewExtended       $this
  * @var \app\models\MarketPriceSchedule[] $marketPriceSchedules
- * @var \app\components\items\Item[]   $searchItems
+ * @var \app\components\items\Item[]      $searchItems
  */
 
 ?>

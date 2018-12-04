@@ -1,26 +1,26 @@
 <?php
 
-namespace app\modules\marketUpdater\commands;
+namespace app\modules\market\commands;
 
 use app\models\MarketPriceSchedule;
 use yii\console\Controller;
 
 /**
- * Class MarketUpdaterController
+ * Class MarketController
  *
- * @package app\modules\marketUpdater\commands
+ * @package app\modules\market\commands
  */
-class MarketUpdaterController extends Controller
+class MarketController extends Controller
 {
     const LOCK_NAME = 'market-updater';
     /** @var float|int $lockDuration */
     private $lockDuration = 60 * 10;
 
     /**
-     * @param bool $force
      * @param int  $quantity
+     * @param bool $force
      */
-    public function actionUpdate($force = false, $quantity = 5)
+    public function actionUpdate($quantity = 5, $force = false)
     {
         $quantity = is_numeric($quantity) ? $quantity : 1;
 

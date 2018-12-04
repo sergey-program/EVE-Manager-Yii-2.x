@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\marketUpdater\controllers;
+namespace app\modules\market\controllers;
 
 use app\components\actions\ActionUpdatePrice;
 use app\models\dump\InvTypes;
@@ -8,11 +8,11 @@ use app\models\MarketPriceSchedule;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class IndexController
+ * Class ScheduleController
  *
- * @package app\modules\marketUpdater\controllers
+ * @package app\modules\market\controllers
  */
-class IndexController extends AbstractMarketUpdater
+class ScheduleController extends AbstractMarketController
 {
     const SESSION_SEARCH_STRING = 'session_search_string';
 
