@@ -15,6 +15,7 @@ use yii\helpers\Url;
 
         <div class="panel box box-primary">
             <div class="box-header with-border">
+                <div class="pull-right text-muted">Всего <?= count($marketPriceSchedules); ?></div>
                 <h3 class="box-title">Список обновляемых предметов:</h3>
             </div>
 

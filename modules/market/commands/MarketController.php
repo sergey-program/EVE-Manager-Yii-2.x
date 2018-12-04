@@ -17,10 +17,12 @@ class MarketController extends Controller
     private $lockDuration = 60 * 10;
 
     /**
+     * php yii market/update 5 1 // qty=1 , force=1
+     *
      * @param int  $quantity
-     * @param bool $force
+     * @param bool|int $force
      */
-    public function actionUpdate($quantity = 5, $force = false)
+    public function actionUpdate($quantity = 10, $force = false)
     {
         $quantity = is_numeric($quantity) ? $quantity : 1;
 
